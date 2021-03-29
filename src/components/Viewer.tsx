@@ -8,10 +8,10 @@ import React, {
   MutableRefObject,
   RefAttributes,
 } from 'react';
+import { StreamCreds } from '../lib/types';
 
 export interface ViewerProps extends ViewerJSX.VertexViewer {
-  readonly clientId: string;
-  readonly streamKey: string;
+  readonly creds: StreamCreds;
   readonly configEnv: Environment;
   readonly viewer: MutableRefObject<HTMLVertexViewerElement | null>;
 }
@@ -22,16 +22,12 @@ export type ViewerComponentType = ComponentType<
 
 export type HOCViewerProps = RefAttributes<HTMLVertexViewerElement>;
 
-export function Viewer({
-  streamKey,
-  viewer,
-  ...props
-}: ViewerProps): JSX.Element {
+export function Viewer({ creds, viewer, ...props }: ViewerProps): JSX.Element {
   return (
     <VertexViewer
       ref={viewer}
       className="w-full h-full"
-      src={`urn:vertexvis:stream-key:${streamKey}`}
+      src={`urn:vertexvis:stream-key:${creds.streamKey}`}
       {...props}
     />
   );

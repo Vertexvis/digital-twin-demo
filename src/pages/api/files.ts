@@ -20,7 +20,7 @@ async function getClient(): Promise<VertexClient> {
         ? 'https://platform.vertexvis.com'
         : `https://platform.${env}.vertexvis.io`,
     client: {
-      id: process.env.NEXT_PUBLIC_VERTEX_CLIENT_ID ?? '',
+      id: process.env.VERTEX_CLIENT_ID ?? '',
       secret: process.env.VERTEX_CLIENT_SECRET ?? '',
     },
   });

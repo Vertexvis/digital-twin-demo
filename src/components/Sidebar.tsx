@@ -6,7 +6,7 @@ export function Sidebar(): JSX.Element {
   return (
     <Panel position="right">
       <div className="w-full px-2 border-b text-gray-700">
-        <Collapsible title="MY SIDEBAR">
+        <Collapsible title="SENSORS">
           <p className="text-center text-sm mb-4">TODO</p>
         </Collapsible>
       </div>

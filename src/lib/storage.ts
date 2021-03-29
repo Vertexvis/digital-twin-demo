@@ -1,18 +1,19 @@
 import { Env } from './env';
+import { StreamCreds } from './types';
 
-export const ClientId = 'clientId';
+const CredsKey = 'creds';
 
-export const StreamKey = 'streamKey';
-
-export function getClientId(): string {
-  return getItem(ClientId) ?? '';
+export function getStoredCreds(): StreamCreds {
+  const val = getItem(CredsKey);
+  const fallback = { clientId: '', streamKey: '' };
+  return val ? JSON.parse(val) : fallback ?? fallback;
 }
 
-export function getStreamKey(): string {
-  return getItem(StreamKey) ?? '';
+export function setStoredCreds(creds: StreamCreds): void {
+  setItem(CredsKey, JSON.stringify(creds));
 }
 
-export function setItem(key: string, value: string): void {
+function setItem(key: string, value: string): void {
   if (typeof window === 'undefined') return;
 
   window.localStorage.setItem(envKey(key), value);

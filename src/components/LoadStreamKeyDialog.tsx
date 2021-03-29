@@ -1,30 +1,26 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Dialog } from './Dialog';
+import { StreamCreds } from '../lib/types';
 
 interface Props {
-  readonly clientId?: string;
-  readonly streamKey?: string;
+  readonly creds: StreamCreds;
   readonly open: boolean;
   readonly onClose: VoidFunction;
-  readonly onConfirm: (clientId: string, streamKey: string) => void;
+  readonly onConfirm: (creds: StreamCreds) => void;
 }
 
 export function LoadStreamKeyDialog({
-  clientId,
-  streamKey,
+  creds,
   open,
   onClose,
   onConfirm,
 }: Props): JSX.Element {
-  const [inputClientId, setInputClientId] = useState(clientId ?? '');
-  const [inputStreamKey, setInputStreamKey] = useState(streamKey ?? '');
-
+  const [inputCreds, setInputCreds] = useState<StreamCreds>(creds);
   const handleDialogClose = (): void => onClose();
 
   useEffect(() => {
-    if (clientId) setInputClientId(clientId);
-    if (streamKey) setInputStreamKey(streamKey);
-  }, [clientId, streamKey, setInputClientId, setInputStreamKey]);
+    if (creds.clientId || creds.streamKey) setInputCreds(creds);
+  }, [creds, setInputCreds]);
 
   return (
     <Dialog
@@ -33,10 +29,10 @@ export function LoadStreamKeyDialog({
         <>
           <button
             className="btn btn-primary"
-            disabled={inputClientId === '' || inputStreamKey === ''}
+            disabled={inputCreds.clientId === '' || inputCreds.streamKey === ''}
             onClick={() => {
-              if (inputClientId && inputStreamKey) {
-                onConfirm(inputClientId, inputStreamKey);
+              if (inputCreds.clientId && inputCreds.streamKey) {
+                onConfirm(inputCreds);
               }
             }}
           >
@@ -59,9 +55,12 @@ export function LoadStreamKeyDialog({
                 placeholder="Client ID"
                 className="txt-input"
                 type="text"
-                value={inputClientId}
+                value={inputCreds.clientId}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setInputClientId(event.target.value);
+                  setInputCreds({
+                    ...inputCreds,
+                    clientId: event.target.value,
+                  });
                 }}
               />
             </div>
@@ -70,9 +69,12 @@ export function LoadStreamKeyDialog({
                 placeholder="Stream Key"
                 className="txt-input"
                 type="text"
-                value={inputStreamKey}
+                value={inputCreds.streamKey}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setInputStreamKey(event.target.value);
+                  setInputCreds({
+                    ...inputCreds,
+                    streamKey: event.target.value,
+                  });
                 }}
               />
             </div>

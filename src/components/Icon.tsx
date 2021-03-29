@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-type IconType = 'caret-right' | 'close';
+type IconType = 'caret-right' | 'close' | 'list';
 
 interface Props {
   readonly icon: IconType;
@@ -16,6 +16,8 @@ function getIcon(type: string): JSX.Element {
       return caretRight;
     case 'close':
       return close;
+    case 'list':
+      return list;
     default:
       return <></>;
   }
@@ -37,4 +39,8 @@ const caretRight = baseIcon(
 
 const close = baseIcon(
   <path d="M8.71,8l4.14-4.15a.49.49,0,0,0-.7-.7L8,7.29,3.85,3.15a.49.49,0,0,0-.7.7L7.29,8,3.15,12.15a.49.49,0,0,0,.7.7L8,8.71l4.15,4.14a.49.49,0,0,0,.7-.7Z" />
+);
+
+const list = baseIcon(
+  <path d="M14,3.5a.5.5,0,0,0-.5-.5H2.5a.5.5,0,0,0,0,1h11A.5.5,0,0,0,14,3.5ZM13.5,12h-9a.5.5,0,0,0,0,1h9a.5.5,0,0,0,0-1Zm0-6h-9a.5.5,0,0,0,0,1h9a.5.5,0,0,0,0-1Zm0,3h-9a.5.5,0,0,0,0,1h9a.5.5,0,0,0,0-1Z" />
 );

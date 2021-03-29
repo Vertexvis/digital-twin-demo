@@ -1,0 +1,402 @@
+[
+  {
+    "timestamp": "2021-01-02T08:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 14,
+    "temp_min": 14,
+    "temp_max": 14.18,
+    "temp_std": 0.0099999998
+  },
+  {
+    "timestamp": "2021-01-02T14:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 14,
+    "temp_min": 14,
+    "temp_max": 14,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-02T14:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 14,
+    "temp_min": 14,
+    "temp_max": 14,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-02T15:40:000Z",
+    "sensor_id": "103",
+    "temp_avg": 14,
+    "temp_min": 14,
+    "temp_max": 14,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-02T23:40:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T02:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T00:40:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T13:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 14,
+    "temp_min": 13.82,
+    "temp_max": 14,
+    "temp_std": 0.0099999998
+  },
+  {
+    "timestamp": "2021-01-03T04:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T05:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T07:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T19:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.7,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.38999999
+  },
+  {
+    "timestamp": "2021-01-03T12:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13.54,
+    "temp_min": 13,
+    "temp_max": 14,
+    "temp_std": 0.41
+  },
+  {
+    "timestamp": "2021-01-03T12:40:000Z",
+    "sensor_id": "103",
+    "temp_avg": 14,
+    "temp_min": 14,
+    "temp_max": 14,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T22:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 12.94,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T14:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13.1,
+    "temp_min": 13,
+    "temp_max": 14,
+    "temp_std": 0.23
+  },
+  {
+    "timestamp": "2021-01-04T06:40:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T06:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-03T16:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13.83,
+    "temp_std": 0.050000001
+  },
+  {
+    "timestamp": "2021-01-03T20:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.29,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.38
+  },
+  {
+    "timestamp": "2021-01-04T16:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.58,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.38
+  },
+  {
+    "timestamp": "2021-01-03T23:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T02:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T21:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T06:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T08:40:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T09:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T10:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-05T01:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-05T06:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.01,
+    "temp_min": 12,
+    "temp_max": 12.66,
+    "temp_std": 0.050000001
+  },
+  {
+    "timestamp": "2021-01-04T12:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T13:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 13,
+    "temp_max": 13,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T20:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.03,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.12
+  },
+  {
+    "timestamp": "2021-01-05T15:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-04T23:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-05T05:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-05T06:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.03,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.15000001
+  },
+  {
+    "timestamp": "2021-01-05T08:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.04,
+    "temp_min": 12,
+    "temp_max": 12.96,
+    "temp_std": 0.15000001
+  },
+  {
+    "timestamp": "2021-01-05T09:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.1,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.23999999
+  },
+  {
+    "timestamp": "2021-01-05T13:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.53,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.44
+  },
+  {
+    "timestamp": "2021-01-05T15:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-05T17:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-06T03:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 11.95,
+    "temp_min": 11,
+    "temp_max": 12,
+    "temp_std": 0.15000001
+  },
+  {
+    "timestamp": "2021-01-06T03:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-06T04:00:000Z",
+    "sensor_id": "103",
+    "temp_avg": 11.99,
+    "temp_min": 11,
+    "temp_max": 12,
+    "temp_std": 0.059999999
+  },
+  {
+    "timestamp": "2021-01-06T05:10:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12,
+    "temp_min": 12,
+    "temp_max": 12,
+    "temp_std": 0
+  },
+  {
+    "timestamp": "2021-01-06T12:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 12.88,
+    "temp_max": 13,
+    "temp_std": 0.0099999998
+  },
+  {
+    "timestamp": "2021-01-06T13:20:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13,
+    "temp_min": 12.7,
+    "temp_max": 13,
+    "temp_std": 0.0099999998
+  },
+  {
+    "timestamp": "2021-01-02T22:30:000Z",
+    "sensor_id": "103",
+    "temp_avg": 13.62,
+    "temp_min": 13,
+    "temp_max": 14,
+    "temp_std": 0.41
+  },
+  {
+    "timestamp": "2021-01-04T21:50:000Z",
+    "sensor_id": "103",
+    "temp_avg": 12.06,
+    "temp_min": 12,
+    "temp_max": 13,
+    "temp_std": 0.2
+  }
+]

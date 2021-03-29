@@ -2,6 +2,9 @@ module.exports = {
   purge: ['./src/**/*.tsx'],
   theme: {
     extend: {
+      zIndex: {
+        overlay: '10',
+      },
       fontSize: {
         xxs: '0.625rem',
         xs: '0.75rem',
