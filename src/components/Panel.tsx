@@ -10,19 +10,19 @@ interface Props {
 export function Panel({
   children,
   position = 'left',
-  overlay,
+  overlay = false,
 }: Props): JSX.Element {
   return (
     <div
       className={cn('relative', {
         ['ml-auto']: position === 'right',
-        ['w-0 flex-shrink-0 overflow-visible']: !!overlay,
+        ['w-0 flex-shrink-0 overflow-visible']: overlay,
       })}
     >
       <div
         className={cn('w-80 h-full overflow-visible z-overlay bg-white', {
           ['right-0']: position === 'right',
-          ['absolute']: !!overlay,
+          ['absolute']: overlay,
         })}
       >
         <div

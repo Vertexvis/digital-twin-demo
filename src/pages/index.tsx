@@ -1,4 +1,3 @@
-import { vertexvis } from '@vertexvis/frame-streaming-protos';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -11,7 +10,13 @@ import { onTap, Viewer } from '../components/Viewer';
 import { selectById } from '../lib/alterations';
 import { Env } from '../lib/env';
 import { waitForHydrate } from '../lib/nextjs';
-import { getClientId, getStreamKey, setItem, StorageKey } from '../lib/storage';
+import {
+  ClientId,
+  getClientId,
+  getStreamKey,
+  setItem,
+  StreamKey,
+} from '../lib/storage';
 import { useViewer } from '../lib/viewer';
 
 const MonoscopicViewer = onTap(Viewer);
@@ -36,8 +41,8 @@ function Home(): JSX.Element {
         clientId
       )}&streamKey=${encodeURIComponent(streamKey)}`
     );
-    setItem(StorageKey.ClientId, clientId);
-    setItem(StorageKey.StreamKey, streamKey);
+    setItem(ClientId, clientId);
+    setItem(StreamKey, streamKey);
   }, [clientId, streamKey]);
 
   return (
@@ -76,7 +81,7 @@ function Home(): JSX.Element {
               streamKey={streamKey}
               viewer={viewerCtx.viewer}
               onSceneReady={viewerCtx.onSceneReady}
-              onSelect={async (hit?: vertexvis.protobuf.stream.IHit) => {
+              onSelect={async (hit) => {
                 const scene = await viewerCtx.viewer.current?.scene();
                 if (scene == null) return;
 
