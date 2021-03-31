@@ -1,6 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Dialog } from './Dialog';
-import { StreamCreds } from '../lib/types';
+
+export interface StreamCreds {
+  clientId: string;
+  streamKey: string;
+}
 
 interface Props {
   readonly creds: StreamCreds;
@@ -9,7 +13,7 @@ interface Props {
   readonly onConfirm: (creds: StreamCreds) => void;
 }
 
-export function LoadStreamKeyDialog({
+export function StreamCredsDialog({
   creds,
   open,
   onClose,
@@ -20,7 +24,7 @@ export function LoadStreamKeyDialog({
 
   useEffect(() => {
     if (creds.clientId || creds.streamKey) setInputCreds(creds);
-  }, [creds, setInputCreds]);
+  }, [creds]);
 
   return (
     <Dialog

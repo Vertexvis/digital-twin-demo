@@ -19,7 +19,7 @@ export function Panel({
           'h-80 w-full overflow-scroll z-overlay bg-white absolute inset-x-0 bottom-0'
         }
       >
-        <div className={'h-full w-full border-gray-300 shadow border-t'}>
+        <div className={'h-full w-full border-gray-300 border-t'}>
           {children}
         </div>
       </div>
@@ -32,7 +32,7 @@ export function Panel({
       })}
     >
       <div
-        className={cn('h-full w-80 overflow-visible bg-white', {
+        className={cn('h-full w-80 overflow-visible z-overlay bg-white', {
           ['right-0']: position === 'right',
           ['absolute']: overlay,
         })}

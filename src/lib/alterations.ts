@@ -1,14 +1,13 @@
 import { ColorMaterial, Scene } from '@vertexvis/viewer';
+import { SelectColor } from './colors';
 
-const SelectColor = {
-  ...ColorMaterial.create(255, 255, 0),
-  glossiness: 4,
-  specular: { r: 255, g: 255, b: 255, a: 0 },
-};
-
-export async function selectById(scene: Scene, itemId: string): Promise<void> {
+export async function selectById(
+  scene: Scene,
+  itemId: string,
+  suppliedId: string
+): Promise<void> {
   if (itemId) {
-    console.debug('Selected', itemId);
+    console.debug('Selected', itemId, suppliedId);
 
     await scene
       .items((op) => [
@@ -19,4 +18,22 @@ export async function selectById(scene: Scene, itemId: string): Promise<void> {
   } else {
     await scene.items((op) => op.where((q) => q.all()).deselect()).execute();
   }
+}
+
+export async function applyOrClearBySuppliedId(
+  scene: Scene,
+  ids: string[],
+  color: string,
+  apply: boolean
+): Promise<void> {
+  await scene
+    .items((op) => {
+      const w = op.where((q) => q.withSuppliedIds(ids));
+      return [
+        apply
+          ? w.materialOverride(ColorMaterial.fromHex(color))
+          : w.clearMaterialOverrides(),
+      ];
+    })
+    .execute();
 }

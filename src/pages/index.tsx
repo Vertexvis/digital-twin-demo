@@ -4,18 +4,21 @@ import React, { useEffect, useState } from 'react';
 import { DataSheet } from '../components/DataSheet';
 import { Header } from '../components/Header';
 import { Props as LayoutProps } from '../components/Layout';
-import { LoadStreamKeyDialog } from '../components/LoadStreamKeyDialog';
+import {
+  StreamCreds,
+  StreamCredsDialog,
+} from '../components/StreamCredsDialog';
 import { Panel } from '../components/Panel';
 import { Sidebar } from '../components/Sidebar';
 import { TimeSeriesPanel } from '../components/TimeSeriesPanel';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
-import { selectById } from '../lib/alterations';
+import { applyOrClearBySuppliedId, selectById } from '../lib/alterations';
 import { Env } from '../lib/env';
 import { waitForHydrate } from '../lib/nextjs';
 import { getStoredCreds, setStoredCreds } from '../lib/storage';
-import { StreamCreds } from '../lib/types';
 import { useViewer } from '../lib/viewer';
+import { getSensors } from '../lib/time-series';
 
 const MonoscopicViewer = onTap(Viewer);
 const Layout = dynamic<LayoutProps>(
@@ -30,13 +33,29 @@ function Home(): JSX.Element {
   const viewerCtx = useViewer();
 
   const [creds, setCreds] = useState<StreamCreds>({
-    clientId: queryId?.toString() || storedCreds.clientId,
-    streamKey: queryKey?.toString() || storedCreds.streamKey,
+    clientId:
+      queryId?.toString() ||
+      storedCreds.clientId ||
+      '08F675C4AACE8C0214362DB5EFD4FACAFA556D463ECA00877CB225157EF58BFA',
+    streamKey:
+      queryKey?.toString() ||
+      storedCreds.streamKey ||
+      'U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU',
   });
   const [dialogOpen, setDialogOpen] = useState(
     !creds.clientId || !creds.streamKey
   );
   const [panelOpen, setPanelOpen] = useState(false);
+
+  const { sensors, sensorIds } = getSensors();
+  const sensorsMeta = sensorIds.map((id) => sensors[id].meta);
+  const [selectedTs, setSelectedTs] = useState(
+    sensors[sensorIds[0]].data[0].timestamp
+  );
+  const [selectedSensor, setSelectedSensor] = useState(sensorsMeta[0].sensorId);
+  const [displayedSensors, setDisplayedSenors] = useState<Set<string>>(
+    new Set()
+  );
 
   useEffect(() => {
     router.push(
@@ -46,6 +65,43 @@ function Home(): JSX.Element {
     );
     setStoredCreds(creds);
   }, [creds]);
+
+  async function colorSelectedSensors(timestamp: string): Promise<void> {
+    const scene = await viewerCtx.viewer.current?.scene();
+    if (scene == null) return;
+
+    await Promise.all(
+      [...displayedSensors].map(async (sId) => {
+        const selectedMeta = sensors[sId].meta;
+        return await (selectedMeta.tsData
+          ? applyOrClearBySuppliedId(
+              scene,
+              selectedMeta.itemSuppliedIds ?? [],
+              selectedMeta.tsData[timestamp].color,
+              true
+            )
+          : Promise.resolve());
+      })
+    );
+  }
+
+  async function applyOrClearBySensorId(
+    sensorId: string,
+    apply: boolean
+  ): Promise<void> {
+    const scene = await viewerCtx.viewer.current?.scene();
+    if (scene == null) return;
+
+    const selectedMeta = sensors[sensorId].meta;
+    return await (selectedMeta.tsData
+      ? applyOrClearBySuppliedId(
+          scene,
+          selectedMeta.itemSuppliedIds ?? [],
+          selectedMeta.tsData[selectedTs].color,
+          apply
+        )
+      : Promise.resolve());
+  }
 
   return (
     <Layout title="Vertex Time Series Demo">
@@ -76,425 +132,47 @@ function Home(): JSX.Element {
                 const scene = await viewerCtx.viewer.current?.scene();
                 if (scene == null) return;
 
-                await selectById(scene, hit?.itemId?.hex ?? '');
+                await selectById(
+                  scene,
+                  hit?.itemId?.hex ?? '',
+                  hit?.itemSuppliedId?.value ?? ''
+                );
               }}
             />
           </div>
         )}
-        <Sidebar />
+        <Sidebar
+          onCheck={async (sensorId: string, checked: boolean) => {
+            checked
+              ? displayedSensors.add(sensorId)
+              : displayedSensors.delete(sensorId);
+            await applyOrClearBySensorId(sensorId, checked);
+            setDisplayedSenors(displayedSensors);
+          }}
+          onSelect={(sensorId: string) => {
+            setSelectedSensor(sensorId);
+          }}
+          selected={selectedSensor}
+          selectedTs={selectedTs}
+          sensorsMeta={sensorsMeta}
+        />
         {panelOpen && (
           <Panel position={'bottom'}>
             <div className="mx-2 my-1">
               <DataSheet
-                data={[
-                  {
-                    timestamp: '2021-01-02T08:50Z',
-                    sensor_id: '103',
-                    temp_avg: 14,
-                    temp_min: 14,
-                    temp_max: 14.18,
-                    temp_std: 0.0099999998,
-                  },
-                  {
-                    timestamp: '2021-01-02T14:00Z',
-                    sensor_id: '103',
-                    temp_avg: 14,
-                    temp_min: 14,
-                    temp_max: 14,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-02T14:30Z',
-                    sensor_id: '103',
-                    temp_avg: 14,
-                    temp_min: 14,
-                    temp_max: 14,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-02T15:40Z',
-                    sensor_id: '103',
-                    temp_avg: 14,
-                    temp_min: 14,
-                    temp_max: 14,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-02T23:40Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T02:10Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T00:40Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T13:30Z',
-                    sensor_id: '103',
-                    temp_avg: 14,
-                    temp_min: 13.82,
-                    temp_max: 14,
-                    temp_std: 0.0099999998,
-                  },
-                  {
-                    timestamp: '2021-01-03T04:20Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T05:10Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T07:00Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T19:00Z',
-                    sensor_id: '103',
-                    temp_avg: 12.7,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.38999999,
-                  },
-                  {
-                    timestamp: '2021-01-03T12:20Z',
-                    sensor_id: '103',
-                    temp_avg: 13.54,
-                    temp_min: 13,
-                    temp_max: 14,
-                    temp_std: 0.41,
-                  },
-                  {
-                    timestamp: '2021-01-03T12:40Z',
-                    sensor_id: '103',
-                    temp_avg: 14,
-                    temp_min: 14,
-                    temp_max: 14,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T22:20Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 12.94,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T14:50Z',
-                    sensor_id: '103',
-                    temp_avg: 13.1,
-                    temp_min: 13,
-                    temp_max: 14,
-                    temp_std: 0.23,
-                  },
-                  {
-                    timestamp: '2021-01-04T06:40Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T06:50Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-03T16:10Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13.83,
-                    temp_std: 0.050000001,
-                  },
-                  {
-                    timestamp: '2021-01-03T20:50Z',
-                    sensor_id: '103',
-                    temp_avg: 12.29,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.38,
-                  },
-                  {
-                    timestamp: '2021-01-04T16:20Z',
-                    sensor_id: '103',
-                    temp_avg: 12.58,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.38,
-                  },
-                  {
-                    timestamp: '2021-01-03T23:10Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T02:30Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T21:20Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T06:00Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T08:40Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T09:20Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T10:20Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-05T01:20Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-05T06:30Z',
-                    sensor_id: '103',
-                    temp_avg: 12.01,
-                    temp_min: 12,
-                    temp_max: 12.66,
-                    temp_std: 0.050000001,
-                  },
-                  {
-                    timestamp: '2021-01-04T12:30Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T13:50Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 13,
-                    temp_max: 13,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T20:50Z',
-                    sensor_id: '103',
-                    temp_avg: 12.03,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.12,
-                  },
-                  {
-                    timestamp: '2021-01-05T15:10Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-04T23:10Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-05T05:00Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-05T06:00Z',
-                    sensor_id: '103',
-                    temp_avg: 12.03,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.15000001,
-                  },
-                  {
-                    timestamp: '2021-01-05T08:10Z',
-                    sensor_id: '103',
-                    temp_avg: 12.04,
-                    temp_min: 12,
-                    temp_max: 12.96,
-                    temp_std: 0.15000001,
-                  },
-                  {
-                    timestamp: '2021-01-05T09:20Z',
-                    sensor_id: '103',
-                    temp_avg: 12.1,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.23999999,
-                  },
-                  {
-                    timestamp: '2021-01-05T13:50Z',
-                    sensor_id: '103',
-                    temp_avg: 12.53,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.44,
-                  },
-                  {
-                    timestamp: '2021-01-05T15:30Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-05T17:20Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-06T03:10Z',
-                    sensor_id: '103',
-                    temp_avg: 11.95,
-                    temp_min: 11,
-                    temp_max: 12,
-                    temp_std: 0.15000001,
-                  },
-                  {
-                    timestamp: '2021-01-06T03:30Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-06T04:00Z',
-                    sensor_id: '103',
-                    temp_avg: 11.99,
-                    temp_min: 11,
-                    temp_max: 12,
-                    temp_std: 0.059999999,
-                  },
-                  {
-                    timestamp: '2021-01-06T05:10Z',
-                    sensor_id: '103',
-                    temp_avg: 12,
-                    temp_min: 12,
-                    temp_max: 12,
-                    temp_std: 0,
-                  },
-                  {
-                    timestamp: '2021-01-06T12:50Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 12.88,
-                    temp_max: 13,
-                    temp_std: 0.0099999998,
-                  },
-                  {
-                    timestamp: '2021-01-06T13:20Z',
-                    sensor_id: '103',
-                    temp_avg: 13,
-                    temp_min: 12.7,
-                    temp_max: 13,
-                    temp_std: 0.0099999998,
-                  },
-                  {
-                    timestamp: '2021-01-02T22:30Z',
-                    sensor_id: '103',
-                    temp_avg: 13.62,
-                    temp_min: 13,
-                    temp_max: 14,
-                    temp_std: 0.41,
-                  },
-                  {
-                    timestamp: '2021-01-04T21:50Z',
-                    sensor_id: '103',
-                    temp_avg: 12.06,
-                    temp_min: 12,
-                    temp_max: 13,
-                    temp_std: 0.2,
-                  },
-                ]}
+                onSelect={async (timestamp: string) => {
+                  await colorSelectedSensors(timestamp);
+                  setSelectedTs(timestamp);
+                }}
+                sensor={sensors[selectedSensor]}
+                timestamp={selectedTs}
               />
             </div>
           </Panel>
         )}
       </div>
       {dialogOpen && (
-        <LoadStreamKeyDialog
+        <StreamCredsDialog
           creds={creds}
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}

@@ -1,34 +1,40 @@
+import cn from 'classnames';
+import { formatValue, Sensor } from '../lib/time-series';
+
 interface Props {
-  readonly data: {
-    timestamp: string;
-    sensor_id: string;
-    temp_avg: number;
-    temp_min: number;
-    temp_max: number;
-    temp_std: number;
-  }[];
+  readonly onSelect: (timestamp: string) => Promise<void>;
+  readonly sensor: Sensor;
+  readonly timestamp: string;
 }
 
-export function DataSheet({ data }: Props): JSX.Element {
+export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
   return (
     <table className="text-left w-full table-auto">
+      <caption className="text-xl">{sensor.meta.name}</caption>
       <thead>
         <tr>
-          <th>timestamp</th>
-          <th>temp_avg</th>
-          <th>temp_min</th>
-          <th>temp_max</th>
-          <th>temp_std</th>
+          <th>Timestamp</th>
+          <th>Minimum</th>
+          <th>Maximum</th>
+          <th>Average</th>
+          <th>Standard Deviation</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((v, i) => (
-          <tr className="hover:bg-gray-300 odd:bg-gray-100" key={i}>
+        {sensor.data.map((v, i) => (
+          <tr
+            className={cn('hover:bg-gray-300', {
+              ['bg-blue-300']: v.timestamp === timestamp,
+              ['odd:bg-gray-100']: v.timestamp !== timestamp,
+            })}
+            key={i}
+            onClick={() => onSelect(v.timestamp)}
+          >
             <td>{v.timestamp}</td>
-            <td>{v.temp_avg}</td>
-            <td>{v.temp_min}</td>
-            <td>{v.temp_max}</td>
-            <td>{v.temp_std}</td>
+            <td>{formatValue(v.min)}</td>
+            <td>{formatValue(v.max)}</td>
+            <td>{formatValue(v.avg)}</td>
+            <td>{formatValue(v.std)}</td>
           </tr>
         ))}
       </tbody>
