@@ -8,7 +8,7 @@ import React, {
   MutableRefObject,
   RefAttributes,
 } from 'react';
-import { StreamCreds } from '../lib/types';
+import { StreamCreds } from '../lib/storage';
 
 export interface ViewerProps extends ViewerJSX.VertexViewer {
   readonly creds: StreamCreds;

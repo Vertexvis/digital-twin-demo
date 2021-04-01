@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  ReactNode,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { ReactNode, useEffect, useCallback } from 'react';
 import { Icon } from './Icon';
 
 interface Props {
@@ -38,14 +33,14 @@ interface Props {
   readonly onBackdropClick?: VoidFunction;
 }
 
-export const Dialog: FunctionComponent<Props> = ({
+export function Dialog({
   children,
   footer,
   header,
   open,
   onClose,
   onBackdropClick,
-}: Props): JSX.Element => {
+}: Props): JSX.Element {
   const mainClass = `
     flex items-end justify-center 
     min-h-screen 
@@ -111,4 +106,4 @@ export const Dialog: FunctionComponent<Props> = ({
       </div>
     </div>
   );
-};
+}

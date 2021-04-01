@@ -4,19 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { DataSheet } from '../components/DataSheet';
 import { Header } from '../components/Header';
 import { Props as LayoutProps } from '../components/Layout';
-import {
-  StreamCreds,
-  StreamCredsDialog,
-} from '../components/StreamCredsDialog';
+import { StreamCredsDialog } from '../components/StreamCredsDialog';
 import { Panel } from '../components/Panel';
 import { Sidebar } from '../components/Sidebar';
 import { TimeSeriesPanel } from '../components/TimeSeriesPanel';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
-import { applyOrClearBySuppliedId, selectById } from '../lib/alterations';
+import { applyOrClearBySuppliedId, selectByHit } from '../lib/alterations';
 import { Env } from '../lib/env';
 import { waitForHydrate } from '../lib/nextjs';
-import { getStoredCreds, setStoredCreds } from '../lib/storage';
+import { getStoredCreds, setStoredCreds, StreamCreds } from '../lib/storage';
 import { useViewer } from '../lib/viewer';
 import { getSensors } from '../lib/time-series';
 
@@ -70,16 +67,17 @@ function Home(): JSX.Element {
     const scene = await viewerCtx.viewer.current?.scene();
     if (scene == null) return;
 
+    console.log(displayedSensors);
     await Promise.all(
       [...displayedSensors].map(async (sId) => {
         const selectedMeta = sensors[sId].meta;
         return await (selectedMeta.tsData
-          ? applyOrClearBySuppliedId(
+          ? applyOrClearBySuppliedId({
+              apply: true,
+              color: selectedMeta.tsData[timestamp].color,
               scene,
-              selectedMeta.itemSuppliedIds ?? [],
-              selectedMeta.tsData[timestamp].color,
-              true
-            )
+              suppliedIds: selectedMeta.itemSuppliedIds ?? [],
+            })
           : Promise.resolve());
       })
     );
@@ -94,12 +92,12 @@ function Home(): JSX.Element {
 
     const selectedMeta = sensors[sensorId].meta;
     return await (selectedMeta.tsData
-      ? applyOrClearBySuppliedId(
+      ? applyOrClearBySuppliedId({
+          apply,
+          color: selectedMeta.tsData[selectedTs].color,
           scene,
-          selectedMeta.itemSuppliedIds ?? [],
-          selectedMeta.tsData[selectedTs].color,
-          apply
-        )
+          suppliedIds: selectedMeta.itemSuppliedIds ?? [],
+        })
       : Promise.resolve());
   }
 
@@ -132,11 +130,7 @@ function Home(): JSX.Element {
                 const scene = await viewerCtx.viewer.current?.scene();
                 if (scene == null) return;
 
-                await selectById(
-                  scene,
-                  hit?.itemId?.hex ?? '',
-                  hit?.itemSuppliedId?.value ?? ''
-                );
+                await selectByHit({ hit, scene });
               }}
             />
           </div>
@@ -149,9 +143,7 @@ function Home(): JSX.Element {
             await applyOrClearBySensorId(sensorId, checked);
             setDisplayedSenors(displayedSensors);
           }}
-          onSelect={(sensorId: string) => {
-            setSelectedSensor(sensorId);
-          }}
+          onSelect={(sensorId) => setSelectedSensor(sensorId)}
           selected={selectedSensor}
           selectedTs={selectedTs}
           sensorsMeta={sensorsMeta}
@@ -160,7 +152,7 @@ function Home(): JSX.Element {
           <Panel position={'bottom'}>
             <div className="mx-2 my-1">
               <DataSheet
-                onSelect={async (timestamp: string) => {
+                onSelect={async (timestamp) => {
                   await colorSelectedSensors(timestamp);
                   setSelectedTs(timestamp);
                 }}

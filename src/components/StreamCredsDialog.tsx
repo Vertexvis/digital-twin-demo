@@ -1,10 +1,6 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { StreamCreds } from '../lib/storage';
 import { Dialog } from './Dialog';
-
-export interface StreamCreds {
-  clientId: string;
-  streamKey: string;
-}
 
 interface Props {
   readonly creds: StreamCreds;
@@ -60,12 +56,9 @@ export function StreamCredsDialog({
                 className="txt-input"
                 type="text"
                 value={inputCreds.clientId}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setInputCreds({
-                    ...inputCreds,
-                    clientId: event.target.value,
-                  });
-                }}
+                onChange={(e) =>
+                  setInputCreds({ ...inputCreds, clientId: e.target.value })
+                }
               />
             </div>
             <div className="py-2">
@@ -74,12 +67,9 @@ export function StreamCredsDialog({
                 className="txt-input"
                 type="text"
                 value={inputCreds.streamKey}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  setInputCreds({
-                    ...inputCreds,
-                    streamKey: event.target.value,
-                  });
-                }}
+                onChange={(e) =>
+                  setInputCreds({ ...inputCreds, streamKey: e.target.value })
+                }
               />
             </div>
           </>

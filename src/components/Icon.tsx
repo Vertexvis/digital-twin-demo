@@ -23,15 +23,17 @@ function getIcon(type: string): JSX.Element {
   }
 }
 
-const baseIcon = (icon: ReactNode): JSX.Element => (
-  <svg
-    className="fill-current"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 16 16"
-  >
-    {icon}
-  </svg>
-);
+function baseIcon(icon: ReactNode): JSX.Element {
+  return (
+    <svg
+      className="fill-current"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 16 16"
+    >
+      {icon}
+    </svg>
+  );
+}
 
 const caretRight = baseIcon(
   <path d="M10.83,7.63l-5-4.5a.5.5,0,0,0-.66.74L9.75,8,5.17,12.13a.5.5,0,1,0,.66.74l5-4.5a.49.49,0,0,0,0-.74Z" />

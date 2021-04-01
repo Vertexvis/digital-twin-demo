@@ -3,8 +3,8 @@ import React from 'react';
 import { Icon } from './Icon';
 
 interface Props {
-  isOpen: boolean;
-  onSelected: (isOpen: boolean) => void;
+  readonly isOpen: boolean;
+  readonly onSelected: (isOpen: boolean) => void;
 }
 
 export function TimeSeriesPanel({ isOpen, onSelected }: Props): JSX.Element {

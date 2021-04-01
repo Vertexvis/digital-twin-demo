@@ -10,11 +10,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "@vertexvis/frame-streaming-protos": "^0.4",
+    "@vertexvis/frame-streaming-protos": "^0.5",
     "@vertexvis/vertex-api-client": "^0.10",
     "@vertexvis/viewer": "^0.9.25-canary.2",
     "@vertexvis/viewer-react": "^0.9.25-canary.2",
-    "next": "10.1.1",
+    "classnames": "^2.3",
+    "next": "10.1",
     "react": "^17",
     "react-dom": "^17"
   },
@@ -26,7 +27,6 @@
     "@vertexvis/eslint-config-vertexvis-typescript": "^0.4",
     "@vertexvis/typescript-config-vertexvis": "^1.1",
     "autoprefixer": "^10.2",
-    "classnames": "^2.2",
     "eslint": "^7.23",
     "postcss": "^8.2",
     "prettier": "^2.2",
