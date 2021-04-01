@@ -369,9 +369,12 @@ const data: Sensors = {
 const sensorIds = Object.keys(data);
 
 const sensorToItemSuppliedId: { [sensorId: string]: string[] } = {
-  '1': ['r/5'],
-  '2': ['r/3', 'r/6'],
-  '3': ['r/9', 'r/10'],
+  // '1': ['r/5'],
+  // '2': ['r/3', 'r/6'],
+  // '3': ['r/9', 'r/10'],
+  '1': ['200050'],
+  '2': ['200030', '200060'],
+  '3': ['200090', '200100'],
 };
 
 export function getSensors(): { sensors: Sensors; sensorIds: string[] } {

@@ -67,7 +67,6 @@ function Home(): JSX.Element {
     const scene = await viewerCtx.viewer.current?.scene();
     if (scene == null) return;
 
-    console.log(displayedSensors);
     await Promise.all(
       [...displayedSensors].map(async (sId) => {
         const selectedMeta = sensors[sId].meta;
