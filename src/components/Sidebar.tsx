@@ -29,7 +29,7 @@ export function Sidebar({
             <thead>
               <tr>
                 <th className="w-1/6"></th>
-                <th className="w-2/6">ID</th>
+                <th className="w-2/6">Value</th>
                 <th className="w-3/6">Name</th>
               </tr>
             </thead>

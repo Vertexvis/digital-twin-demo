@@ -126,11 +126,16 @@ function Home(): JSX.Element {
     });
   }
 
-  async function hideAll(): Promise<void> {
+  async function all({ show }: { show: boolean }): Promise<void> {
     const scene = await viewerCtx.viewer.current?.scene();
     if (scene == null) return;
 
-    await scene.items((op) => [op.where((q) => q.all()).hide()]).execute();
+    await scene
+      .items((op) => {
+        const w = op.where((q) => q.all());
+        return [show ? w.show() : w.hide()];
+      })
+      .execute();
   }
 
   return (
@@ -157,10 +162,7 @@ function Home(): JSX.Element {
               configEnv={Env}
               creds={creds}
               viewer={viewerCtx.viewer}
-              onSceneReady={async () => {
-                await viewerCtx.onSceneReady();
-                await hideAll();
-              }}
+              onSceneReady={() => viewerCtx.onSceneReady()}
               onSelect={async (hit) => {
                 const scene = await viewerCtx.viewer.current?.scene();
                 if (scene == null) return;
@@ -181,6 +183,8 @@ function Home(): JSX.Element {
           onCheck={async (sensorId: string, checked: boolean) => {
             const upd = new Set(displayedSensors);
             checked ? upd.add(sensorId) : upd.delete(sensorId);
+            if (upd.size === 1) await all({ show: false });
+            else if (upd.size === 0) all({ show: true });
             setDisplayedSenors(upd);
             await applyAndShowOrHideBySensorId(sensorId, checked);
           }}
