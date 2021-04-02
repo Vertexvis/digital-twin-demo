@@ -10,7 +10,11 @@ import { Sidebar } from '../components/Sidebar';
 import { TimeSeriesPanel } from '../components/TimeSeriesPanel';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
-import { applyOrClearBySuppliedId, selectByHit } from '../lib/alterations';
+import {
+  applyGroupsBySuppliedIds,
+  applyAndShowOrHideBySuppliedIds,
+  selectByHit,
+} from '../lib/alterations';
 import { Env } from '../lib/env';
 import { waitForHydrate } from '../lib/nextjs';
 import { getStoredCreds, setStoredCreds, StreamCreds } from '../lib/storage';
@@ -27,6 +31,8 @@ function Home(): JSX.Element {
   const router = useRouter();
   const { clientId: queryId, streamKey: queryKey } = router.query;
   const storedCreds = getStoredCreds();
+  const { sensors, sensorIds } = getSensors();
+  const sensorsMeta = sensorIds.map((id) => sensors[id].meta);
   const viewerCtx = useViewer();
 
   const [creds, setCreds] = useState<StreamCreds>({
@@ -43,9 +49,6 @@ function Home(): JSX.Element {
     !creds.clientId || !creds.streamKey
   );
   const [panelOpen, setPanelOpen] = useState(false);
-
-  const { sensors, sensorIds } = getSensors();
-  const sensorsMeta = sensorIds.map((id) => sensors[id].meta);
   const [selectedTs, setSelectedTs] = useState(
     sensors[sensorIds[0]].data[0].timestamp
   );
@@ -53,6 +56,7 @@ function Home(): JSX.Element {
   const [displayedSensors, setDisplayedSenors] = useState<Set<string>>(
     new Set()
   );
+  const [altDown, setAltDown] = useState(false);
 
   useEffect(() => {
     router.push(
@@ -63,26 +67,31 @@ function Home(): JSX.Element {
     setStoredCreds(creds);
   }, [creds]);
 
-  async function colorSelectedSensors(timestamp: string): Promise<void> {
-    const scene = await viewerCtx.viewer.current?.scene();
-    if (scene == null) return;
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return function cleanup() {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  });
 
-    await Promise.all(
-      [...displayedSensors].map(async (sId) => {
-        const selectedMeta = sensors[sId].meta;
-        return await (selectedMeta.tsData
-          ? applyOrClearBySuppliedId({
-              apply: true,
-              color: selectedMeta.tsData[timestamp].color,
-              scene,
-              suppliedIds: selectedMeta.itemSuppliedIds ?? [],
-            })
-          : Promise.resolve());
-      })
-    );
+  function handleKeyDown(event: KeyboardEvent): void {
+    setAltDown(event.altKey);
   }
 
-  async function applyOrClearBySensorId(
+  function handleKeyUp(): void {
+    setAltDown(false);
+  }
+
+  // TODO
+  // Chart each sensor's data
+  // Switch between assets
+  // Fault codes alerts in sidebar, clicking goes to timestamp
+  // Left/right arrows at top
+  //
+  // How to swap out data once deployed
+  async function applyAndShowOrHideBySensorId(
     sensorId: string,
     apply: boolean
   ): Promise<void> {
@@ -90,14 +99,38 @@ function Home(): JSX.Element {
     if (scene == null) return;
 
     const selectedMeta = sensors[sensorId].meta;
-    return await (selectedMeta.tsData
-      ? applyOrClearBySuppliedId({
-          apply,
-          color: selectedMeta.tsData[selectedTs].color,
-          scene,
-          suppliedIds: selectedMeta.itemSuppliedIds ?? [],
-        })
-      : Promise.resolve());
+    await applyAndShowOrHideBySuppliedIds({
+      apply,
+      group: {
+        color: selectedMeta.tsData[selectedTs].color,
+        suppliedIds: selectedMeta.itemSuppliedIds,
+      },
+      scene,
+    });
+  }
+
+  async function colorSelectedSensors(timestamp: string): Promise<void> {
+    const scene = await viewerCtx.viewer.current?.scene();
+    if (scene == null || displayedSensors.size === 0) return;
+
+    await applyGroupsBySuppliedIds({
+      apply: true,
+      groups: [...displayedSensors].map((sId) => {
+        const selectedMeta = sensors[sId].meta;
+        return {
+          color: selectedMeta.tsData[timestamp].color,
+          suppliedIds: selectedMeta.itemSuppliedIds,
+        };
+      }),
+      scene,
+    });
+  }
+
+  async function hideAll(): Promise<void> {
+    const scene = await viewerCtx.viewer.current?.scene();
+    if (scene == null) return;
+
+    await scene.items((op) => [op.where((q) => q.all()).hide()]).execute();
   }
 
   return (
@@ -124,32 +157,54 @@ function Home(): JSX.Element {
               configEnv={Env}
               creds={creds}
               viewer={viewerCtx.viewer}
-              onSceneReady={viewerCtx.onSceneReady}
+              onSceneReady={async () => {
+                await viewerCtx.onSceneReady();
+                await hideAll();
+              }}
               onSelect={async (hit) => {
                 const scene = await viewerCtx.viewer.current?.scene();
                 if (scene == null) return;
 
                 await selectByHit({ hit, scene });
               }}
+              streamAttributes={{
+                experimentalGhosting: {
+                  enabled: { value: true },
+                  opacity: { value: 0.7 },
+                },
+              }}
             />
           </div>
         )}
         <Sidebar
+          displayed={displayedSensors}
           onCheck={async (sensorId: string, checked: boolean) => {
-            checked
-              ? displayedSensors.add(sensorId)
-              : displayedSensors.delete(sensorId);
-            await applyOrClearBySensorId(sensorId, checked);
-            setDisplayedSenors(displayedSensors);
+            const upd = new Set(displayedSensors);
+            checked ? upd.add(sensorId) : upd.delete(sensorId);
+            setDisplayedSenors(upd);
+            await applyAndShowOrHideBySensorId(sensorId, checked);
           }}
-          onSelect={(sensorId) => setSelectedSensor(sensorId)}
+          onSelect={async (sensorId) => {
+            setSelectedSensor(sensorId);
+            if (displayedSensors.has(sensorId) && altDown) {
+              const scene = await viewerCtx.viewer.current?.scene();
+              if (scene == null) return;
+
+              await scene
+                .camera()
+                .flyTo({
+                  itemSuppliedId: sensors[sensorId].meta.itemSuppliedIds[0],
+                })
+                .render({ animation: { milliseconds: 1500 } });
+            }
+          }}
           selected={selectedSensor}
           selectedTs={selectedTs}
           sensorsMeta={sensorsMeta}
         />
         {panelOpen && (
           <Panel position={'bottom'}>
-            <div className="mx-2 my-1">
+            <div className="w-full h-full">
               <DataSheet
                 onSelect={async (timestamp) => {
                   await colorSelectedSensors(timestamp);
@@ -166,7 +221,10 @@ function Home(): JSX.Element {
         <StreamCredsDialog
           creds={creds}
           open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
+          onClose={() => {
+            setDisplayedSenors(new Set());
+            setDialogOpen(false);
+          }}
           onConfirm={(creds) => {
             setCreds(creds);
             setDialogOpen(false);

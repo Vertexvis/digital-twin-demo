@@ -9,7 +9,7 @@ import {
 
 export interface ViewerContext {
   readonly viewer: MutableRefObject<HTMLVertexViewerElement | null>;
-  readonly onSceneReady: () => void;
+  readonly onSceneReady: () => Promise<void>;
   readonly viewerState: ViewerState;
 }
 
@@ -33,9 +33,7 @@ export function useViewer(): ViewerContext {
       setState({ ...(state ?? {}), isReady: true });
     }
 
-    if (!state.isReady) {
-      setup();
-    }
+    if (!state.isReady) setup();
   }, [state]);
 
   return { viewer: ref, viewerState: state, onSceneReady };

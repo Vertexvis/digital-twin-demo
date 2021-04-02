@@ -10,6 +10,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@nivo/core": "^0.67.0",
+    "@nivo/line": "^0.67.0",
     "@vertexvis/frame-streaming-protos": "^0.5",
     "@vertexvis/vertex-api-client": "^0.10",
     "@vertexvis/viewer": "^0.9.25-canary.2",

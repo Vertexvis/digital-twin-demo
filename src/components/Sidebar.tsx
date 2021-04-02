@@ -5,14 +5,16 @@ import { Collapsible } from './Collapsible';
 import { Panel } from './Panel';
 
 interface Props {
+  readonly displayed: Set<string>;
   readonly onCheck: (sensorId: string, checked: boolean) => Promise<void>;
-  readonly onSelect: (sensorId: string) => void;
+  readonly onSelect: (sensorId: string) => Promise<void>;
   readonly selected: string;
   readonly selectedTs: string;
   readonly sensorsMeta: SensorMeta[];
 }
 
 export function Sidebar({
+  displayed,
   onCheck,
   onSelect,
   selected,
@@ -21,7 +23,7 @@ export function Sidebar({
 }: Props): JSX.Element {
   return (
     <Panel position="right">
-      <div className="w-full px-2 border-b text-gray-700">
+      <div className="w-full pr-2 border-b text-gray-700">
         <Collapsible title="SENSORS">
           <table className="text-left mb-4 w-full table-fixed">
             <thead>
@@ -49,7 +51,7 @@ export function Sidebar({
                       <input
                         className="rounded-sm ml-4 mb-1"
                         type="checkbox"
-                        checked={s.display}
+                        checked={displayed.has(s.sensorId)}
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => onCheck(s.sensorId, e.target.checked)}
                       />

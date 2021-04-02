@@ -1,5 +1,7 @@
 import cn from 'classnames';
+import React from 'react';
 import { formatValue, Sensor } from '../lib/time-series';
+import { Chart } from './Chart';
 
 interface Props {
   readonly onSelect: (timestamp: string) => Promise<void>;
@@ -8,8 +10,10 @@ interface Props {
 }
 
 export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
-  return (
-    <table className="text-left w-full table-auto">
+  return false ? (
+    <Chart />
+  ) : (
+    <table className="mx-2 text-left w-full table-auto">
       <caption className="text-xl">{sensor.meta.name}</caption>
       <thead>
         <tr>
@@ -21,22 +25,25 @@ export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
         </tr>
       </thead>
       <tbody>
-        {sensor.data.map((v, i) => (
-          <tr
-            className={cn('hover:bg-gray-300', {
-              ['bg-blue-300']: v.timestamp === timestamp,
-              ['odd:bg-gray-100']: v.timestamp !== timestamp,
-            })}
-            key={i}
-            onClick={() => onSelect(v.timestamp)}
-          >
-            <td>{v.timestamp}</td>
-            <td>{formatValue(v.min)}</td>
-            <td>{formatValue(v.max)}</td>
-            <td>{formatValue(v.avg)}</td>
-            <td>{formatValue(v.std)}</td>
-          </tr>
-        ))}
+        {sensor.data.map((v, i) => {
+          const tsEq = v.timestamp === timestamp;
+          return (
+            <tr
+              className={cn('hover:bg-gray-300', {
+                ['bg-blue-300']: tsEq,
+                ['odd:bg-gray-100']: !tsEq,
+              })}
+              key={i}
+              onClick={() => onSelect(v.timestamp)}
+            >
+              <td>{v.timestamp}</td>
+              <td>{formatValue(v.min)}</td>
+              <td>{formatValue(v.max)}</td>
+              <td>{formatValue(v.avg)}</td>
+              <td>{formatValue(v.std)}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
