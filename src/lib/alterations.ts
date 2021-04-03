@@ -7,20 +7,20 @@ export interface ColorGroup {
   readonly suppliedIds: string[];
 }
 
-interface ApplyArgs {
+interface ApplyReq {
   readonly apply: boolean;
   readonly scene: Scene;
 }
 
-interface ApplyGroupsBySuppliedIdsArgs extends ApplyArgs {
+interface ApplyGroupsBySuppliedIdsReq extends ApplyReq {
   readonly groups: ColorGroup[];
 }
 
-interface ApplyOrClearBySuppliedIdsArgs extends ApplyArgs {
+interface ApplyOrClearBySuppliedIdsReq extends ApplyReq {
   group: ColorGroup;
 }
 
-interface SelectByHitArgs {
+interface SelectByHitReq {
   readonly hit?: vertexvis.protobuf.stream.IHit;
   readonly scene: Scene;
 }
@@ -29,7 +29,7 @@ export async function applyGroupsBySuppliedIds({
   apply,
   groups,
   scene,
-}: ApplyGroupsBySuppliedIdsArgs): Promise<void> {
+}: ApplyGroupsBySuppliedIdsReq): Promise<void> {
   await scene
     .items((op) =>
       groups.map((g) => {
@@ -46,7 +46,7 @@ export async function applyAndShowOrHideBySuppliedIds({
   apply,
   group: { color, suppliedIds },
   scene,
-}: ApplyOrClearBySuppliedIdsArgs): Promise<void> {
+}: ApplyOrClearBySuppliedIdsReq): Promise<void> {
   await scene
     .items((op) => {
       const w = op.where((q) => q.withSuppliedIds(suppliedIds));
@@ -60,7 +60,7 @@ export async function applyAndShowOrHideBySuppliedIds({
 export async function selectByHit({
   hit,
   scene,
-}: SelectByHitArgs): Promise<void> {
+}: SelectByHitReq): Promise<void> {
   const id = hit?.itemId?.hex;
   const suppliedId = hit?.itemSuppliedId?.value;
   if (id) {

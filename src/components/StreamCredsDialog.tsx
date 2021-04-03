@@ -16,7 +16,7 @@ export function StreamCredsDialog({
   onConfirm,
 }: Props): JSX.Element {
   const [inputCreds, setInputCreds] = useState<StreamCreds>(creds);
-  const handleDialogClose = (): void => onClose();
+  const handleClose = (): void => onClose();
 
   useEffect(() => {
     if (creds.clientId || creds.streamKey) setInputCreds(creds);
@@ -38,13 +38,13 @@ export function StreamCredsDialog({
           >
             Open Scene
           </button>
-          <button className="btn btn-secondary" onClick={handleDialogClose}>
+          <button className="btn btn-secondary" onClick={handleClose}>
             Cancel
           </button>
         </>
       }
       open={open}
-      onClose={handleDialogClose}
+      onClose={handleClose}
     >
       <div data-testid="dialog-content">
         {

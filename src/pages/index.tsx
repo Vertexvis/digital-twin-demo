@@ -6,8 +6,8 @@ import { Header } from '../components/Header';
 import { Props as LayoutProps } from '../components/Layout';
 import { StreamCredsDialog } from '../components/StreamCredsDialog';
 import { Panel } from '../components/Panel';
-import { Sidebar } from '../components/Sidebar';
-import { TimeSeriesPanel } from '../components/TimeSeriesPanel';
+import { RightSidebar } from '../components/RightSidebar';
+import { LeftSidebar } from '../components/LeftSidebar';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
 import {
@@ -153,7 +153,7 @@ function Home(): JSX.Element {
         </Header>
       </div>
       <div className="row-start-2 row-span-full col-span-1">
-        <TimeSeriesPanel isOpen={panelOpen} onSelected={setPanelOpen} />
+        <LeftSidebar isOpen={panelOpen} onSelected={setPanelOpen} />
       </div>
       <div className="flex w-full row-start-2 row-span-full col-start-2 col-span-full">
         {!dialogOpen && viewerCtx.viewerState.isReady && (
@@ -178,7 +178,7 @@ function Home(): JSX.Element {
             />
           </div>
         )}
-        <Sidebar
+        <RightSidebar
           displayed={displayedSensors}
           onCheck={async (sensorId: string, checked: boolean) => {
             const upd = new Set(displayedSensors);
@@ -229,8 +229,8 @@ function Home(): JSX.Element {
             setDisplayedSenors(new Set());
             setDialogOpen(false);
           }}
-          onConfirm={(creds) => {
-            setCreds(creds);
+          onConfirm={(cs) => {
+            setCreds(cs);
             setDialogOpen(false);
           }}
         />

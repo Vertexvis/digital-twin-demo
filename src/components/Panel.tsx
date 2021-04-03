@@ -12,35 +12,32 @@ export function Panel({
   position = 'left',
   overlay = true,
 }: Props): JSX.Element {
-  return position === 'bottom' ? (
-    <div className={'flex'}>
-      <div
-        className={
-          'h-80 w-full overflow-scroll z-overlay bg-white absolute inset-x-0 bottom-0'
-        }
-      >
-        <div className={'h-full w-full border-gray-300 border-t'}>
-          {children}
-        </div>
-      </div>
-    </div>
-  ) : (
+  const isBottom = position === 'bottom';
+  const isLeft = position === 'left';
+  const isRight = position === 'right';
+
+  return (
     <div
-      className={cn('relative', {
-        ['ml-auto']: position === 'right',
+      className={cn({
+        ['flex']: isBottom,
+        ['relative']: isLeft,
+        ['relative ml-auto']: isRight,
         ['w-0 flex-shrink-0 overflow-visible']: overlay,
       })}
     >
       <div
-        className={cn('h-full w-80 overflow-visible z-overlay bg-white', {
-          ['right-0']: position === 'right',
+        className={cn('z-overlay bg-white', {
+          ['h-80 w-full overflow-scroll absolute inset-x-0 bottom-0']: isBottom,
+          ['h-full w-80 overflow-visible']: isLeft,
+          ['h-full w-80 overflow-visible right-0']: isRight,
           ['absolute']: overlay,
         })}
       >
         <div
-          className={cn('h-full w-full border-gray-300 shadow', {
-            ['border-r']: position === 'left',
-            ['border-l']: position === 'right',
+          className={cn('h-full w-full border-gray-300', {
+            ['border-t']: isBottom,
+            ['border-r shadow']: isLeft,
+            ['border-l shadow']: isRight,
           })}
         >
           {children}

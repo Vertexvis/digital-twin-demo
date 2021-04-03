@@ -13,7 +13,7 @@ interface Props {
   readonly sensorsMeta: SensorMeta[];
 }
 
-export function Sidebar({
+export function RightSidebar({
   displayed,
   onCheck,
   onSelect,
@@ -22,7 +22,7 @@ export function Sidebar({
   sensorsMeta,
 }: Props): JSX.Element {
   return (
-    <Panel position="right">
+    <Panel position="right" overlay={false}>
       <div className="w-full pr-2 border-b text-gray-700">
         <Collapsible title="SENSORS">
           <table className="text-left mb-4 w-full table-fixed">
