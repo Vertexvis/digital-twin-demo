@@ -53,10 +53,8 @@ export function Dialog({
     return <div data-testid="empty-common-dialog" />;
   }
 
-  const escFunction = useCallback((event) => {
-    if (event.keyCode === 27) {
-      onClose();
-    }
+  const escFunction = useCallback((e) => {
+    if (e.keyCode === 27) onClose();
   }, []);
 
   useEffect(() => {

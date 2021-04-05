@@ -2,14 +2,17 @@ import { vertexvis } from '@vertexvis/frame-streaming-protos';
 import { ColorMaterial, Scene } from '@vertexvis/viewer';
 import { SelectColor } from './colors';
 
+export interface SceneReq {
+  readonly scene?: Scene;
+}
+
 export interface ColorGroup {
   readonly color: string;
   readonly suppliedIds: string[];
 }
 
-interface ApplyReq {
+interface ApplyReq extends SceneReq {
   readonly apply: boolean;
-  readonly scene: Scene;
 }
 
 interface ApplyGroupsBySuppliedIdsReq extends ApplyReq {
@@ -20,9 +23,8 @@ interface ApplyOrClearBySuppliedIdsReq extends ApplyReq {
   group: ColorGroup;
 }
 
-interface SelectByHitReq {
+interface SelectByHitReq extends SceneReq {
   readonly hit?: vertexvis.protobuf.stream.IHit;
-  readonly scene: Scene;
 }
 
 export async function applyGroupsBySuppliedIds({
@@ -30,6 +32,8 @@ export async function applyGroupsBySuppliedIds({
   groups,
   scene,
 }: ApplyGroupsBySuppliedIdsReq): Promise<void> {
+  if (scene == null) return;
+
   await scene
     .items((op) =>
       groups.map((g) => {
@@ -47,6 +51,8 @@ export async function applyAndShowOrHideBySuppliedIds({
   group: { color, suppliedIds },
   scene,
 }: ApplyOrClearBySuppliedIdsReq): Promise<void> {
+  if (scene == null) return;
+
   await scene
     .items((op) => {
       const w = op.where((q) => q.withSuppliedIds(suppliedIds));
@@ -57,10 +63,16 @@ export async function applyAndShowOrHideBySuppliedIds({
     .execute();
 }
 
+export async function hideAll({ scene }: SceneReq): Promise<void> {
+  return all({ show: false, scene });
+}
+
 export async function selectByHit({
   hit,
   scene,
 }: SelectByHitReq): Promise<void> {
+  if (scene == null) return;
+
   const id = hit?.itemId?.hex;
   const suppliedId = hit?.itemSuppliedId?.value;
   if (id) {
@@ -75,4 +87,22 @@ export async function selectByHit({
   } else {
     await scene.items((op) => op.where((q) => q.all()).deselect()).execute();
   }
+}
+
+export async function showAll({ scene }: SceneReq): Promise<void> {
+  return all({ show: true, scene });
+}
+
+async function all({
+  show,
+  scene,
+}: SceneReq & { show: boolean }): Promise<void> {
+  if (scene == null) return;
+
+  await scene
+    .items((op) => {
+      const w = op.where((q) => q.all());
+      return [show ? w.show() : w.hide()];
+    })
+    .execute();
 }

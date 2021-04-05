@@ -43,7 +43,7 @@ export function Collapsible({ title, children }: Props): JSX.Element {
         data-testid="expand-content"
         ref={contentRef}
         style={{ maxHeight: open ? `${maxHeight}px` : '0' }}
-        className="origin-top duration-200 ease-in-out overflow-hidden pl-2"
+        className="origin-top duration-200 ease-in-out overflow-y-hidden pl-2"
       >
         {children}
       </div>

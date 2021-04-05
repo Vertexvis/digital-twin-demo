@@ -1,7 +1,6 @@
 import { vertexvis } from '@vertexvis/frame-streaming-protos';
 import { VertexViewer, JSX as ViewerJSX } from '@vertexvis/viewer-react';
 import { Environment } from '@vertexvis/viewer/dist/types/config/environment';
-import { TapEventDetails } from '@vertexvis/viewer/dist/types/interactions/tapEventDetails';
 import React, {
   ComponentType,
   FunctionComponent,
@@ -45,17 +44,17 @@ export function onTap<P extends ViewerProps>(
       <WrappedViewer
         viewer={viewer}
         {...props}
-        onTap={async (event: CustomEvent<TapEventDetails>) => {
-          if (props.onTap) {
-            props.onTap(event);
-          }
+        onTap={async (e) => {
+          if (props.onTap) props.onTap(e);
 
-          if (!event.defaultPrevented) {
+          if (!e.defaultPrevented) {
             const scene = await viewer.current?.scene();
             const raycaster = scene?.raycaster();
 
             if (raycaster != null) {
-              const res = await raycaster.hitItems(event.detail.position);
+              const res = await raycaster.hitItems(e.detail.position, {
+                includeMetadata: true,
+              });
               const hit = (res?.hits ?? [])[0];
               onSelect(hit);
             }

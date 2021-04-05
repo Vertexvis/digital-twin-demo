@@ -14,12 +14,16 @@ import {
   applyGroupsBySuppliedIds,
   applyAndShowOrHideBySuppliedIds,
   selectByHit,
-} from '../lib/alterations';
+  hideAll,
+  showAll,
+} from '../lib/scene-items';
 import { Env } from '../lib/env';
 import { waitForHydrate } from '../lib/nextjs';
 import { getStoredCreds, setStoredCreds, StreamCreds } from '../lib/storage';
 import { useViewer } from '../lib/viewer';
 import { getSensors } from '../lib/time-series';
+import { flyToSuppliedId } from '../lib/scene-camera';
+import { Properties, toProperties } from '../lib/metadata';
 
 const MonoscopicViewer = onTap(Viewer);
 const Layout = dynamic<LayoutProps>(
@@ -53,9 +57,10 @@ function Home(): JSX.Element {
     sensors[sensorIds[0]].data[0].timestamp
   );
   const [selectedSensor, setSelectedSensor] = useState(sensorsMeta[0].sensorId);
-  const [displayedSensors, setDisplayedSenors] = useState<Set<string>>(
+  const [displayedSensors, setDisplayedSensors] = useState<Set<string>>(
     new Set()
   );
+  const [itemProperties, setItemProperties] = useState<Properties>({});
   const [altDown, setAltDown] = useState(false);
 
   useEffect(() => {
@@ -86,18 +91,13 @@ function Home(): JSX.Element {
 
   // TODO
   // Chart each sensor's data
+  // Metadata
   // Switch between assets
   // Fault codes alerts in sidebar, clicking goes to timestamp
-  // Left/right arrows at top
-  //
-  // How to swap out data once deployed
   async function applyAndShowOrHideBySensorId(
     sensorId: string,
     apply: boolean
   ): Promise<void> {
-    const scene = await viewerCtx.viewer.current?.scene();
-    if (scene == null) return;
-
     const selectedMeta = sensors[sensorId].meta;
     await applyAndShowOrHideBySuppliedIds({
       apply,
@@ -105,13 +105,12 @@ function Home(): JSX.Element {
         color: selectedMeta.tsData[selectedTs].color,
         suppliedIds: selectedMeta.itemSuppliedIds,
       },
-      scene,
+      scene: await viewerCtx.viewer.current?.scene(),
     });
   }
 
   async function colorSelectedSensors(timestamp: string): Promise<void> {
-    const scene = await viewerCtx.viewer.current?.scene();
-    if (scene == null || displayedSensors.size === 0) return;
+    if (displayedSensors.size === 0) return;
 
     await applyGroupsBySuppliedIds({
       apply: true,
@@ -122,20 +121,8 @@ function Home(): JSX.Element {
           suppliedIds: selectedMeta.itemSuppliedIds,
         };
       }),
-      scene,
+      scene: await viewerCtx.viewer.current?.scene(),
     });
-  }
-
-  async function all({ show }: { show: boolean }): Promise<void> {
-    const scene = await viewerCtx.viewer.current?.scene();
-    if (scene == null) return;
-
-    await scene
-      .items((op) => {
-        const w = op.where((q) => q.all());
-        return [show ? w.show() : w.hide()];
-      })
-      .execute();
   }
 
   return (
@@ -164,10 +151,12 @@ function Home(): JSX.Element {
               viewer={viewerCtx.viewer}
               onSceneReady={() => viewerCtx.onSceneReady()}
               onSelect={async (hit) => {
-                const scene = await viewerCtx.viewer.current?.scene();
-                if (scene == null) return;
-
-                await selectByHit({ hit, scene });
+                const md = hit?.metadata;
+                setItemProperties(md ? toProperties({ metadata: md }) : {});
+                return await selectByHit({
+                  hit,
+                  scene: await viewerCtx.viewer.current?.scene(),
+                });
               }}
               streamAttributes={{
                 experimentalGhosting: {
@@ -181,30 +170,30 @@ function Home(): JSX.Element {
         <RightSidebar
           displayed={displayedSensors}
           onCheck={async (sensorId: string, checked: boolean) => {
+            const scene = await viewerCtx.viewer.current?.scene();
             const upd = new Set(displayedSensors);
+
             checked ? upd.add(sensorId) : upd.delete(sensorId);
-            if (upd.size === 1) await all({ show: false });
-            else if (upd.size === 0) all({ show: true });
-            setDisplayedSenors(upd);
+            setDisplayedSensors(upd);
+
+            if (displayedSensors.size === 0 && upd.size === 1) {
+              await hideAll({ scene });
+            } else if (upd.size === 0) await showAll({ scene });
             await applyAndShowOrHideBySensorId(sensorId, checked);
           }}
           onSelect={async (sensorId) => {
             setSelectedSensor(sensorId);
             if (displayedSensors.has(sensorId) && altDown) {
-              const scene = await viewerCtx.viewer.current?.scene();
-              if (scene == null) return;
-
-              await scene
-                .camera()
-                .flyTo({
-                  itemSuppliedId: sensors[sensorId].meta.itemSuppliedIds[0],
-                })
-                .render({ animation: { milliseconds: 1500 } });
+              flyToSuppliedId({
+                scene: await viewerCtx.viewer.current?.scene(),
+                suppliedId: sensors[sensorId].meta.itemSuppliedIds[0],
+              });
             }
           }}
           selected={selectedSensor}
           selectedTs={selectedTs}
           sensorsMeta={sensorsMeta}
+          itemProperties={itemProperties}
         />
         {panelOpen && (
           <Panel position={'bottom'}>
@@ -226,7 +215,7 @@ function Home(): JSX.Element {
           creds={creds}
           open={dialogOpen}
           onClose={() => {
-            setDisplayedSenors(new Set());
+            setDisplayedSensors(new Set());
             setDialogOpen(false);
           }}
           onConfirm={(cs) => {
