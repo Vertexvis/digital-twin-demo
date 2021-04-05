@@ -6,23 +6,27 @@ import { Collapsible } from './Collapsible';
 import { Panel } from './Panel';
 
 interface Props {
-  readonly displayed: Set<string>;
-  readonly onCheck: (sensorId: string, checked: boolean) => Promise<void>;
-  readonly onSelect: (sensorId: string) => Promise<void>;
-  readonly selected: string;
-  readonly selectedTs: string;
-  readonly sensorsMeta: SensorMeta[];
+  readonly assets: {
+    readonly list: string[];
+    readonly onSelect: (asset: string) => Promise<void>;
+    readonly selected: string;
+  };
   readonly itemProperties: Properties;
+  readonly selectedTs: string;
+  readonly sensors: {
+    readonly displayed: Set<string>;
+    readonly list: SensorMeta[];
+    readonly onCheck: (sensorId: string, checked: boolean) => Promise<void>;
+    readonly onSelect: (sensorId: string) => Promise<void>;
+    readonly selected: string;
+  };
 }
 
 export function RightSidebar({
-  displayed,
-  onCheck,
-  onSelect,
-  selected,
-  selectedTs,
-  sensorsMeta,
+  assets,
   itemProperties,
+  selectedTs,
+  sensors,
 }: Props): JSX.Element {
   const propKeys = Object.keys(itemProperties);
 
@@ -39,7 +43,8 @@ export function RightSidebar({
               </tr>
             </thead>
             <tbody>
-              {sensorsMeta.map((s) => {
+              {sensors.list.map((s) => {
+                const isSelected = s.sensorId === sensors.selected;
                 const tsd = s.tsData
                   ? s.tsData[selectedTs]
                   : { color: '#fff', value: 0 };
@@ -47,18 +52,20 @@ export function RightSidebar({
                   <tr
                     key={s.sensorId}
                     className={cn('hover:bg-gray-300', {
-                      ['bg-blue-300']: s.sensorId === selected,
-                      ['odd:bg-gray-100']: s.sensorId !== selected,
+                      ['bg-blue-300']: isSelected,
+                      ['odd:bg-gray-100']: !isSelected,
                     })}
-                    onClick={() => onSelect(s.sensorId)}
+                    onClick={() => sensors.onSelect(s.sensorId)}
                   >
                     <td>
                       <input
                         className="rounded-sm ml-4 mb-1"
                         type="checkbox"
-                        checked={displayed.has(s.sensorId)}
+                        checked={sensors.displayed.has(s.sensorId)}
                         onClick={(e) => e.stopPropagation()}
-                        onChange={(e) => onCheck(s.sensorId, e.target.checked)}
+                        onChange={(e) =>
+                          sensors.onCheck(s.sensorId, e.target.checked)
+                        }
                       />
                     </td>
                     <td className="flex items-center">
@@ -74,6 +81,31 @@ export function RightSidebar({
               })}
             </tbody>
           </table>
+        </Collapsible>
+        <Collapsible title="ASSETS">
+          {assets.list.length > 0 ? (
+            <table className="text-left mb-4 w-full table-auto">
+              <tbody>
+                {assets.list.map((a) => {
+                  const isSelected = a === assets.selected;
+                  return (
+                    <tr
+                      key={a}
+                      className={cn('hover:bg-gray-300', {
+                        ['bg-blue-300']: isSelected,
+                        ['odd:bg-gray-100']: !isSelected,
+                      })}
+                      onClick={() => assets.onSelect(a)}
+                    >
+                      <td>{a}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <p className="my-4 text-center text-sm">No data</p>
+          )}
         </Collapsible>
         <Collapsible title="METADATA PROPERTIES">
           {propKeys.length > 0 ? (

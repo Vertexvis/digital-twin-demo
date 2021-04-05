@@ -36,6 +36,7 @@ function Home(): JSX.Element {
   const router = useRouter();
   const { clientId: queryId, streamKey: queryKey } = router.query;
   const storedCreds = getStoredCreds();
+  const assets = ['Hubble', 'James Webb', 'Kepler'];
   const { sensors, sensorIds } = getSensors();
   const sensorsMeta = sensorIds.map((id) => sensors[id].meta);
   const viewerCtx = useViewer();
@@ -61,6 +62,7 @@ function Home(): JSX.Element {
   const [displayedSensors, setDisplayedSensors] = useState<Set<string>>(
     new Set()
   );
+  const [selectedAsset, setSelectedAsset] = useState(assets[0]);
   const [itemProperties, setItemProperties] = useState<Properties>({});
   const [altDown, setAltDown] = useState(false);
 
@@ -91,8 +93,6 @@ function Home(): JSX.Element {
   }
 
   // TODO
-  // Chart each sensor's data
-  // Switch between assets
   // Fault codes alerts in sidebar, clicking goes to timestamp
   async function applyAndShowOrHideBySensorId(
     sensorId: string,
@@ -168,32 +168,39 @@ function Home(): JSX.Element {
           </div>
         )}
         <RightSidebar
-          displayed={displayedSensors}
-          onCheck={async (sensorId: string, checked: boolean) => {
-            const scene = await viewerCtx.viewer.current?.scene();
-            const upd = new Set(displayedSensors);
-
-            checked ? upd.add(sensorId) : upd.delete(sensorId);
-            setDisplayedSensors(upd);
-
-            if (displayedSensors.size === 0 && upd.size === 1) {
-              await hideAll({ scene });
-            } else if (upd.size === 0) await showAll({ scene });
-            await applyAndShowOrHideBySensorId(sensorId, checked);
+          assets={{
+            list: assets,
+            onSelect: async (asset: string) => setSelectedAsset(asset),
+            selected: selectedAsset,
           }}
-          onSelect={async (sensorId) => {
-            setSelectedSensor(sensorId);
-            if (displayedSensors.has(sensorId) && altDown) {
-              flyToSuppliedId({
-                scene: await viewerCtx.viewer.current?.scene(),
-                suppliedId: sensors[sensorId].meta.itemSuppliedIds[0],
-              });
-            }
-          }}
-          selected={selectedSensor}
-          selectedTs={selectedTs}
-          sensorsMeta={sensorsMeta}
           itemProperties={itemProperties}
+          selectedTs={selectedTs}
+          sensors={{
+            displayed: displayedSensors,
+            list: sensorsMeta,
+            onCheck: async (sensorId: string, checked: boolean) => {
+              const scene = await viewerCtx.viewer.current?.scene();
+              const upd = new Set(displayedSensors);
+
+              checked ? upd.add(sensorId) : upd.delete(sensorId);
+              setDisplayedSensors(upd);
+
+              if (displayedSensors.size === 0 && upd.size === 1) {
+                await hideAll({ scene });
+              } else if (upd.size === 0) await showAll({ scene });
+              await applyAndShowOrHideBySensorId(sensorId, checked);
+            },
+            onSelect: async (sensorId) => {
+              setSelectedSensor(sensorId);
+              if (displayedSensors.has(sensorId) && altDown) {
+                flyToSuppliedId({
+                  scene: await viewerCtx.viewer.current?.scene(),
+                  suppliedId: sensors[sensorId].meta.itemSuppliedIds[0],
+                });
+              }
+            },
+            selected: selectedSensor,
+          }}
         />
         {panelOpen === 'data' && (
           <Panel position={'bottom'}>
