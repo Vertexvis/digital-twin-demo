@@ -1,25 +1,25 @@
 import React, { ReactNode } from 'react';
 
-type IconType = 'caret-right' | 'chart' | 'close' | 'list';
+type IconType = 'caret-right' | 'chart' | 'close' | 'error' | 'list' | 'warn';
 
 interface Props {
   readonly icon: IconType;
 }
 
 export function Icon({ icon }: Props): JSX.Element {
-  return getIcon(icon);
-}
-
-function getIcon(type: string): JSX.Element {
-  switch (type) {
+  switch (icon) {
     case 'caret-right':
       return caretRight;
     case 'chart':
       return chart;
     case 'close':
       return close;
+    case 'error':
+      return error;
     case 'list':
       return list;
+    case 'warn':
+      return warn;
     default:
       return <></>;
   }
@@ -53,7 +53,17 @@ const close = baseIcon(
   'close'
 );
 
+const error = baseIcon(
+  <path d="M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1Zm4.27,11.23A6,6,0,1,1,14,8,6,6,0,0,1,12.27,12.27ZM8,4a.5.5,0,0,0-.5.5v5a.5.5,0,0,0,1,0v-5A.5.5,0,0,0,8,4Zm0,7a.51.51,0,1,0,.35.15A.47.47,0,0,0,8,11Z" />,
+  'error'
+);
+
 const list = baseIcon(
   <path d="M14,3.5a.5.5,0,0,0-.5-.5H2.5a.5.5,0,0,0,0,1h11A.5.5,0,0,0,14,3.5ZM13.5,12h-9a.5.5,0,0,0,0,1h9a.5.5,0,0,0,0-1Zm0-6h-9a.5.5,0,0,0,0,1h9a.5.5,0,0,0,0-1Zm0,3h-9a.5.5,0,0,0,0,1h9a.5.5,0,0,0,0-1Z" />,
   'list'
+);
+
+const warn = baseIcon(
+  <path d="M14.65,12.29ZM8,11a.51.51,0,1,0,.35.15A.47.47,0,0,0,8,11ZM8,6a.5.5,0,0,0-.5.5v3a.5.5,0,0,0,1,0v-3A.5.5,0,0,0,8,6Zm6.65,6.29L9.32,2.4h0a1.5,1.5,0,0,0-2.64,0L1.35,12.29h0a1.53,1.53,0,0,0-.18.71,1.5,1.5,0,0,0,1.5,1.5H13.33a1.5,1.5,0,0,0,1.5-1.5A1.53,1.53,0,0,0,14.65,12.29Zm-1,1.06a.47.47,0,0,1-.35.15H2.67a.47.47,0,0,1-.35-.15A.51.51,0,0,1,2.17,13l.06-.24h0L7.56,2.87h0a.5.5,0,0,1,.88,0l5.33,9.89h0l.06.24A.51.51,0,0,1,13.68,13.35Z" />,
+  'warn'
 );

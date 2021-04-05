@@ -3,13 +3,26 @@ import React from 'react';
 import { Properties } from '../lib/metadata';
 import { formatValue, SensorMeta } from '../lib/time-series';
 import { Collapsible } from './Collapsible';
+import { Icon } from './Icon';
 import { Panel } from './Panel';
+
+export interface FaultCode {
+  id: string;
+  severity: 'warn' | 'error';
+  title: string;
+  timestamp: string;
+}
 
 interface Props {
   readonly assets: {
     readonly list: string[];
     readonly onSelect: (asset: string) => Promise<void>;
     readonly selected: string;
+  };
+  readonly faults: {
+    readonly list: FaultCode[];
+    readonly onSelect: (timestamp: string) => Promise<void>;
+    readonly selected?: string;
   };
   readonly itemProperties: Properties;
   readonly selectedTs: string;
@@ -24,6 +37,7 @@ interface Props {
 
 export function RightSidebar({
   assets,
+  faults,
   itemProperties,
   selectedTs,
   sensors,
@@ -32,7 +46,7 @@ export function RightSidebar({
 
   return (
     <Panel position="right" overlay={false}>
-      <div className="w-full pr-2 border-b text-gray-700">
+      <div className="w-full pr-2 border-b text-gray-700 text-sm">
         <Collapsible title="SENSORS">
           <table className="text-left mb-4 w-full table-fixed">
             <thead>
@@ -98,6 +112,44 @@ export function RightSidebar({
                       onClick={() => assets.onSelect(a)}
                     >
                       <td>{a}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <p className="my-4 text-center text-sm">No data</p>
+          )}
+        </Collapsible>
+        <Collapsible title="FAULT CODES">
+          {faults.list.length > 0 ? (
+            <table className="text-left mb-4 w-full table-fixed">
+              <thead>
+                <tr>
+                  <th className="w-1/6"></th>
+                  <th className="w-3/6">Fault</th>
+                  <th className="w-2/6">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {faults.list.map((f) => {
+                  const isSelected = f.timestamp === faults.selected;
+                  return (
+                    <tr
+                      key={f.id}
+                      className={cn('hover:bg-gray-300', {
+                        ['bg-blue-300']: isSelected,
+                        ['odd:bg-gray-100']: !isSelected,
+                      })}
+                      onClick={() => faults.onSelect(f.timestamp)}
+                    >
+                      <td>
+                        <div className="w-5 ml-4">
+                          <Icon icon={f.severity} />
+                        </div>
+                      </td>
+                      <td>{f.title}</td>
+                      <td>{f.timestamp.substring(11, 19)}</td>
                     </tr>
                   );
                 })}

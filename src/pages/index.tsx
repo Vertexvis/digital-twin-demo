@@ -6,7 +6,7 @@ import { Header } from '../components/Header';
 import { Props as LayoutProps } from '../components/Layout';
 import { StreamCredsDialog } from '../components/StreamCredsDialog';
 import { Panel } from '../components/Panel';
-import { RightSidebar } from '../components/RightSidebar';
+import { FaultCode, RightSidebar } from '../components/RightSidebar';
 import { LeftSidebar, Options } from '../components/LeftSidebar';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
@@ -37,6 +37,20 @@ function Home(): JSX.Element {
   const { clientId: queryId, streamKey: queryKey } = router.query;
   const storedCreds = getStoredCreds();
   const assets = ['Hubble', 'James Webb', 'Kepler'];
+  const faults: FaultCode[] = [
+    {
+      id: '1',
+      severity: 'warn',
+      title: 'End-of-life warning',
+      timestamp: '2021-04-01T12:15:01.000Z',
+    },
+    {
+      id: '2',
+      severity: 'error',
+      title: 'PCB malfunction',
+      timestamp: '2021-04-01T12:15:07.000Z',
+    },
+  ];
   const { sensors, sensorIds } = getSensors();
   const sensorsMeta = sensorIds.map((id) => sensors[id].meta);
   const viewerCtx = useViewer();
@@ -92,8 +106,6 @@ function Home(): JSX.Element {
     setAltDown(false);
   }
 
-  // TODO
-  // Fault codes alerts in sidebar, clicking goes to timestamp
   async function applyAndShowOrHideBySensorId(
     sensorId: string,
     apply: boolean
@@ -107,6 +119,11 @@ function Home(): JSX.Element {
       },
       scene: await viewerCtx.viewer.current?.scene(),
     });
+  }
+
+  async function updateTimestamp(timestamp: string): Promise<void> {
+    await colorSelectedSensors(timestamp);
+    setSelectedTs(timestamp);
   }
 
   async function colorSelectedSensors(timestamp: string): Promise<void> {
@@ -173,6 +190,11 @@ function Home(): JSX.Element {
             onSelect: async (asset: string) => setSelectedAsset(asset),
             selected: selectedAsset,
           }}
+          faults={{
+            list: faults,
+            selected: selectedTs,
+            onSelect: async (timestamp) => updateTimestamp(timestamp),
+          }}
           itemProperties={itemProperties}
           selectedTs={selectedTs}
           sensors={{
@@ -206,10 +228,7 @@ function Home(): JSX.Element {
           <Panel position={'bottom'}>
             <div className="w-full h-full">
               <DataSheet
-                onSelect={async (timestamp) => {
-                  await colorSelectedSensors(timestamp);
-                  setSelectedTs(timestamp);
-                }}
+                onSelect={async (timestamp) => updateTimestamp(timestamp)}
                 sensor={sensors[selectedSensor]}
                 timestamp={selectedTs}
               />
