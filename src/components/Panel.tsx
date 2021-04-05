@@ -33,7 +33,7 @@ export function Panel({
             overflow ? `overflow-${overflow}` : 'overflow-scroll'
           } absolute inset-x-0 bottom-0`]: isBottom,
           ['h-full w-80 overflow-visible']: isLeft,
-          ['h-full w-80 overflow-visible right-0']: isRight,
+          ['h-full w-80 overflow-scroll right-0']: isRight,
           ['absolute']: overlay,
         })}
       >
