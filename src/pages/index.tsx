@@ -7,7 +7,7 @@ import { Props as LayoutProps } from '../components/Layout';
 import { StreamCredsDialog } from '../components/StreamCredsDialog';
 import { Panel } from '../components/Panel';
 import { RightSidebar } from '../components/RightSidebar';
-import { LeftSidebar } from '../components/LeftSidebar';
+import { LeftSidebar, Options } from '../components/LeftSidebar';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
 import {
@@ -24,6 +24,7 @@ import { useViewer } from '../lib/viewer';
 import { getSensors } from '../lib/time-series';
 import { flyToSuppliedId } from '../lib/scene-camera';
 import { Properties, toProperties } from '../lib/metadata';
+import { Chart } from '../components/Chart';
 
 const MonoscopicViewer = onTap(Viewer);
 const Layout = dynamic<LayoutProps>(
@@ -52,7 +53,7 @@ function Home(): JSX.Element {
   const [dialogOpen, setDialogOpen] = useState(
     !creds.clientId || !creds.streamKey
   );
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState<Options | undefined>(undefined);
   const [selectedTs, setSelectedTs] = useState(
     sensors[sensorIds[0]].data[0].timestamp
   );
@@ -91,7 +92,6 @@ function Home(): JSX.Element {
 
   // TODO
   // Chart each sensor's data
-  // Metadata
   // Switch between assets
   // Fault codes alerts in sidebar, clicking goes to timestamp
   async function applyAndShowOrHideBySensorId(
@@ -195,7 +195,7 @@ function Home(): JSX.Element {
           sensorsMeta={sensorsMeta}
           itemProperties={itemProperties}
         />
-        {panelOpen && (
+        {panelOpen === 'data' && (
           <Panel position={'bottom'}>
             <div className="w-full h-full">
               <DataSheet
@@ -206,6 +206,13 @@ function Home(): JSX.Element {
                 sensor={sensors[selectedSensor]}
                 timestamp={selectedTs}
               />
+            </div>
+          </Panel>
+        )}
+        {panelOpen === 'chart' && (
+          <Panel position={'bottom'} overflow={'visible'}>
+            <div className="w-full h-full">
+              <Chart sensor={sensors[selectedSensor]} />
             </div>
           </Panel>
         )}

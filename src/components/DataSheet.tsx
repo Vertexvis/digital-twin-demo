@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import React from 'react';
 import { formatValue, Sensor } from '../lib/time-series';
-import { Chart } from './Chart';
 
 interface Props {
   readonly onSelect: (timestamp: string) => Promise<void>;
@@ -10,9 +9,7 @@ interface Props {
 }
 
 export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
-  return false ? (
-    <Chart />
-  ) : (
+  return (
     <table className="mx-2 text-left w-full table-auto">
       <caption className="text-xl">{sensor.meta.name}</caption>
       <thead>

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-type IconType = 'caret-right' | 'close' | 'list';
+type IconType = 'caret-right' | 'chart' | 'close' | 'list';
 
 interface Props {
   readonly icon: IconType;
@@ -14,6 +14,8 @@ function getIcon(type: string): JSX.Element {
   switch (type) {
     case 'caret-right':
       return caretRight;
+    case 'chart':
+      return chart;
     case 'close':
       return close;
     case 'list':
@@ -39,6 +41,11 @@ function baseIcon(icon: ReactNode, testId: string): JSX.Element {
 const caretRight = baseIcon(
   <path d="M10.83,7.63l-5-4.5a.5.5,0,0,0-.66.74L9.75,8,5.17,12.13a.5.5,0,1,0,.66.74l5-4.5a.49.49,0,0,0,0-.74Z" />,
   'caret-right'
+);
+
+const chart = baseIcon(
+  <path d="M12.5,1h-9A2.5,2.5,0,0,0,1,3.5v9A2.5,2.5,0,0,0,3.5,15h9A2.5,2.5,0,0,0,15,12.5v-9A2.5,2.5,0,0,0,12.5,1ZM14,12.5A1.5,1.5,0,0,1,12.5,14h-9A1.5,1.5,0,0,1,2,12.5V9H3.5A.51.51,0,0,0,4,8.62L4.5,6.56,6,12.62a.51.51,0,0,0,.47.38A.5.5,0,0,0,7,12.66L9.43,5.29,11,11.62a.51.51,0,0,0,1,0L12.89,8H14ZM14,7H12.5a.51.51,0,0,0-.49.38L11.5,9.44,10,3.38A.51.51,0,0,0,9.52,3,.5.5,0,0,0,9,3.34L6.57,10.71,5,4.38a.51.51,0,0,0-1,0L3.11,8H2V3.5A1.5,1.5,0,0,1,3.5,2h9A1.5,1.5,0,0,1,14,3.5Z" />,
+  'chart'
 );
 
 const close = baseIcon(
