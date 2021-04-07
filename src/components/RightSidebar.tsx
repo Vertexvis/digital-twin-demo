@@ -2,6 +2,7 @@ import cn from 'classnames';
 import React, { useState } from 'react';
 import { Properties } from '../lib/metadata';
 import {
+  Asset,
   FaultCode,
   formatValue,
   SensorMeta,
@@ -14,7 +15,7 @@ import { Panel } from './Panel';
 interface Props {
   readonly assets: {
     readonly list: string[];
-    readonly onSelect: (asset: string) => Promise<void>;
+    readonly onSelect: (asset: Asset) => Promise<void>;
     readonly selected: string;
   };
   readonly faults: {
@@ -96,7 +97,7 @@ export function RightSidebar({
                         ></div>
                         {formatValue(tsd.value)}
                       </td>
-                      <td>{s.name}</td>
+                      <td>{s.id}</td>
                     </tr>
                   );
                 })}
@@ -119,7 +120,7 @@ export function RightSidebar({
                         ['bg-blue-300']: isSelected,
                         ['odd:bg-gray-100']: !isSelected,
                       })}
-                      onClick={() => assets.onSelect(a)}
+                      onClick={() => assets.onSelect(a as Asset)}
                     >
                       <td>{a}</td>
                     </tr>

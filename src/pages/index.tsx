@@ -22,9 +22,12 @@ import { waitForHydrate } from '../lib/nextjs';
 import { getStoredCreds, setStoredCreds, StreamCreds } from '../lib/storage';
 import { useViewer } from '../lib/viewer';
 import {
+  Asset,
   Assets,
   Faults,
+  getData,
   getTimeSeriesData,
+  RawSensors,
   sensorsToItemSuppliedIds,
   SensorsToItemSuppliedIds,
   TimeSeriesData,
@@ -71,6 +74,7 @@ function Home(): JSX.Element {
     new Set()
   );
   const [selectedAsset, setSelectedAsset] = useState(Assets[0]);
+  const [data, setData] = useState<RawSensors>(getData(selectedAsset));
   const [itemProperties, setItemProperties] = useState<Properties>({});
   const [altDown, setAltDown] = useState(false);
 
@@ -82,7 +86,7 @@ function Home(): JSX.Element {
     );
     setStoredCreds(creds);
     const sensorsToIds = sensorsToItemSuppliedIds(creds.streamKey);
-    setTimeSeriesData(getTimeSeriesData(sensorsToIds));
+    setTimeSeriesData(getTimeSeriesData(data, sensorsToIds));
   }, [creds]);
 
   useEffect(() => {
@@ -172,7 +176,7 @@ function Home(): JSX.Element {
       <div className="row-start-2 row-span-full col-span-1">
         <LeftSidebar isOpen={panelOpen} onSelected={setPanelOpen} />
       </div>
-      <div className="flex w-full row-start-2 row-span-full col-start-2 col-span-full">
+      <div className="flex w-full row-start-2 row-span-full col-start-2 col-span-full overflow-x-hidden">
         {!dialogOpen && viewerCtx.viewerState.isReady && (
           <div className="w-0 flex-grow ml-auto relative">
             <MonoscopicViewer
@@ -200,7 +204,15 @@ function Home(): JSX.Element {
         <RightSidebar
           assets={{
             list: Assets,
-            onSelect: async (asset: string) => setSelectedAsset(asset),
+            onSelect: async (asset: Asset) => {
+              await reset();
+              setSelectedAsset(asset);
+              const d = getData(asset);
+              setData(d);
+              setTimeSeriesData(
+                getTimeSeriesData(d, timeSeriesData.sensorsToIds)
+              );
+            },
             selected: selectedAsset,
           }}
           faults={{
@@ -231,7 +243,7 @@ function Home(): JSX.Element {
             },
             onMappingChange: async (mapping: SensorsToItemSuppliedIds) => {
               await reset();
-              setTimeSeriesData(getTimeSeriesData(mapping));
+              setTimeSeriesData(getTimeSeriesData(data, mapping));
             },
             onSelect: async (id) => {
               setSelectedSensor(id);

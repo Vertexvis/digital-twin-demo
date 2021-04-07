@@ -11,7 +11,7 @@ export function Chart({ sensor }: Props): JSX.Element {
       colors={'#93C5FD'}
       data={[
         {
-          id: sensor.meta.name,
+          id: sensor.meta.id,
           data: sensor.data.map((d) => ({
             //2021-04-01T12:15:07.000Z
             x: d.timestamp.substring(11, 19),

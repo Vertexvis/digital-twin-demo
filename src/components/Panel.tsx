@@ -38,11 +38,11 @@ export function Panel({
       >
         <div
           className={cn(
-            `h-full w-full border-gray-300 overflow-${overflow ?? 'scroll'}`,
+            `w-full border-gray-300 overflow-${overflow ?? 'scroll'}`,
             {
-              ['border-t']: isBottom,
-              ['border-r shadow']: isLeft,
-              ['border-l shadow']: isRight,
+              ['border-t h-full']: isBottom,
+              ['border-r shadow min-h-full']: isLeft,
+              ['border-l shadow min-h-full']: isRight,
             }
           )}
         >

@@ -11,7 +11,7 @@ interface Props {
 export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
   return (
     <table className="mx-2 text-left w-full table-auto">
-      <caption className="text-xl">{sensor.meta.name}</caption>
+      <caption className="text-xl">{sensor.meta.id}</caption>
       <thead>
         <tr>
           <th>Timestamp</th>
