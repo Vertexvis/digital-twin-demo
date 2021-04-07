@@ -6,22 +6,29 @@ import { Header } from '../components/Header';
 import { Props as LayoutProps } from '../components/Layout';
 import { StreamCredsDialog } from '../components/StreamCredsDialog';
 import { Panel } from '../components/Panel';
-import { FaultCode, RightSidebar } from '../components/RightSidebar';
+import { RightSidebar } from '../components/RightSidebar';
 import { LeftSidebar, Options } from '../components/LeftSidebar';
 import { VertexLogo } from '../components/VertexLogo';
 import { onTap, Viewer } from '../components/Viewer';
 import {
   applyGroupsBySuppliedIds,
-  applyAndShowOrHideBySuppliedIds,
+  applyAndShowBySuppliedIds,
   selectByHit,
-  hideAll,
-  showAll,
+  showAndClearAll,
+  hideBySuppliedId,
 } from '../lib/scene-items';
 import { Env } from '../lib/env';
 import { waitForHydrate } from '../lib/nextjs';
 import { getStoredCreds, setStoredCreds, StreamCreds } from '../lib/storage';
 import { useViewer } from '../lib/viewer';
-import { getSensors } from '../lib/time-series';
+import {
+  Assets,
+  Faults,
+  getTimeSeriesData,
+  sensorsToItemSuppliedIds,
+  SensorsToItemSuppliedIds,
+  TimeSeriesData,
+} from '../lib/time-series';
 import { flyToSuppliedId } from '../lib/scene-camera';
 import { Properties, toProperties } from '../lib/metadata';
 import { Chart } from '../components/Chart';
@@ -36,23 +43,6 @@ function Home(): JSX.Element {
   const router = useRouter();
   const { clientId: queryId, streamKey: queryKey } = router.query;
   const storedCreds = getStoredCreds();
-  const assets = ['Hubble', 'James Webb', 'Kepler'];
-  const faults: FaultCode[] = [
-    {
-      id: '1',
-      severity: 'warn',
-      title: 'End-of-life warning',
-      timestamp: '2021-04-01T12:15:01.000Z',
-    },
-    {
-      id: '2',
-      severity: 'error',
-      title: 'PCB malfunction',
-      timestamp: '2021-04-01T12:15:07.000Z',
-    },
-  ];
-  const { sensors, sensorIds } = getSensors();
-  const sensorsMeta = sensorIds.map((id) => sensors[id].meta);
   const viewerCtx = useViewer();
 
   const [creds, setCreds] = useState<StreamCreds>({
@@ -69,14 +59,18 @@ function Home(): JSX.Element {
     !creds.clientId || !creds.streamKey
   );
   const [panelOpen, setPanelOpen] = useState<Options | undefined>(undefined);
-  const [selectedTs, setSelectedTs] = useState(
-    sensors[sensorIds[0]].data[0].timestamp
-  );
-  const [selectedSensor, setSelectedSensor] = useState(sensorsMeta[0].sensorId);
+  const [timeSeriesData, setTimeSeriesData] = useState<TimeSeriesData>({
+    ids: [],
+    sensors: {},
+    sensorsMeta: [],
+    sensorsToIds: {},
+  });
+  const [selectedTs, setSelectedTs] = useState('');
+  const [selectedSensor, setSelectedSensor] = useState('');
   const [displayedSensors, setDisplayedSensors] = useState<Set<string>>(
     new Set()
   );
-  const [selectedAsset, setSelectedAsset] = useState(assets[0]);
+  const [selectedAsset, setSelectedAsset] = useState(Assets[0]);
   const [itemProperties, setItemProperties] = useState<Properties>({});
   const [altDown, setAltDown] = useState(false);
 
@@ -87,7 +81,17 @@ function Home(): JSX.Element {
       )}&streamKey=${encodeURIComponent(creds.streamKey)}`
     );
     setStoredCreds(creds);
+    const sensorsToIds = sensorsToItemSuppliedIds(creds.streamKey);
+    setTimeSeriesData(getTimeSeriesData(sensorsToIds));
   }, [creds]);
+
+  useEffect(() => {
+    const tsd = timeSeriesData;
+    setSelectedTs(
+      tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ''
+    );
+    setSelectedSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : '');
+  }, [timeSeriesData]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -107,18 +111,22 @@ function Home(): JSX.Element {
   }
 
   async function applyAndShowOrHideBySensorId(
-    sensorId: string,
-    apply: boolean
+    id: string,
+    apply: boolean,
+    all: boolean
   ): Promise<void> {
-    const selectedMeta = sensors[sensorId].meta;
-    await applyAndShowOrHideBySuppliedIds({
-      apply,
-      group: {
-        color: selectedMeta.tsData[selectedTs].color,
-        suppliedIds: selectedMeta.itemSuppliedIds,
-      },
-      scene: await viewerCtx.viewer.current?.scene(),
-    });
+    const selectedMeta = timeSeriesData.sensors[id].meta;
+    const color = selectedMeta.tsData[selectedTs].color;
+    const scene = await viewerCtx.viewer.current?.scene();
+    const suppliedIds = selectedMeta.itemSuppliedIds;
+
+    await (apply
+      ? applyAndShowBySuppliedIds({
+          all,
+          group: { color, suppliedIds },
+          scene,
+        })
+      : hideBySuppliedId({ scene, suppliedIds }));
   }
 
   async function updateTimestamp(timestamp: string): Promise<void> {
@@ -132,7 +140,7 @@ function Home(): JSX.Element {
     await applyGroupsBySuppliedIds({
       apply: true,
       groups: [...displayedSensors].map((sId) => {
-        const selectedMeta = sensors[sId].meta;
+        const selectedMeta = timeSeriesData.sensors[sId].meta;
         return {
           color: selectedMeta.tsData[timestamp].color,
           suppliedIds: selectedMeta.itemSuppliedIds,
@@ -140,6 +148,11 @@ function Home(): JSX.Element {
       }),
       scene: await viewerCtx.viewer.current?.scene(),
     });
+  }
+
+  async function reset(): Promise<void> {
+    setDisplayedSensors(new Set());
+    await showAndClearAll({ scene: await viewerCtx.viewer.current?.scene() });
   }
 
   return (
@@ -186,12 +199,12 @@ function Home(): JSX.Element {
         )}
         <RightSidebar
           assets={{
-            list: assets,
+            list: Assets,
             onSelect: async (asset: string) => setSelectedAsset(asset),
             selected: selectedAsset,
           }}
           faults={{
-            list: faults,
+            list: Faults,
             selected: selectedTs,
             onSelect: async (timestamp) => updateTimestamp(timestamp),
           }}
@@ -199,25 +212,34 @@ function Home(): JSX.Element {
           selectedTs={selectedTs}
           sensors={{
             displayed: displayedSensors,
-            list: sensorsMeta,
-            onCheck: async (sensorId: string, checked: boolean) => {
+            list: timeSeriesData.sensorsMeta,
+            mapping: timeSeriesData.sensorsToIds,
+            onCheck: async (id: string, checked: boolean) => {
               const scene = await viewerCtx.viewer.current?.scene();
               const upd = new Set(displayedSensors);
-
-              checked ? upd.add(sensorId) : upd.delete(sensorId);
+              checked ? upd.add(id) : upd.delete(id);
               setDisplayedSensors(upd);
 
-              if (displayedSensors.size === 0 && upd.size === 1) {
-                await hideAll({ scene });
-              } else if (upd.size === 0) await showAll({ scene });
-              await applyAndShowOrHideBySensorId(sensorId, checked);
+              if (upd.size === 0) await showAndClearAll({ scene });
+              else {
+                await applyAndShowOrHideBySensorId(
+                  id,
+                  checked,
+                  displayedSensors.size === 0 && upd.size === 1
+                );
+              }
             },
-            onSelect: async (sensorId) => {
-              setSelectedSensor(sensorId);
-              if (displayedSensors.has(sensorId) && altDown) {
+            onMappingChange: async (mapping: SensorsToItemSuppliedIds) => {
+              await reset();
+              setTimeSeriesData(getTimeSeriesData(mapping));
+            },
+            onSelect: async (id) => {
+              setSelectedSensor(id);
+              if (displayedSensors.has(id) && altDown) {
                 flyToSuppliedId({
                   scene: await viewerCtx.viewer.current?.scene(),
-                  suppliedId: sensors[sensorId].meta.itemSuppliedIds[0],
+                  suppliedId:
+                    timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
                 });
               }
             },
@@ -226,10 +248,10 @@ function Home(): JSX.Element {
         />
         {panelOpen === 'data' && (
           <Panel position={'bottom'}>
-            <div className="w-full h-full">
+            <div className="w-full h-full overflow-x-hidden">
               <DataSheet
                 onSelect={async (timestamp) => updateTimestamp(timestamp)}
-                sensor={sensors[selectedSensor]}
+                sensor={timeSeriesData.sensors[selectedSensor]}
                 timestamp={selectedTs}
               />
             </div>
@@ -238,7 +260,7 @@ function Home(): JSX.Element {
         {panelOpen === 'chart' && (
           <Panel position={'bottom'} overflow={'visible'}>
             <div className="w-full h-full">
-              <Chart sensor={sensors[selectedSensor]} />
+              <Chart sensor={timeSeriesData.sensors[selectedSensor]} />
             </div>
           </Panel>
         )}
@@ -248,7 +270,7 @@ function Home(): JSX.Element {
           creds={creds}
           open={dialogOpen}
           onClose={() => {
-            setDisplayedSensors(new Set());
+            reset();
             setDialogOpen(false);
           }}
           onConfirm={(cs) => {

@@ -19,7 +19,7 @@ export function Collapsible({ title, children }: Props): JSX.Element {
   }, [contentRef, setMaxHeight, children]);
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full">
       <div
         data-testid="expand-click-target"
         className="flex items-center cursor-pointer hover:text-blue-700 py-3"

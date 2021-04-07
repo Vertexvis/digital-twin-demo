@@ -19,8 +19,13 @@ interface ApplyGroupsBySuppliedIdsReq extends ApplyReq {
   readonly groups: ColorGroup[];
 }
 
-interface ApplyOrClearBySuppliedIdsReq extends ApplyReq {
-  group: ColorGroup;
+interface ApplyAndShowBySuppliedIdsReq extends SceneReq {
+  readonly all: boolean;
+  readonly group: ColorGroup;
+}
+
+interface HideSuppliedIdReq extends SceneReq {
+  readonly suppliedIds: string[];
 }
 
 interface SelectByHitReq extends SceneReq {
@@ -46,25 +51,33 @@ export async function applyGroupsBySuppliedIds({
     ?.execute();
 }
 
-export async function applyAndShowOrHideBySuppliedIds({
-  apply,
+export async function applyAndShowBySuppliedIds({
+  all,
   group: { color, suppliedIds },
   scene,
-}: ApplyOrClearBySuppliedIdsReq): Promise<void> {
+}: ApplyAndShowBySuppliedIdsReq): Promise<void> {
   if (scene == null) return;
 
   await scene
-    .items((op) => {
-      const w = op.where((q) => q.withSuppliedIds(suppliedIds));
-      return apply
-        ? [w.materialOverride(ColorMaterial.fromHex(color)), w.show()]
-        : [w.hide()];
-    })
+    .items((op) => [
+      ...(all ? [op.where((q) => q.all()).hide()] : []),
+      op
+        .where((q) => q.withSuppliedIds(suppliedIds))
+        .materialOverride(ColorMaterial.fromHex(color))
+        .show(),
+    ])
     .execute();
 }
 
-export async function hideAll({ scene }: SceneReq): Promise<void> {
-  return all({ show: false, scene });
+export async function hideBySuppliedId({
+  scene,
+  suppliedIds,
+}: HideSuppliedIdReq): Promise<void> {
+  if (scene == null) return;
+
+  await scene
+    .items((op) => [op.where((q) => q.withSuppliedIds(suppliedIds)).hide()])
+    .execute();
 }
 
 export async function selectByHit({
@@ -89,20 +102,15 @@ export async function selectByHit({
   }
 }
 
-export async function showAll({ scene }: SceneReq): Promise<void> {
-  return all({ show: true, scene });
-}
-
-async function all({
-  show,
-  scene,
-}: SceneReq & { show: boolean }): Promise<void> {
+export async function showAndClearAll({ scene }: SceneReq): Promise<void> {
   if (scene == null) return;
 
   await scene
-    .items((op) => {
-      const w = op.where((q) => q.all());
-      return [show ? w.show() : w.hide()];
-    })
+    .items((op) =>
+      op
+        .where((q) => q.all())
+        .clearMaterialOverrides()
+        .show()
+    )
     .execute();
 }
