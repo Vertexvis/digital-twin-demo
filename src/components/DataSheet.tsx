@@ -28,7 +28,6 @@ export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
             <tr
               className={cn('hover:bg-gray-300', {
                 ['bg-blue-300']: tsEq,
-                ['odd:bg-gray-100']: !tsEq,
               })}
               key={i}
               onClick={() => onSelect(v.timestamp)}

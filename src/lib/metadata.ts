@@ -4,27 +4,56 @@ export interface Properties {
   [key: string]: string | undefined;
 }
 
-const PartRevIdKey = 'PART_REVISION_ID';
-const PartInstIdKey = 'PART_INSTANCE_ID';
+const ItemIdKey = 'VERTEX_SCENE_ITEM_ID';
+const ItemSuppliedIdKey = 'VERTEX_SCENE_ITEM_SUPPLIED_ID';
+const PartIdKey = 'VERTEX_PART_ID';
+const PartRevIdKey = 'VERTEX_PART_REVISION_ID';
+const PartRevSuppliedId = 'VERTEX_PART_REVISION_SUPPLIED_ID';
+const PartInstIdKey = 'VERTEX_PART_INSTANCE_ID';
 
 export function toProperties({
-  metadata,
+  hit,
 }: {
-  metadata?: vertexvis.protobuf.stream.IMetadata | null;
+  hit?: vertexvis.protobuf.stream.IHit | null;
 }): Properties {
-  if (metadata == null) return {};
+  if (hit == null) return {};
 
   const ps: Properties = {};
-  const { partRevisionId, partInstanceId } = metadata;
+  const {
+    itemId,
+    itemSuppliedId,
+    partRevisionId,
+    partId,
+    suppliedPartRevisionId: partRevSuppliedId,
+  } = hit;
+  if (itemId?.hex) ps[ItemIdKey] = itemId.hex;
+  if (itemSuppliedId?.value) ps[ItemSuppliedIdKey] = itemSuppliedId.value;
+  if (partId?.hex) ps[PartIdKey] = partId.hex;
   if (partRevisionId?.hex) ps[PartRevIdKey] = partRevisionId.hex;
-  if (partInstanceId?.hex) ps[PartInstIdKey] = partInstanceId.hex;
-  if (metadata.properties) {
-    metadata.properties
-      .filter((p) => p.key)
-      .forEach((p) => (ps[p.key as string] = toValue(p)));
+  if (partRevSuppliedId?.value) ps[PartRevSuppliedId] = partRevSuppliedId.value;
+
+  const md = hit?.metadata;
+  if (md != null) {
+    const { partInstanceId } = md;
+    if (partInstanceId?.hex) ps[PartInstIdKey] = partInstanceId.hex;
+
+    if (md.properties != null) {
+      md.properties
+        .filter((p) => p.key)
+        .forEach((p) => (ps[p.key as string] = toValue(p)));
+    }
   }
 
-  return ps;
+  return alphabetize(ps);
+}
+
+function alphabetize<T extends Record<string, unknown>>(obj: T): T {
+  return Object.keys(obj)
+    .sort((a, b) => a.localeCompare(b))
+    .reduce((acc: T, cur: keyof T) => {
+      acc[cur] = obj[cur];
+      return acc;
+    }, {} as T);
 }
 
 function toValue(

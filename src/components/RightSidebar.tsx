@@ -10,6 +10,7 @@ import {
 } from '../lib/time-series';
 import { Collapsible } from './Collapsible';
 import { Icon } from './Icon';
+import { MetadataProperties } from './MetadataProperties';
 import { Panel } from './Panel';
 
 interface Props {
@@ -23,7 +24,7 @@ interface Props {
     readonly onSelect: (timestamp: string) => Promise<void>;
     readonly selected?: string;
   };
-  readonly itemProperties: Properties;
+  readonly properties: Properties;
   readonly selectedTs: string;
   readonly sensors: {
     readonly displayed: Set<string>;
@@ -41,14 +42,13 @@ interface Props {
 export function RightSidebar({
   assets,
   faults,
-  itemProperties,
+  properties,
   selectedTs,
   sensors,
 }: Props): JSX.Element {
   const [mapping, setMapping] = useState(
     JSON.stringify(sensors.mapping, null, 2)
   );
-  const propKeys = Object.keys(itemProperties);
 
   return (
     <Panel position="right" overlay={false}>
@@ -75,7 +75,6 @@ export function RightSidebar({
                       key={s.id}
                       className={cn('hover:bg-gray-300', {
                         ['bg-blue-300']: isSelected,
-                        ['odd:bg-gray-100']: !isSelected,
                       })}
                       onClick={() => sensors.onSelect(s.id)}
                     >
@@ -118,7 +117,6 @@ export function RightSidebar({
                       key={a}
                       className={cn('hover:bg-gray-300', {
                         ['bg-blue-300']: isSelected,
-                        ['odd:bg-gray-100']: !isSelected,
                       })}
                       onClick={() => assets.onSelect(a as Asset)}
                     >
@@ -150,7 +148,6 @@ export function RightSidebar({
                       key={f.id}
                       className={cn('hover:bg-gray-300', {
                         ['bg-blue-300']: isSelected,
-                        ['odd:bg-gray-100']: !isSelected,
                       })}
                       onClick={() => faults.onSelect(f.timestamp)}
                     >
@@ -171,26 +168,7 @@ export function RightSidebar({
           )}
         </Collapsible>
         <Collapsible title="METADATA PROPERTIES">
-          {propKeys.length > 0 ? (
-            <table className="text-left mb-4 w-full table-auto">
-              <thead>
-                <tr>
-                  <th>Key</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {propKeys.map((k) => (
-                  <tr key={k} className={'hover:bg-gray-300 odd:bg-gray-100'}>
-                    <td>{k}</td>
-                    <td>{itemProperties[k]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="my-4 text-center">No data</p>
-          )}
+          <MetadataProperties properties={properties} />
         </Collapsible>
         <Collapsible title="SENSOR MAPPING">
           <textarea

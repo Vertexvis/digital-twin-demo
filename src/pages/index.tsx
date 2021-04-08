@@ -75,7 +75,7 @@ function Home(): JSX.Element {
   );
   const [selectedAsset, setSelectedAsset] = useState(Assets[0]);
   const [data, setData] = useState<RawSensors>(getData(selectedAsset));
-  const [itemProperties, setItemProperties] = useState<Properties>({});
+  const [properties, setProperties] = useState<Properties>({});
   const [altDown, setAltDown] = useState(false);
 
   useEffect(() => {
@@ -185,8 +185,7 @@ function Home(): JSX.Element {
               viewer={viewerCtx.viewer}
               onSceneReady={() => viewerCtx.onSceneReady()}
               onSelect={async (hit) => {
-                const md = hit?.metadata;
-                setItemProperties(md ? toProperties({ metadata: md }) : {});
+                setProperties(toProperties({ hit }));
                 return await selectByHit({
                   hit,
                   scene: await viewerCtx.viewer.current?.scene(),
@@ -220,7 +219,7 @@ function Home(): JSX.Element {
             selected: selectedTs,
             onSelect: async (timestamp) => updateTimestamp(timestamp),
           }}
-          itemProperties={itemProperties}
+          properties={properties}
           selectedTs={selectedTs}
           sensors={{
             displayed: displayedSensors,
