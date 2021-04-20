@@ -1,15 +1,15 @@
-import { vertexvis } from '@vertexvis/frame-streaming-protos';
+import { vertexvis } from "@vertexvis/frame-streaming-protos";
 
 export interface Properties {
   [key: string]: string | undefined;
 }
 
-const ItemIdKey = 'VERTEX_SCENE_ITEM_ID';
-const ItemSuppliedIdKey = 'VERTEX_SCENE_ITEM_SUPPLIED_ID';
-const PartIdKey = 'VERTEX_PART_ID';
-const PartRevIdKey = 'VERTEX_PART_REVISION_ID';
-const PartRevSuppliedId = 'VERTEX_PART_REVISION_SUPPLIED_ID';
-const PartInstIdKey = 'VERTEX_PART_INSTANCE_ID';
+const ItemIdKey = "VERTEX_SCENE_ITEM_ID";
+const ItemSuppliedIdKey = "VERTEX_SCENE_ITEM_SUPPLIED_ID";
+const PartIdKey = "VERTEX_PART_ID";
+const PartRevIdKey = "VERTEX_PART_REVISION_ID";
+const PartRevSuppliedId = "VERTEX_PART_REVISION_SUPPLIED_ID";
+const PartInstIdKey = "VERTEX_PART_INSTANCE_ID";
 
 export function toProperties({
   hit,

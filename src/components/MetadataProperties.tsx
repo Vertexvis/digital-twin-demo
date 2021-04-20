@@ -1,31 +1,52 @@
-import React from 'react';
-import { Properties } from '../lib/metadata';
+import { makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Typography from "@material-ui/core/Typography";
+import React from "react";
+import { Properties } from "../lib/metadata";
 
 interface Props {
   readonly properties: Properties;
 }
 
+const useStyles = makeStyles((theme) => ({
+  table: {
+    // To accommodate scrollbar
+    marginBottom: theme.spacing(1),
+  },
+}));
+
 export function MetadataProperties({ properties }: Props): JSX.Element {
+  const { table } = useStyles();
   const propKeys = Object.keys(properties);
 
   return propKeys.length > 0 ? (
-    <table className="text-left mb-4 w-full">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        {propKeys.map((k) => (
-          <tr key={k} className={'whitespace-nowrap hover:bg-gray-300'}>
-            <td>{k}</td>
-            <td>{properties[k]}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <TableContainer>
+      <Table className={table} padding="checkbox" size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Key</TableCell>
+            <TableCell>Value</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {propKeys.map((k) => (
+            <TableRow key={k}>
+              <TableCell>{k}</TableCell>
+              <TableCell>{properties[k]}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   ) : (
-    <p className="my-4 text-center">No data</p>
+    <Box mx={2} mb={2}>
+      <Typography variant="body2">No data</Typography>
+    </Box>
   );
 }

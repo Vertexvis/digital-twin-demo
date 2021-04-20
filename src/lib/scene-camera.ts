@@ -1,9 +1,12 @@
-import { SceneReq } from './scene-items';
+import { Req } from "./scene-items";
 
 export async function flyToSuppliedId({
-  scene,
   suppliedId,
-}: SceneReq & { suppliedId: string }): Promise<void> {
+  viewer,
+}: Req & { suppliedId: string }): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
   if (scene == null) return;
 
   await scene

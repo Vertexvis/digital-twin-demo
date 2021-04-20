@@ -1,6 +1,6 @@
-import { calcRedToGreenGradient } from './colors';
-import N29961 from '../data/N29961';
-import N905NA from '../data/N905NA';
+import { calcRedToGreenGradient } from "./colors";
+import N29961 from "../data/N29961";
+import N905NA from "../data/N905NA";
 
 export interface TimeSeriesData {
   readonly ids: string[];
@@ -34,7 +34,7 @@ export interface SensorData {
 
 export interface FaultCode {
   readonly id: string;
-  readonly severity: 'warn' | 'error';
+  readonly severity: "warn" | "error";
   readonly title: string;
   readonly timestamp: string;
 }
@@ -67,43 +67,43 @@ export const MinValue = 5;
 
 export const MaxValue = 15;
 
-export type Asset = 'N29961' | 'N905NA';
+export type Asset = "N29961" | "N905NA";
 
-export const Assets: Asset[] = ['N29961', 'N905NA'];
+export const Assets: Asset[] = ["N29961", "N905NA"];
 
 export const Faults: FaultCode[] = [
   {
-    id: '1',
-    severity: 'warn',
-    title: 'SCU maintenance',
-    timestamp: '2021-04-01T12:15:01.000Z',
+    id: "1",
+    severity: "warn",
+    title: "ECU maintenance",
+    timestamp: "2021-04-01T12:15:01.000Z",
   },
   {
-    id: '2',
-    severity: 'error',
-    title: 'CCU malfunction',
-    timestamp: '2021-04-01T12:15:07.000Z',
+    id: "2",
+    severity: "error",
+    title: "LCU malfunction",
+    timestamp: "2021-04-01T12:15:07.000Z",
   },
 ];
 
 const stSk = process.env.NEXT_PUBLIC_ST_STREAM_KEY;
 const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds = {
-  'U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU': {
-    ECU: ['200050'],
-    VCU: ['200030', '200060'],
-    TCU: ['200090', '200100'],
+  "U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU": {
+    ECU: ["200050"],
+    VCU: ["200030", "200060"],
+    TCU: ["200090", "200100"],
   },
 };
 if (stSk)
   streamKeyToSensorsToItemSuppliedIds[stSk] = {
-    ECU: ['r/216'],
-    VCU: ['r/1969', 'r/1754', 'r/3238'],
-    TCU: ['r/589', 'r/607', 'r/511', 'r/573', 'r/564'],
-    CCU: ['r/3989', 'r/6817'],
-    RCU: ['r/5467', 'r/4891'],
-    ACU: ['r/10444'],
-    LCU: ['r/10635', 'r/1669', 'r/6377', 'r/2760', 'r/5077', 'r/2183'],
-    SCU: ['r/10798', 'r/9986', 'r/6204'],
+    ECU: ["r/216"],
+    VCU: ["r/1969", "r/1754", "r/3238"],
+    TCU: ["r/589", "r/607", "r/511", "r/573", "r/564"],
+    CCU: ["r/3989", "r/6817"],
+    RCU: ["r/5467", "r/4891"],
+    ACU: ["r/10444"],
+    LCU: ["r/10635", "r/1669", "r/6377", "r/2760", "r/5077", "r/2183"],
+    SCU: ["r/10798", "r/9986", "r/6204"],
   };
 
 export function sensorsToItemSuppliedIds(
@@ -113,7 +113,7 @@ export function sensorsToItemSuppliedIds(
 }
 
 export function getData(asset: Asset): RawSensors {
-  return asset === 'N29961' ? N29961 : N905NA;
+  return asset === "N29961" ? N29961 : N905NA;
 }
 
 export function getTimeSeriesData(

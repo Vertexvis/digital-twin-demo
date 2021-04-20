@@ -1,4 +1,4 @@
-import { ColorMaterial } from '@vertexvis/viewer';
+import { ColorMaterial } from "@vertexvis/viewer";
 
 export const SelectColor = {
   ...ColorMaterial.create(255, 255, 0),
@@ -21,12 +21,12 @@ export function calcRedToGreenGradient(
 
 function rgbToHex({ r, g, b }: { r: number; g: number; b: number }): string {
   return (
-    '#' +
+    "#" +
     [r, g, b]
       .map((c) => {
         const hex = Math.min(255, c).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
+        return hex.length === 1 ? "0" + hex : hex;
       })
-      .join('')
+      .join("")
   );
 }

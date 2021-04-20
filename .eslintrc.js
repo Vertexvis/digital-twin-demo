@@ -1,10 +1,21 @@
 module.exports = {
-  extends: '@vertexvis/vertexvis-typescript',
-  rules: {
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      { vars: 'all', args: 'after-used' },
-    ],
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
   },
-  ignorePatterns: ['compiled'],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+  ],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaFeatures: { jsx: true },
+    ecmaVersion: 12,
+    sourceType: "module",
+  },
+  plugins: ["@typescript-eslint", "react"],
+  rules: {},
+  settings: { react: { version: "detect" } },
 };

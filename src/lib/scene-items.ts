@@ -1,17 +1,17 @@
-import { vertexvis } from '@vertexvis/frame-streaming-protos';
-import { ColorMaterial, Scene } from '@vertexvis/viewer';
-import { SelectColor } from './colors';
+import { vertexvis } from "@vertexvis/frame-streaming-protos";
+import { ColorMaterial, Components } from "@vertexvis/viewer";
+import { SelectColor } from "./colors";
 
-export interface SceneReq {
-  readonly scene?: Scene;
+export interface Req {
+  readonly viewer: Components.VertexViewer | null;
 }
 
-export interface ColorGroup {
+interface ColorGroup {
   readonly color: string;
   readonly suppliedIds: string[];
 }
 
-interface ApplyReq extends SceneReq {
+interface ApplyReq extends Req {
   readonly apply: boolean;
 }
 
@@ -19,24 +19,27 @@ interface ApplyGroupsBySuppliedIdsReq extends ApplyReq {
   readonly groups: ColorGroup[];
 }
 
-interface ApplyAndShowBySuppliedIdsReq extends SceneReq {
+interface ApplyAndShowBySuppliedIdsReq extends Req {
   readonly all: boolean;
   readonly group: ColorGroup;
 }
 
-interface HideSuppliedIdReq extends SceneReq {
+interface HideSuppliedIdReq extends Req {
   readonly suppliedIds: string[];
 }
 
-interface SelectByHitReq extends SceneReq {
+interface SelectByHitReq extends Req {
   readonly hit?: vertexvis.protobuf.stream.IHit;
 }
 
 export async function applyGroupsBySuppliedIds({
   apply,
   groups,
-  scene,
+  viewer,
 }: ApplyGroupsBySuppliedIdsReq): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
   if (scene == null) return;
 
   await scene
@@ -54,8 +57,11 @@ export async function applyGroupsBySuppliedIds({
 export async function applyAndShowBySuppliedIds({
   all,
   group: { color, suppliedIds },
-  scene,
+  viewer,
 }: ApplyAndShowBySuppliedIdsReq): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
   if (scene == null) return;
 
   await scene
@@ -70,9 +76,12 @@ export async function applyAndShowBySuppliedIds({
 }
 
 export async function hideBySuppliedId({
-  scene,
   suppliedIds,
+  viewer,
 }: HideSuppliedIdReq): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
   if (scene == null) return;
 
   await scene
@@ -82,14 +91,17 @@ export async function hideBySuppliedId({
 
 export async function selectByHit({
   hit,
-  scene,
+  viewer,
 }: SelectByHitReq): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
   if (scene == null) return;
 
   const id = hit?.itemId?.hex;
   const suppliedId = hit?.itemSuppliedId?.value;
   if (id) {
-    console.debug(`Selected ${id}${suppliedId ? `, ${suppliedId}` : ''}`);
+    console.debug(`Selected ${id}${suppliedId ? `, ${suppliedId}` : ""}`);
 
     await scene
       .items((op) => [
@@ -102,7 +114,10 @@ export async function selectByHit({
   }
 }
 
-export async function showAndClearAll({ scene }: SceneReq): Promise<void> {
+export async function showAndClearAll({ viewer }: Req): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
   if (scene == null) return;
 
   await scene

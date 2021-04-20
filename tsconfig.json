@@ -1,13 +1,14 @@
 {
-  "extends": "@vertexvis/typescript-config-vertexvis/tsconfig",
   "compilerOptions": {
     "allowJs": true,
     "declaration": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
     "isolatedModules": true,
     "lib": ["ES2020", "DOM"],
     "module": "CommonJS",
+    "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,

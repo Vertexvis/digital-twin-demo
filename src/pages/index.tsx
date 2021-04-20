@@ -1,26 +1,28 @@
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { DataSheet } from '../components/DataSheet';
-import { Header } from '../components/Header';
-import { Props as LayoutProps } from '../components/Layout';
-import { StreamCredsDialog } from '../components/StreamCredsDialog';
-import { Panel } from '../components/Panel';
-import { RightSidebar } from '../components/RightSidebar';
-import { LeftSidebar, Options } from '../components/LeftSidebar';
-import { VertexLogo } from '../components/VertexLogo';
-import { onTap, Viewer } from '../components/Viewer';
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import React from "react";
+import { BottomDrawer } from "../components/BottomDrawer";
+import { Props as LayoutProps } from "../components/Layout";
+import { LeftDrawer, Options } from "../components/LeftDrawer";
+import { encodeCreds, OpenButton, OpenDialog } from "../components/OpenScene";
+import { RightDrawer } from "../components/RightDrawer";
+import { Viewer } from "../components/Viewer";
+import { DefaultClientId, DefaultStreamKey, Env } from "../lib/env";
+import { useKeyListener } from "../lib/key-listener";
+import { Properties, toProperties } from "../lib/metadata";
+import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyGroupsBySuppliedIds,
   applyAndShowBySuppliedIds,
   selectByHit,
   showAndClearAll,
   hideBySuppliedId,
-} from '../lib/scene-items';
-import { Env } from '../lib/env';
-import { waitForHydrate } from '../lib/nextjs';
-import { getStoredCreds, setStoredCreds, StreamCreds } from '../lib/storage';
-import { useViewer } from '../lib/viewer';
+} from "../lib/scene-items";
+import {
+  getStoredCreds,
+  setStoredCreds,
+  StreamCredentials,
+} from "../lib/storage";
 import {
   Asset,
   Assets,
@@ -31,88 +33,61 @@ import {
   sensorsToItemSuppliedIds,
   SensorsToItemSuppliedIds,
   TimeSeriesData,
-} from '../lib/time-series';
-import { flyToSuppliedId } from '../lib/scene-camera';
-import { Properties, toProperties } from '../lib/metadata';
-import { Chart } from '../components/Chart';
+} from "../lib/time-series";
+import { useViewer } from "../lib/viewer";
 
-const MonoscopicViewer = onTap(Viewer);
 const Layout = dynamic<LayoutProps>(
-  () => import('../components/Layout').then((m) => m.Layout),
+  () => import("../components/Layout").then((m) => m.Layout),
   { ssr: false }
 );
 
-function Home(): JSX.Element {
+export default function Home(): JSX.Element {
   const router = useRouter();
   const { clientId: queryId, streamKey: queryKey } = router.query;
-  const storedCreds = getStoredCreds();
-  const viewerCtx = useViewer();
-
-  const [creds, setCreds] = useState<StreamCreds>({
-    clientId:
-      queryId?.toString() ||
-      storedCreds.clientId ||
-      '08F675C4AACE8C0214362DB5EFD4FACAFA556D463ECA00877CB225157EF58BFA',
-    streamKey:
-      queryKey?.toString() ||
-      storedCreds.streamKey ||
-      'U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU',
+  const stored = getStoredCreds();
+  const [credentials, setCredentials] = React.useState<StreamCredentials>({
+    clientId: queryId?.toString() || stored.clientId || DefaultClientId,
+    streamKey: queryKey?.toString() || stored.streamKey || DefaultStreamKey,
   });
-  const [dialogOpen, setDialogOpen] = useState(
-    !creds.clientId || !creds.streamKey
-  );
-  const [panelOpen, setPanelOpen] = useState<Options | undefined>(undefined);
-  const [timeSeriesData, setTimeSeriesData] = useState<TimeSeriesData>({
+
+  React.useEffect(() => {
+    router.push(encodeCreds(credentials));
+    setStoredCreds(credentials);
+    const sensorsToIds = sensorsToItemSuppliedIds(credentials.streamKey);
+    setTimeSeriesData(getTimeSeriesData(data, sensorsToIds));
+  }, [credentials]);
+
+  const keys = useKeyListener();
+  React.useEffect(() => {
+    if (!dialogOpen && keys.o) setDialogOpen(true);
+  }, [keys]);
+
+  const viewer = useViewer();
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [panelOpen, setPanelOpen] = React.useState<Options>(undefined);
+  const [timeSeriesData, setTimeSeriesData] = React.useState<TimeSeriesData>({
     ids: [],
     sensors: {},
     sensorsMeta: [],
     sensorsToIds: {},
   });
-  const [selectedTs, setSelectedTs] = useState('');
-  const [selectedSensor, setSelectedSensor] = useState('');
-  const [displayedSensors, setDisplayedSensors] = useState<Set<string>>(
+  const [selectedTs, setSelectedTs] = React.useState("");
+  const [selectedSensor, setSelectedSensor] = React.useState("");
+  const [displayedSensors, setDisplayedSensors] = React.useState<Set<string>>(
     new Set()
   );
-  const [selectedAsset, setSelectedAsset] = useState(Assets[0]);
-  const [data, setData] = useState<RawSensors>(getData(selectedAsset));
-  const [properties, setProperties] = useState<Properties>({});
-  const [altDown, setAltDown] = useState(false);
+  const [selectedAsset, setSelectedAsset] = React.useState(Assets[0]);
+  const [data, setData] = React.useState<RawSensors>(getData(selectedAsset));
+  const [properties, setProperties] = React.useState<Properties>({});
+  const ready = credentials.clientId && credentials.streamKey && viewer.isReady;
 
-  useEffect(() => {
-    router.push(
-      `/?clientId=${encodeURIComponent(
-        creds.clientId
-      )}&streamKey=${encodeURIComponent(creds.streamKey)}`
-    );
-    setStoredCreds(creds);
-    const sensorsToIds = sensorsToItemSuppliedIds(creds.streamKey);
-    setTimeSeriesData(getTimeSeriesData(data, sensorsToIds));
-  }, [creds]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     const tsd = timeSeriesData;
     setSelectedTs(
-      tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ''
+      tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ""
     );
-    setSelectedSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : '');
+    setSelectedSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
   }, [timeSeriesData]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return function cleanup() {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  });
-
-  function handleKeyDown(event: KeyboardEvent): void {
-    setAltDown(event.altKey);
-  }
-
-  function handleKeyUp(): void {
-    setAltDown(false);
-  }
 
   async function applyAndShowOrHideBySensorId(
     id: string,
@@ -121,16 +96,15 @@ function Home(): JSX.Element {
   ): Promise<void> {
     const selectedMeta = timeSeriesData.sensors[id].meta;
     const color = selectedMeta.tsData[selectedTs].color;
-    const scene = await viewerCtx.viewer.current?.scene();
     const suppliedIds = selectedMeta.itemSuppliedIds;
 
     await (apply
       ? applyAndShowBySuppliedIds({
           all,
           group: { color, suppliedIds },
-          scene,
+          viewer: viewer.ref.current,
         })
-      : hideBySuppliedId({ scene, suppliedIds }));
+      : hideBySuppliedId({ suppliedIds, viewer: viewer.ref.current }));
   }
 
   async function updateTimestamp(timestamp: string): Promise<void> {
@@ -150,57 +124,49 @@ function Home(): JSX.Element {
           suppliedIds: selectedMeta.itemSuppliedIds,
         };
       }),
-      scene: await viewerCtx.viewer.current?.scene(),
+      viewer: viewer.ref.current,
     });
   }
 
   async function reset(): Promise<void> {
     setDisplayedSensors(new Set());
-    await showAndClearAll({ scene: await viewerCtx.viewer.current?.scene() });
+    await showAndClearAll({ viewer: viewer.ref.current });
   }
 
   return (
-    <Layout title="Vertex Time Series Demo">
-      <div className="col-span-full">
-        <Header logo={<VertexLogo />}>
-          <div className="ml-4 mr-auto">
-            <button
-              className="btn btn-primary text-sm"
-              onClick={() => setDialogOpen(true)}
-            >
-              Open Scene
-            </button>
-          </div>
-        </Header>
-      </div>
-      <div className="row-start-2 row-span-full col-span-1">
-        <LeftSidebar isOpen={panelOpen} onSelected={setPanelOpen} />
-      </div>
-      <div className="flex w-full row-start-2 row-span-full col-start-2 col-span-full overflow-x-hidden">
-        {!dialogOpen && viewerCtx.viewerState.isReady && (
-          <div className="w-0 flex-grow ml-auto relative">
-            <MonoscopicViewer
-              configEnv={Env}
-              creds={creds}
-              viewer={viewerCtx.viewer}
-              onSceneReady={() => viewerCtx.onSceneReady()}
-              onSelect={async (hit) => {
-                setProperties(toProperties({ hit }));
-                return await selectByHit({
-                  hit,
-                  scene: await viewerCtx.viewer.current?.scene(),
-                });
-              }}
-              streamAttributes={{
-                experimentalGhosting: {
-                  enabled: { value: true },
-                  opacity: { value: 0.7 },
-                },
-              }}
-            />
-          </div>
-        )}
-        <RightSidebar
+    <Layout
+      bottomDrawer={
+        <BottomDrawer
+          onSelect={async (timestamp) => updateTimestamp(timestamp)}
+          panel={panelOpen}
+          sensor={timeSeriesData.sensors[selectedSensor]}
+          timestamp={selectedTs}
+        />
+      }
+      header={<OpenButton onClick={() => setDialogOpen(true)} />}
+      leftDrawer={<LeftDrawer isOpen={panelOpen} onSelected={setPanelOpen} />}
+      main={
+        ready && (
+          <Viewer
+            configEnv={Env}
+            credentials={credentials}
+            onSceneReady={() => viewer.onSceneReady()}
+            onSelect={async (hit) => {
+              setProperties(toProperties({ hit }));
+              return await selectByHit({ hit, viewer: viewer.ref.current });
+            }}
+            streamAttributes={{
+              experimentalGhosting: {
+                enabled: { value: true },
+                opacity: { value: 0.7 },
+              },
+            }}
+            viewer={viewer.ref}
+          />
+        )
+      }
+      rightDrawer={
+        <RightDrawer
           assets={{
             list: Assets,
             onSelect: async (asset: Asset) => {
@@ -226,12 +192,12 @@ function Home(): JSX.Element {
             list: timeSeriesData.sensorsMeta,
             mapping: timeSeriesData.sensorsToIds,
             onCheck: async (id: string, checked: boolean) => {
-              const scene = await viewerCtx.viewer.current?.scene();
               const upd = new Set(displayedSensors);
               checked ? upd.add(id) : upd.delete(id);
               setDisplayedSensors(upd);
 
-              if (upd.size === 0) await showAndClearAll({ scene });
+              if (upd.size === 0)
+                await showAndClearAll({ viewer: viewer.ref.current });
               else {
                 await applyAndShowOrHideBySensorId(
                   id,
@@ -246,52 +212,33 @@ function Home(): JSX.Element {
             },
             onSelect: async (id) => {
               setSelectedSensor(id);
-              if (displayedSensors.has(id) && altDown) {
+              if (displayedSensors.has(id) && keys.alt) {
                 flyToSuppliedId({
-                  scene: await viewerCtx.viewer.current?.scene(),
                   suppliedId:
                     timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
+                  viewer: viewer.ref.current,
                 });
               }
             },
             selected: selectedSensor,
           }}
         />
-        {panelOpen === 'data' && (
-          <Panel position={'bottom'}>
-            <div className="w-full h-full overflow-x-hidden">
-              <DataSheet
-                onSelect={async (timestamp) => updateTimestamp(timestamp)}
-                sensor={timeSeriesData.sensors[selectedSensor]}
-                timestamp={selectedTs}
-              />
-            </div>
-          </Panel>
-        )}
-        {panelOpen === 'chart' && (
-          <Panel position={'bottom'} overflow={'visible'}>
-            <div className="w-full h-full">
-              <Chart sensor={timeSeriesData.sensors[selectedSensor]} />
-            </div>
-          </Panel>
-        )}
-      </div>
+      }
+    >
       {dialogOpen && (
-        <StreamCredsDialog
-          creds={creds}
-          open={dialogOpen}
+        <OpenDialog
+          credentials={credentials}
           onClose={() => {
             reset();
             setDialogOpen(false);
           }}
           onConfirm={(cs) => {
-            setCreds(cs);
+            setCredentials(cs);
             setDialogOpen(false);
           }}
+          open={dialogOpen}
         />
       )}
     </Layout>
   );
 }
-
-export default waitForHydrate(Home);
