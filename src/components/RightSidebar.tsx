@@ -52,7 +52,7 @@ export function RightSidebar({
 
   return (
     <Panel position="right" overlay={false}>
-      <div className="w-full pr-2 border-b text-gray-700 text-sm">
+      <aside className="w-full pr-2 border-b text-gray-700 text-sm">
         <Collapsible title="SENSORS">
           {sensors.list.length > 0 ? (
             <table className="text-left mb-4 w-full table-fixed">
@@ -190,7 +190,7 @@ export function RightSidebar({
             Load
           </button>
         </Collapsible>
-      </div>
+      </aside>
     </Panel>
   );
 }

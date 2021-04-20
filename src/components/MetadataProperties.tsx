@@ -9,7 +9,7 @@ export function MetadataProperties({ properties }: Props): JSX.Element {
   const propKeys = Object.keys(properties);
 
   return propKeys.length > 0 ? (
-    <table className="text-left mb-4 w-full table-auto">
+    <table className="text-left mb-4 w-full">
       <thead>
         <tr>
           <th>Key</th>

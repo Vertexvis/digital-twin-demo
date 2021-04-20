@@ -10,15 +10,15 @@ interface Props {
 
 export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
   return (
-    <table className="mx-2 text-left w-full table-auto">
+    <table className="text-right w-full">
       <caption className="text-xl">{sensor.meta.id}</caption>
-      <thead>
+      <thead className="border-b-2 border-t">
         <tr>
-          <th>Timestamp</th>
+          <th className="px-3 text-left">Timestamp</th>
           <th>Minimum</th>
           <th>Maximum</th>
           <th>Average</th>
-          <th>Standard Deviation</th>
+          <th className="px-3">Standard Deviation</th>
         </tr>
       </thead>
       <tbody>
@@ -32,11 +32,11 @@ export function DataSheet({ onSelect, sensor, timestamp }: Props): JSX.Element {
               key={i}
               onClick={() => onSelect(v.timestamp)}
             >
-              <td>{v.timestamp}</td>
+              <td className="px-3 text-left">{v.timestamp}</td>
               <td>{formatValue(v.min)}</td>
               <td>{formatValue(v.max)}</td>
               <td>{formatValue(v.avg)}</td>
-              <td>{formatValue(v.std)}</td>
+              <td className="px-3">{formatValue(v.std)}</td>
             </tr>
           );
         })}
