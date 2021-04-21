@@ -7,12 +7,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
-import { Properties } from "../lib/metadata";
-
-interface Props {
-  readonly properties: Properties;
-}
+import { useRecoilValue } from "recoil";
+import { metadataPropertiesState } from "../lib/state";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -21,8 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function MetadataProperties({ properties }: Props): JSX.Element {
+export function MetadataProperties(): JSX.Element {
   const { table } = useStyles();
+  const properties = useRecoilValue(metadataPropertiesState);
   const propKeys = Object.keys(properties);
 
   return propKeys.length > 0 ? (

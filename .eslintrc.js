@@ -8,6 +8,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -16,6 +17,9 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint", "react"],
-  rules: {},
+  rules: {
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+  },
   settings: { react: { version: "detect" } },
 };

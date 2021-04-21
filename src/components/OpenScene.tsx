@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,29 +5,27 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-import { StreamCredentials } from "../lib/storage";
+import React from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  openSceneDialogOpenState,
+  StreamCredentials,
+  credentialsState,
+} from "../lib/state";
 
-interface Props {
-  readonly credentials: StreamCredentials;
-  readonly open: boolean;
-  readonly onClose: VoidFunction;
-  readonly onConfirm: (credentials: StreamCredentials) => void;
-}
+export function OpenButton(): JSX.Element {
+  const setOpen = useSetRecoilState(openSceneDialogOpenState);
 
-export function OpenButton({ onClick }: { onClick: () => void }): JSX.Element {
   return (
-    <Button color="primary" onClick={() => onClick()} variant="contained">
+    <Button color="primary" onClick={() => setOpen(true)} variant="contained">
       Open Scene
     </Button>
   );
 }
 
-export function OpenDialog({
-  credentials,
-  open,
-  onClose,
-  onConfirm,
-}: Props): JSX.Element {
+export function OpenDialog(): JSX.Element {
+  const [open, setOpen] = useRecoilState(openSceneDialogOpenState);
+  const [credentials, setCredentials] = useRecoilState(credentialsState);
   const [inputCreds, setInputCreds] = React.useState<StreamCredentials>(
     credentials
   );
@@ -41,7 +38,7 @@ export function OpenDialog({
       aria-labelledby="open-scene-title"
       fullWidth
       maxWidth="md"
-      onClose={onClose}
+      onClick={() => setOpen(false)}
       open={open}
     >
       <DialogTitle id="open-scene-title">Open Scene</DialogTitle>
@@ -82,12 +79,13 @@ export function OpenDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={() => setOpen(false)}>Cancel</Button>
         <Button
           color="primary"
           onClick={() => {
             if (inputCreds.clientId && inputCreds.streamKey) {
-              onConfirm(inputCreds);
+              setOpen(false);
+              setCredentials(inputCreds);
             }
           }}
         >

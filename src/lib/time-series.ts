@@ -6,7 +6,6 @@ export interface TimeSeriesData {
   readonly ids: string[];
   readonly sensors: Sensors;
   readonly sensorsMeta: SensorMeta[];
-  readonly sensorsToIds: SensorsToItemSuppliedIds;
 }
 
 export interface Sensors {
@@ -24,7 +23,7 @@ export interface SensorMeta {
   readonly tsData: TsData;
 }
 
-export interface SensorData {
+interface SensorData {
   readonly avg: number;
   readonly min: number;
   readonly max: number;
@@ -32,7 +31,7 @@ export interface SensorData {
   readonly timestamp: string;
 }
 
-export interface FaultCode {
+interface FaultCode {
   readonly id: string;
   readonly severity: "warn" | "error";
   readonly title: string;
@@ -67,7 +66,7 @@ export const MinValue = 5;
 
 export const MaxValue = 15;
 
-export type Asset = "N29961" | "N905NA";
+type Asset = "N29961" | "N905NA";
 
 export const Assets: Asset[] = ["N29961", "N905NA"];
 
@@ -152,7 +151,6 @@ export function getTimeSeriesData(
     ids: filteredIds,
     sensors: enriched,
     sensorsMeta: filteredIds.map((id) => enriched[id].meta),
-    sensorsToIds,
   };
 }
 

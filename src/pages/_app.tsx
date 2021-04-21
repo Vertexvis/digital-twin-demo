@@ -3,6 +3,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
+import { RecoilRoot } from "recoil";
 import theme from "../lib/theme";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
@@ -12,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   return (
-    <React.Fragment>
+    <RecoilRoot>
       <Head>
         <title>Vertex Time Series</title>
         <link rel="icon" href="/favicon-512x512.png" />
@@ -25,6 +26,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
-    </React.Fragment>
+    </RecoilRoot>
   );
 }

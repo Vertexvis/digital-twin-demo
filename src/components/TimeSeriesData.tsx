@@ -5,13 +5,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import React from "react";
+import { useRecoilState } from "recoil";
+import { timestampState } from "../lib/state";
 import { formatValue, Sensor } from "../lib/time-series";
 
 interface Props {
-  readonly onSelect: (timestamp: string) => Promise<void>;
   readonly sensor: Sensor;
-  readonly timestamp: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -21,12 +20,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function TimeSeriesData({
-  onSelect,
-  sensor,
-  timestamp,
-}: Props): JSX.Element {
+export function TimeSeriesData({ sensor }: Props): JSX.Element {
   const { table } = useStyles();
+  const [ts, setTs] = useRecoilState(timestampState);
 
   return (
     <TableContainer>
@@ -42,11 +38,11 @@ export function TimeSeriesData({
         </TableHead>
         <TableBody>
           {sensor.data.map((v, i) => {
-            const tsEq = v.timestamp === timestamp;
+            const tsEq = v.timestamp === ts;
             return (
               <TableRow
                 key={i}
-                onClick={() => onSelect(v.timestamp)}
+                onClick={() => setTs(v.timestamp)}
                 selected={tsEq}
               >
                 <TableCell>{v.timestamp}</TableCell>

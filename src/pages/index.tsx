@@ -1,15 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { BottomDrawer } from "../components/BottomDrawer";
 import { Props as LayoutProps } from "../components/Layout";
-import { LeftDrawer, Options } from "../components/LeftDrawer";
+import { LeftDrawer } from "../components/LeftDrawer";
 import { encodeCreds, OpenButton, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
-import { DefaultClientId, DefaultStreamKey, Env } from "../lib/env";
+import { Env } from "../lib/env";
 import { useKeyListener } from "../lib/key-listener";
-import { Properties, toProperties } from "../lib/metadata";
+import { toProperties } from "../lib/metadata";
 import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyGroupsBySuppliedIds,
@@ -19,20 +21,24 @@ import {
   hideBySuppliedId,
 } from "../lib/scene-items";
 import {
-  getStoredCreds,
-  setStoredCreds,
-  StreamCredentials,
-} from "../lib/storage";
+  shownSensorsState,
+  head,
+  metadataPropertiesState,
+  openSceneDialogOpenState,
+  assetState,
+  sensorState,
+  timestampState,
+  sensorDataState,
+  credentialsState,
+  timeSeriesDataState,
+  sensorMappingState,
+} from "../lib/state";
 import {
-  Asset,
-  Assets,
-  Faults,
   getData,
   getTimeSeriesData,
   RawSensors,
   sensorsToItemSuppliedIds,
   SensorsToItemSuppliedIds,
-  TimeSeriesData,
 } from "../lib/time-series";
 import { useViewer } from "../lib/viewer";
 
@@ -42,61 +48,70 @@ const Layout = dynamic<LayoutProps>(
 );
 
 export default function Home(): JSX.Element {
-  const router = useRouter();
-  const { clientId: queryId, streamKey: queryKey } = router.query;
-  const stored = getStoredCreds();
-  const [credentials, setCredentials] = React.useState<StreamCredentials>({
-    clientId: queryId?.toString() || stored.clientId || DefaultClientId,
-    streamKey: queryKey?.toString() || stored.streamKey || DefaultStreamKey,
-  });
-
-  React.useEffect(() => {
-    router.push(encodeCreds(credentials));
-    setStoredCreds(credentials);
-    const sensorsToIds = sensorsToItemSuppliedIds(credentials.streamKey);
-    setTimeSeriesData(getTimeSeriesData(data, sensorsToIds));
-  }, [credentials]);
-
   const keys = useKeyListener();
-  React.useEffect(() => {
-    if (!dialogOpen && keys.o) setDialogOpen(true);
-  }, [keys]);
-
+  const router = useRouter();
   const viewer = useViewer();
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [panelOpen, setPanelOpen] = React.useState<Options>(undefined);
-  const [timeSeriesData, setTimeSeriesData] = React.useState<TimeSeriesData>({
-    ids: [],
-    sensors: {},
-    sensorsMeta: [],
-    sensorsToIds: {},
-  });
-  const [selectedTs, setSelectedTs] = React.useState("");
-  const [selectedSensor, setSelectedSensor] = React.useState("");
-  const [displayedSensors, setDisplayedSensors] = React.useState<Set<string>>(
-    new Set()
+
+  const dialogOpen = useRecoilValue(openSceneDialogOpenState);
+  const asset = useRecoilValue(assetState);
+  const sensorData = useRecoilValue(sensorDataState);
+  const setProperties = useSetRecoilState(metadataPropertiesState);
+
+  const [credentials, setCredentials] = useRecoilState(credentialsState);
+  const [sensorMapping, setSensorMapping] = useRecoilState(sensorMappingState);
+  const [timeSeriesData, setTimeSeriesData] = useRecoilState(
+    timeSeriesDataState
   );
-  const [selectedAsset, setSelectedAsset] = React.useState(Assets[0]);
-  const [data, setData] = React.useState<RawSensors>(getData(selectedAsset));
-  const [properties, setProperties] = React.useState<Properties>({});
+  const [timestamp, setTimestamp] = useRecoilState(timestampState);
+  const [sensor, setSensor] = useRecoilState(sensorState);
+  const [shownSensors, setShownSensors] = useRecoilState(shownSensorsState);
+
   const ready = credentials.clientId && credentials.streamKey && viewer.isReady;
 
   React.useEffect(() => {
+    if (router.query.clientId || router.query.streamKey) {
+      setCredentials({
+        clientId: head(router.query.clientId) ?? credentials.clientId,
+        streamKey: head(router.query.streamKey) ?? credentials.streamKey,
+      });
+    }
+  }, [router.isReady]);
+
+  React.useEffect(() => {
+    router.push(encodeCreds(credentials));
+    setSensorMapping(sensorsToItemSuppliedIds(credentials.streamKey));
+  }, [credentials]);
+
+  React.useEffect(() => {
     const tsd = timeSeriesData;
-    setSelectedTs(
+    setTimestamp(
       tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ""
     );
-    setSelectedSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
+    setSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
   }, [timeSeriesData]);
+
+  React.useEffect(() => {
+    reset();
+    setTimeSeriesData(getTimeSeriesData(getData(asset), sensorMapping));
+  }, [asset]);
+
+  React.useEffect(() => {
+    reset();
+    setTimeSeriesData(getTimeSeriesData(sensorData, sensorMapping));
+  }, [sensorMapping]);
+
+  React.useEffect(() => {
+    colorSensors(timestamp);
+  }, [timestamp]);
 
   async function applyAndShowOrHideBySensorId(
     id: string,
     apply: boolean,
     all: boolean
   ): Promise<void> {
-    const selectedMeta = timeSeriesData.sensors[id].meta;
-    const color = selectedMeta.tsData[selectedTs].color;
-    const suppliedIds = selectedMeta.itemSuppliedIds;
+    const meta = timeSeriesData.sensors[id].meta;
+    const color = meta.tsData[timestamp].color;
+    const suppliedIds = meta.itemSuppliedIds;
 
     await (apply
       ? applyAndShowBySuppliedIds({
@@ -107,21 +122,16 @@ export default function Home(): JSX.Element {
       : hideBySuppliedId({ suppliedIds, viewer: viewer.ref.current }));
   }
 
-  async function updateTimestamp(timestamp: string): Promise<void> {
-    await colorSelectedSensors(timestamp);
-    setSelectedTs(timestamp);
-  }
-
-  async function colorSelectedSensors(timestamp: string): Promise<void> {
-    if (displayedSensors.size === 0) return;
+  async function colorSensors(ts: string): Promise<void> {
+    if (shownSensors.size === 0) return;
 
     await applyGroupsBySuppliedIds({
       apply: true,
-      groups: [...displayedSensors].map((sId) => {
-        const selectedMeta = timeSeriesData.sensors[sId].meta;
+      groups: [...shownSensors].map((sId) => {
+        const meta = timeSeriesData.sensors[sId].meta;
         return {
-          color: selectedMeta.tsData[timestamp].color,
-          suppliedIds: selectedMeta.itemSuppliedIds,
+          color: meta.tsData[ts].color,
+          suppliedIds: meta.itemSuppliedIds,
         };
       }),
       viewer: viewer.ref.current,
@@ -129,28 +139,20 @@ export default function Home(): JSX.Element {
   }
 
   async function reset(): Promise<void> {
-    setDisplayedSensors(new Set());
+    setShownSensors(new Set());
     await showAndClearAll({ viewer: viewer.ref.current });
   }
 
   return (
     <Layout
-      bottomDrawer={
-        <BottomDrawer
-          onSelect={async (timestamp) => updateTimestamp(timestamp)}
-          panel={panelOpen}
-          sensor={timeSeriesData.sensors[selectedSensor]}
-          timestamp={selectedTs}
-        />
-      }
-      header={<OpenButton onClick={() => setDialogOpen(true)} />}
-      leftDrawer={<LeftDrawer isOpen={panelOpen} onSelected={setPanelOpen} />}
+      bottomDrawer={<BottomDrawer sensor={timeSeriesData.sensors[sensor]} />}
+      header={<OpenButton />}
+      leftDrawer={<LeftDrawer />}
       main={
         ready && (
           <Viewer
             configEnv={Env}
             credentials={credentials}
-            onSceneReady={() => viewer.onSceneReady()}
             onSelect={async (hit) => {
               setProperties(toProperties({ hit }));
               return await selectByHit({ hit, viewer: viewer.ref.current });
@@ -167,78 +169,36 @@ export default function Home(): JSX.Element {
       }
       rightDrawer={
         <RightDrawer
-          assets={{
-            list: Assets,
-            onSelect: async (asset: Asset) => {
-              await reset();
-              setSelectedAsset(asset);
-              const d = getData(asset);
-              setData(d);
-              setTimeSeriesData(
-                getTimeSeriesData(d, timeSeriesData.sensorsToIds)
-              );
-            },
-            selected: selectedAsset,
-          }}
-          faults={{
-            list: Faults,
-            selected: selectedTs,
-            onSelect: async (timestamp) => updateTimestamp(timestamp),
-          }}
-          properties={properties}
-          selectedTs={selectedTs}
-          sensors={{
-            displayed: displayedSensors,
-            list: timeSeriesData.sensorsMeta,
-            mapping: timeSeriesData.sensorsToIds,
-            onCheck: async (id: string, checked: boolean) => {
-              const upd = new Set(displayedSensors);
-              checked ? upd.add(id) : upd.delete(id);
-              setDisplayedSensors(upd);
+          onCheck={async (id: string, checked: boolean) => {
+            const upd = new Set(shownSensors);
+            checked ? upd.add(id) : upd.delete(id);
+            setShownSensors(upd);
 
-              if (upd.size === 0)
-                await showAndClearAll({ viewer: viewer.ref.current });
-              else {
-                await applyAndShowOrHideBySensorId(
-                  id,
-                  checked,
-                  displayedSensors.size === 0 && upd.size === 1
-                );
-              }
-            },
-            onMappingChange: async (mapping: SensorsToItemSuppliedIds) => {
-              await reset();
-              setTimeSeriesData(getTimeSeriesData(data, mapping));
-            },
-            onSelect: async (id) => {
-              setSelectedSensor(id);
-              if (displayedSensors.has(id) && keys.alt) {
-                flyToSuppliedId({
-                  suppliedId:
-                    timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
-                  viewer: viewer.ref.current,
-                });
-              }
-            },
-            selected: selectedSensor,
+            if (upd.size === 0) {
+              await showAndClearAll({ viewer: viewer.ref.current });
+            } else {
+              await applyAndShowOrHideBySensorId(
+                id,
+                checked,
+                shownSensors.size === 0 && upd.size === 1
+              );
+            }
           }}
+          onSelect={async (id) => {
+            setSensor(id);
+            if (shownSensors.has(id) && keys.alt) {
+              flyToSuppliedId({
+                suppliedId: timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
+                viewer: viewer.ref.current,
+              });
+            }
+          }}
+          selected={sensor}
+          shown={shownSensors}
         />
       }
     >
-      {dialogOpen && (
-        <OpenDialog
-          credentials={credentials}
-          onClose={() => {
-            reset();
-            setDialogOpen(false);
-          }}
-          onConfirm={(cs) => {
-            setCredentials(cs);
-            setDialogOpen(false);
-          }}
-          open={dialogOpen}
-        />
-      )}
+      {dialogOpen && <OpenDialog />}
     </Layout>
   );
 }
