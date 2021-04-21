@@ -10,15 +10,11 @@ import { encodeCreds, OpenButton, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
 import { Env } from "../lib/env";
-import { useKeyListener } from "../lib/key-listener";
 import { toProperties } from "../lib/metadata";
-import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyGroupsBySuppliedIds,
-  applyAndShowBySuppliedIds,
   selectByHit,
   showAndClearAll,
-  hideBySuppliedId,
 } from "../lib/scene-items";
 import {
   shownSensorsState,
@@ -36,9 +32,7 @@ import {
 import {
   getData,
   getTimeSeriesData,
-  RawSensors,
   sensorsToItemSuppliedIds,
-  SensorsToItemSuppliedIds,
 } from "../lib/time-series";
 import { useViewer } from "../lib/viewer";
 
@@ -48,7 +42,6 @@ const Layout = dynamic<LayoutProps>(
 );
 
 export default function Home(): JSX.Element {
-  const keys = useKeyListener();
   const router = useRouter();
   const viewer = useViewer();
 
@@ -104,24 +97,6 @@ export default function Home(): JSX.Element {
     colorSensors(timestamp);
   }, [timestamp]);
 
-  async function applyAndShowOrHideBySensorId(
-    id: string,
-    apply: boolean,
-    all: boolean
-  ): Promise<void> {
-    const meta = timeSeriesData.sensors[id].meta;
-    const color = meta.tsData[timestamp].color;
-    const suppliedIds = meta.itemSuppliedIds;
-
-    await (apply
-      ? applyAndShowBySuppliedIds({
-          all,
-          group: { color, suppliedIds },
-          viewer: viewer.ref.current,
-        })
-      : hideBySuppliedId({ suppliedIds, viewer: viewer.ref.current }));
-  }
-
   async function colorSensors(ts: string): Promise<void> {
     if (shownSensors.size === 0) return;
 
@@ -167,36 +142,7 @@ export default function Home(): JSX.Element {
           />
         )
       }
-      rightDrawer={
-        <RightDrawer
-          onCheck={async (id: string, checked: boolean) => {
-            const upd = new Set(shownSensors);
-            checked ? upd.add(id) : upd.delete(id);
-            setShownSensors(upd);
-
-            if (upd.size === 0) {
-              await showAndClearAll({ viewer: viewer.ref.current });
-            } else {
-              await applyAndShowOrHideBySensorId(
-                id,
-                checked,
-                shownSensors.size === 0 && upd.size === 1
-              );
-            }
-          }}
-          onSelect={async (id) => {
-            setSensor(id);
-            if (shownSensors.has(id) && keys.alt) {
-              flyToSuppliedId({
-                suppliedId: timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
-                viewer: viewer.ref.current,
-              });
-            }
-          }}
-          selected={sensor}
-          shown={shownSensors}
-        />
-      }
+      rightDrawer={<RightDrawer viewer={viewer.ref.current} />}
     >
       {dialogOpen && <OpenDialog />}
     </Layout>

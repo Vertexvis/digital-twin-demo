@@ -25,8 +25,8 @@ export function Assets(): JSX.Element {
                 onClick={() => setAsset(a)}
                 selected={isSelected}
               >
-                <TableCell>
-                  <LayersIcon />
+                <TableCell align="center">
+                  <LayersIcon style={{ marginTop: "4px" }} color="action" />
                 </TableCell>
                 <TableCell>{a}</TableCell>
               </TableRow>

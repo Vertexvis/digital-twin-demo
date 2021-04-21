@@ -4,7 +4,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
@@ -19,13 +18,6 @@ export function Faults(): JSX.Element {
   return FaultsList.length > 0 ? (
     <TableContainer>
       <Table padding="checkbox" size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell>Fault</TableCell>
-            <TableCell>Timestamp</TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           {FaultsList.map((f) => {
             const isSelected = f.timestamp === ts;
@@ -35,14 +27,20 @@ export function Faults(): JSX.Element {
                 onClick={() => setTs(f.timestamp)}
                 selected={isSelected}
               >
-                <TableCell>
+                <TableCell align="center">
                   {f.severity === "warn" ? (
                     <WarningTwoToneIcon
-                      style={{ color: theme.palette.warning.light }}
+                      style={{
+                        color: theme.palette.warning.light,
+                        marginTop: "4px",
+                      }}
                     />
                   ) : (
                     <ErrorTwoToneIcon
-                      style={{ color: theme.palette.error.light }}
+                      style={{
+                        color: theme.palette.error.light,
+                        marginTop: "4px",
+                      }}
                     />
                   )}
                 </TableCell>

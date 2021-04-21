@@ -74,13 +74,13 @@ export const Faults: FaultCode[] = [
   {
     id: "1",
     severity: "warn",
-    title: "ECU maintenance",
+    title: "Check ECU",
     timestamp: "2021-04-01T12:15:01.000Z",
   },
   {
     id: "2",
     severity: "error",
-    title: "LCU malfunction",
+    title: "LCU fault",
     timestamp: "2021-04-01T12:15:07.000Z",
   },
 ];

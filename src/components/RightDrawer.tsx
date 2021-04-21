@@ -4,6 +4,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Drawer from "@material-ui/core/Drawer";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
+import { Components } from "@vertexvis/viewer";
 import React from "react";
 import { Assets } from "./Assets";
 import { Faults } from "./Faults";
@@ -13,10 +14,7 @@ import { MetadataProperties } from "./MetadataProperties";
 import { Sensors } from "./Sensors";
 
 interface Props {
-  readonly onCheck: (id: string, checked: boolean) => Promise<void>;
-  readonly onSelect: (id: string) => Promise<void>;
-  readonly selected: string;
-  readonly shown: Set<string>;
+  readonly viewer: Components.VertexViewer | null;
 }
 
 const useStyles = makeStyles(() => ({
@@ -28,12 +26,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function RightDrawer({
-  onCheck,
-  onSelect,
-  selected,
-  shown,
-}: Props): JSX.Element {
+export function RightDrawer({ viewer }: Props): JSX.Element {
   const { paper, title } = useStyles();
 
   return (
@@ -44,12 +37,7 @@ export function RightDrawer({
             Sensors
           </Typography>
         </AccordionSummary>
-        <Sensors
-          onCheck={onCheck}
-          onSelect={onSelect}
-          selected={selected}
-          shown={shown}
-        />
+        <Sensors viewer={viewer} />
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
