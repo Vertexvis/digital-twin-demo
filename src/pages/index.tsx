@@ -18,13 +18,11 @@ import {
 } from "../lib/scene-items";
 import {
   shownSensorsState,
-  head,
   metadataPropertiesState,
   openSceneDialogOpenState,
   assetState,
   sensorState,
   timestampState,
-  sensorDataState,
   credentialsState,
   timeSeriesDataState,
   sensorMappingState,
@@ -47,7 +45,6 @@ export default function Home(): JSX.Element {
 
   const dialogOpen = useRecoilValue(openSceneDialogOpenState);
   const asset = useRecoilValue(assetState);
-  const sensorData = useRecoilValue(sensorDataState);
   const setProperties = useSetRecoilState(metadataPropertiesState);
 
   const [credentials, setCredentials] = useRecoilState(credentialsState);
@@ -86,16 +83,15 @@ export default function Home(): JSX.Element {
   React.useEffect(() => {
     reset();
     setTimeSeriesData(getTimeSeriesData(getData(asset), sensorMapping));
-  }, [asset]);
-
-  React.useEffect(() => {
-    reset();
-    setTimeSeriesData(getTimeSeriesData(sensorData, sensorMapping));
-  }, [sensorMapping]);
+  }, [asset, sensorMapping]);
 
   React.useEffect(() => {
     colorSensors(timestamp);
   }, [timestamp]);
+
+  function head<T>(items?: T | T[]): T | undefined {
+    return items ? (Array.isArray(items) ? items[0] : items) : undefined;
+  }
 
   async function colorSensors(ts: string): Promise<void> {
     if (shownSensors.size === 0) return;

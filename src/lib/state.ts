@@ -1,10 +1,8 @@
-import { atom, DefaultValue, RecoilState, selector } from "recoil";
+import { atom, DefaultValue, RecoilState } from "recoil";
 import { DefaultClientId, DefaultStreamKey, Env } from "./env";
 import { Properties } from "./metadata";
 import {
   Assets,
-  getData,
-  RawSensors,
   SensorsToItemSuppliedIds,
   TimeSeriesData,
 } from "./time-series";
@@ -45,7 +43,6 @@ const Keys = {
   asset: "asset",
   sensor: "sensor",
   timestamp: "timestamp",
-  sensorDataState: "sensorDataState",
   sensorMapping: "sensorMapping",
   credentialsState: "credentialsState",
   timeSeriesData: "timeSeriesData",
@@ -106,12 +103,7 @@ export const sensorMappingState = atom<SensorsToItemSuppliedIds>({
   default: {},
 });
 
-export const sensorDataState = selector<RawSensors>({
-  key: Keys.sensorDataState,
-  get: ({ get }) => getData(get(assetState)),
-});
-
-export function localStorageEffect<T>(
+function localStorageEffect<T>(
   key: string
 ): ({ setSelf, onSet }: Param<T>) => void {
   return ({ setSelf, onSet }: Param<T>): void => {
@@ -146,8 +138,4 @@ function setItem(key: string, value: string): void {
 
 function envKey(key: string): string {
   return `vertexvis:${Env}:${key}`;
-}
-
-export function head<T>(items?: T | T[]): T | undefined {
-  return items ? (Array.isArray(items) ? items[0] : items) : undefined;
 }

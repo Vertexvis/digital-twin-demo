@@ -17,7 +17,7 @@ export interface Sensor {
   readonly meta: SensorMeta;
 }
 
-export interface SensorMeta {
+interface SensorMeta {
   readonly id: string;
   readonly itemSuppliedIds: string[];
   readonly tsData: TsData;
