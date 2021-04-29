@@ -1,4 +1,3 @@
-import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,21 +8,13 @@ import Typography from "@material-ui/core/Typography";
 import { useRecoilValue } from "recoil";
 import { metadataPropertiesState } from "../lib/state";
 
-const useStyles = makeStyles((theme) => ({
-  table: {
-    // To accommodate scrollbar
-    marginBottom: theme.spacing(1),
-  },
-}));
-
 export function MetadataProperties(): JSX.Element {
-  const { table } = useStyles();
   const properties = useRecoilValue(metadataPropertiesState);
   const propKeys = Object.keys(properties);
 
   return propKeys.length > 0 ? (
     <TableContainer>
-      <Table className={table} padding="checkbox" size="small">
+      <Table padding="checkbox" size="small" style={{ whiteSpace: "nowrap" }}>
         <TableBody>
           {propKeys.map((k) => (
             <TableRow key={k}>
