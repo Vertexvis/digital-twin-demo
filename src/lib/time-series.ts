@@ -92,6 +92,16 @@ const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds =
     VCU: ["200030", "200060"],
     TCU: ["200090", "200100"],
   },
+  UbZCuXV38qGRUxw8gSenvgoTwN4x_QErXMIR: {
+    ECU: ["300590", "300060", "306940", "300050", "300590", "300610"],
+    VCU: ["326250", "327030", "326260"],
+    TCU: ["327980", "327990", "328760"],
+    CCU: ["329580", "329590", "330360"],
+    RCU: ["304010", "304040"],
+    ACU: ["310830", "310840"],
+    LCU: ["312840", "312850"],
+    SCU: ["309590", "309600"],
+  },
 };
 if (stSk)
   streamKeyToSensorsToItemSuppliedIds[stSk] = {
