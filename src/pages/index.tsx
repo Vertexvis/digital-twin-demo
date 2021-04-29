@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { BottomDrawer } from "../components/BottomDrawer";
+import { Header } from "../components/Header";
 import { Props as LayoutProps } from "../components/Layout";
 import { LeftDrawer } from "../components/LeftDrawer";
-import { encodeCreds, OpenButton, OpenDialog } from "../components/OpenScene";
+import { encodeCreds, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
 import { Env } from "../lib/env";
@@ -89,10 +90,6 @@ export default function Home(): JSX.Element {
     colorSensors(timestamp);
   }, [timestamp]);
 
-  function head<T>(items?: T | T[]): T | undefined {
-    return items ? (Array.isArray(items) ? items[0] : items) : undefined;
-  }
-
   async function colorSensors(ts: string): Promise<void> {
     if (shownSensors.size === 0) return;
 
@@ -117,7 +114,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       bottomDrawer={<BottomDrawer sensor={timeSeriesData.sensors[sensor]} />}
-      header={<OpenButton />}
+      header={<Header />}
       leftDrawer={<LeftDrawer />}
       main={
         ready && (
@@ -143,4 +140,8 @@ export default function Home(): JSX.Element {
       {dialogOpen && <OpenDialog />}
     </Layout>
   );
+}
+
+function head<T>(items?: T | T[]): T | undefined {
+  return items ? (Array.isArray(items) ? items[0] : items) : undefined;
 }
