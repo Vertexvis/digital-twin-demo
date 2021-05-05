@@ -1,4 +1,4 @@
-# Vertex Time Series Demo
+# Vertex Digital Twin Demo
 
 ## Run locally in Docker
 

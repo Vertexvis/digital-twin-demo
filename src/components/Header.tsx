@@ -14,7 +14,7 @@ export function Header(): JSX.Element {
         Open Scene
       </Button>
       <Link
-        href="https://github.com/Vertexvis/time-series-demo"
+        href="https://github.com/Vertexvis/digital-twin-demo"
         rel="noreferrer"
         style={{ alignSelf: "center" }}
         target="_blank"

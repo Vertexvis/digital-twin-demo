@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <RecoilRoot>
       <Head>
-        <title>Vertex Time Series</title>
+        <title>Vertex Digital Twin</title>
         <link rel="icon" href="/favicon-512x512.png" />
         <meta
           name="viewport"
