@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "next build",
+    "clean": "rm -rf .next/ node_modules/",
     "dev": "next dev",
     "format": "prettier --write './**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|mdx|html|css)'",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx --ignore-path ./.gitignore .",
