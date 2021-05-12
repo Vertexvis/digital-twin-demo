@@ -5,11 +5,13 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
-import { useRecoilValue } from "recoil";
-import { metadataPropertiesState } from "../lib/state";
+import { Properties } from "../lib/metadata";
 
-export function MetadataProperties(): JSX.Element {
-  const properties = useRecoilValue(metadataPropertiesState);
+export interface MetadataProps {
+  readonly properties: Properties;
+}
+
+export function MetadataProperties({ properties }: MetadataProps): JSX.Element {
   const propKeys = Object.keys(properties);
 
   return propKeys.length > 0 ? (

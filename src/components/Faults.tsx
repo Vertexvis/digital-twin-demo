@@ -7,24 +7,25 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
-import { useRecoilState } from "recoil";
 import { Faults as FaultsList } from "../lib/time-series";
 import theme from "../lib/theme";
-import { timestampState } from "../lib/state";
 
-export function Faults(): JSX.Element {
-  const [ts, setTs] = useRecoilState(timestampState);
+export interface FaultProps {
+  readonly onSelect: (timestamp: string) => void;
+  readonly selected: string;
+}
 
+export function Faults({ onSelect, selected }: FaultProps): JSX.Element {
   return FaultsList.length > 0 ? (
     <TableContainer>
       <Table padding="checkbox" size="small">
         <TableBody>
           {FaultsList.map((f) => {
-            const isSelected = f.timestamp === ts;
+            const isSelected = f.timestamp === selected;
             return (
               <TableRow
                 key={f.id}
-                onClick={() => setTs(f.timestamp)}
+                onClick={() => onSelect(f.timestamp)}
                 selected={isSelected}
               >
                 <TableCell align="center">

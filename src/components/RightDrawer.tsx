@@ -4,17 +4,20 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Drawer from "@material-ui/core/Drawer";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
-import { Components } from "@vertexvis/viewer";
 import React from "react";
-import { Assets } from "./Assets";
-import { Faults } from "./Faults";
+import { AssetProps, Assets } from "./Assets";
+import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";
-import { Mapping } from "./Mapping";
-import { MetadataProperties } from "./MetadataProperties";
-import { Sensors } from "./Sensors";
+import { Mapping, MappingProps } from "./Mapping";
+import { MetadataProperties, MetadataProps } from "./MetadataProperties";
+import { SensorProps, Sensors } from "./Sensors";
 
 interface Props {
-  readonly viewer: Components.VertexViewer | null;
+  readonly assets: AssetProps;
+  readonly faults: FaultProps;
+  readonly mapping: MappingProps;
+  readonly metadata: MetadataProps;
+  readonly sensors: SensorProps;
 }
 
 const useStyles = makeStyles(() => ({
@@ -26,7 +29,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function RightDrawer({ viewer }: Props): JSX.Element {
+export function RightDrawer({
+  assets,
+  faults,
+  mapping,
+  metadata,
+  sensors,
+}: Props): JSX.Element {
   const { paper, title } = useStyles();
 
   return (
@@ -37,7 +46,7 @@ export function RightDrawer({ viewer }: Props): JSX.Element {
             Sensors
           </Typography>
         </AccordionSummary>
-        <Sensors viewer={viewer} />
+        <Sensors {...sensors} />
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -45,7 +54,7 @@ export function RightDrawer({ viewer }: Props): JSX.Element {
             Assets
           </Typography>
         </AccordionSummary>
-        <Assets />
+        <Assets {...assets} />
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -53,7 +62,7 @@ export function RightDrawer({ viewer }: Props): JSX.Element {
             Fault Codes
           </Typography>
         </AccordionSummary>
-        <Faults />
+        <Faults {...faults} />
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -61,7 +70,7 @@ export function RightDrawer({ viewer }: Props): JSX.Element {
             Metadata Properties
           </Typography>
         </AccordionSummary>
-        <MetadataProperties />
+        <MetadataProperties {...metadata} />
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -69,7 +78,7 @@ export function RightDrawer({ viewer }: Props): JSX.Element {
             Sensor Mapping
           </Typography>
         </AccordionSummary>
-        <Mapping />
+        <Mapping {...mapping} />
       </Accordion>
     </Drawer>
   );

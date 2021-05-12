@@ -4,14 +4,17 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
 import Drawer from "@material-ui/core/Drawer";
 import Typography from "@material-ui/core/Typography";
-import { useRecoilValue } from "recoil";
 import { Sensor } from "../lib/time-series";
 import { TimeSeriesChart } from "./TimeSeriesChart";
 import { TimeSeriesData } from "./TimeSeriesData";
-import { bottomDrawerContentState } from "../lib/state";
+
+export type Content = "data" | "chart" | undefined;
 
 interface Props {
+  readonly content: Content;
+  readonly onSelect: (timestamp: string) => Promise<void>;
   readonly sensor: Sensor;
+  readonly timestamp: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -27,8 +30,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function BottomDrawer({ sensor }: Props): JSX.Element {
-  const content = useRecoilValue(bottomDrawerContentState);
+export function BottomDrawer({
+  content,
+  onSelect,
+  sensor,
+  timestamp,
+}: Props): JSX.Element {
   const { expanded, paper, title } = useStyles();
 
   return (
@@ -45,7 +52,11 @@ export function BottomDrawer({ sensor }: Props): JSX.Element {
               {sensor.meta.id} Data
             </Typography>
           </AccordionSummary>
-          <TimeSeriesData sensor={sensor} />
+          <TimeSeriesData
+            onSelect={onSelect}
+            sensor={sensor}
+            timestamp={timestamp}
+          />
         </Accordion>
       )}
       {content === "chart" && (

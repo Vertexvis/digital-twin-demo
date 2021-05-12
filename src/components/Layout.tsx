@@ -9,7 +9,7 @@ const DenseToolbarHeight = 48;
 export const LeftDrawerWidth = 73;
 export const RightDrawerWidth = 320;
 
-export interface Props {
+interface Props {
   readonly bottomDrawer: React.ReactNode;
   readonly children: React.ReactNode;
   readonly header: React.ReactNode;

@@ -2,15 +2,19 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
-import { useSetRecoilState } from "recoil";
-import { openSceneDialogOpenState } from "../lib/state";
 
-export function Header(): JSX.Element {
-  const setOpen = useSetRecoilState(openSceneDialogOpenState);
+interface Props {
+  onOpenSceneClick: () => void;
+}
 
+export function Header({ onOpenSceneClick }: Props): JSX.Element {
   return (
     <Box display="flex" justifyContent="space-between" width="100%">
-      <Button color="primary" onClick={() => setOpen(true)} variant="contained">
+      <Button
+        color="primary"
+        onClick={() => onOpenSceneClick()}
+        variant="contained"
+      >
         Open Scene
       </Button>
       <Link

@@ -1,14 +1,12 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
-import { openSceneDialogOpenState } from "./state";
 
 interface Keys {
   readonly alt: boolean;
+  readonly o: boolean;
 }
 
 export function useKeyListener(): Keys {
-  const setDialogOpen = useSetRecoilState(openSceneDialogOpenState);
-  const [keys, setKeys] = React.useState<Keys>({ alt: false });
+  const [keys, setKeys] = React.useState<Keys>({ alt: false, o: false });
 
   React.useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -29,7 +27,7 @@ export function useKeyListener(): Keys {
 
   function handle(e: KeyboardEvent, down: boolean): void {
     if (e.altKey) setKeys({ ...keys, alt: down });
-    else if (e.key === "o" && down) setDialogOpen(true);
+    else if (e.key === "o") setKeys({ ...keys, o: down });
   }
 
   return keys;

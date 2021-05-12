@@ -17,7 +17,7 @@ export interface Sensor {
   readonly meta: SensorMeta;
 }
 
-interface SensorMeta {
+export interface SensorMeta {
   readonly id: string;
   readonly itemSuppliedIds: string[];
   readonly tsData: TsData;
@@ -31,7 +31,7 @@ interface SensorData {
   readonly timestamp: string;
 }
 
-interface FaultCode {
+export interface FaultCode {
   readonly id: string;
   readonly severity: "warn" | "error";
   readonly title: string;
@@ -66,7 +66,7 @@ export const MinValue = 5;
 
 export const MaxValue = 15;
 
-type Asset = "N29961" | "N905NA";
+export type Asset = "N29961" | "N905NA";
 
 export const Assets: Asset[] = ["N29961", "N905NA"];
 
@@ -86,23 +86,24 @@ export const Faults: FaultCode[] = [
 ];
 
 const stSk = process.env.NEXT_PUBLIC_ST_STREAM_KEY;
-const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds = {
-  "U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU": {
-    ECU: ["200050"],
-    VCU: ["200030", "200060"],
-    TCU: ["200090", "200100"],
-  },
-  UbZCuXV38qGRUxw8gSenvgoTwN4x_QErXMIR: {
-    ECU: ["300590", "300060", "306940", "300050", "300590", "300610"],
-    VCU: ["326250", "327030", "326260"],
-    TCU: ["327980", "327990", "328760"],
-    CCU: ["329580", "329590", "330360"],
-    RCU: ["304010", "304040"],
-    ACU: ["310830", "310840"],
-    LCU: ["312840", "312850"],
-    SCU: ["309590", "309600"],
-  },
-};
+const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds =
+  {
+    "U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU": {
+      ECU: ["200050"],
+      VCU: ["200030", "200060"],
+      TCU: ["200090", "200100"],
+    },
+    UbZCuXV38qGRUxw8gSenvgoTwN4x_QErXMIR: {
+      ECU: ["300590", "300060", "306940", "300050", "300590", "300610"],
+      VCU: ["326250", "327030", "326260"],
+      TCU: ["327980", "327990", "328760"],
+      CCU: ["329580", "329590", "330360"],
+      RCU: ["304010", "304040"],
+      ACU: ["310830", "310840"],
+      LCU: ["312840", "312850"],
+      SCU: ["309590", "309600"],
+    },
+  };
 if (stSk)
   streamKeyToSensorsToItemSuppliedIds[stSk] = {
     ECU: ["r/216"],

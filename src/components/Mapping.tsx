@@ -2,11 +2,14 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import React from "react";
-import { useRecoilState } from "recoil";
-import { sensorMappingState } from "../lib/state";
+import { SensorsToItemSuppliedIds } from "../lib/time-series";
 
-export function Mapping(): JSX.Element {
-  const [mapping, setMapping] = useRecoilState(sensorMappingState);
+export interface MappingProps {
+  readonly mapping: SensorsToItemSuppliedIds;
+  readonly onChange: (mapping: SensorsToItemSuppliedIds) => void;
+}
+
+export function Mapping({ mapping, onChange }: MappingProps): JSX.Element {
   const [map, setMap] = React.useState(JSON.stringify(mapping, null, 2));
 
   return (
@@ -27,7 +30,7 @@ export function Mapping(): JSX.Element {
       <Button
         onClick={() => {
           try {
-            setMapping(JSON.parse(map));
+            onChange(JSON.parse(map));
           } catch (error) {
             // ignore
           }

@@ -1,5 +1,9 @@
 # Vertex Digital Twin Demo
 
+Visualize IoT time series data aligned to your 3D digital twin.
+
+Build a true digital twin by mapping sensor IoT data directly to your 3D geometry. Set up conditional triggers to help users better understand and explore issues, failures and performance of individual assets.
+
 ## Run locally in Docker
 
 1. Copy `.env.local.template` to `.env.local` and optionally edit values
