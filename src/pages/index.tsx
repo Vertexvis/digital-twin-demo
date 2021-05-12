@@ -31,6 +31,7 @@ import {
 import { useViewer } from "../lib/viewer";
 
 export default function Home(): JSX.Element {
+  const keys = useKeyListener();
   const router = useRouter();
   const viewer = useViewer();
 
@@ -46,12 +47,16 @@ export default function Home(): JSX.Element {
     sensors: {},
     sensorsMeta: [],
   });
-  const [selectedTs, setSelectedTs] = React.useState("");
-  const [selectedSensor, setSelectedSensor] = React.useState("");
+  const [ts, setTs] = React.useState("");
+  const [sensor, setSensor] = React.useState("");
   const [sensorMapping, setSensorMapping] = React.useState({});
   const [shownSensors, setShownSensors] = React.useState<Set<string>>(
     new Set()
   );
+
+  React.useEffect(() => {
+    if (!dialogOpen && keys.o) setDialogOpen(true);
+  }, [dialogOpen, keys]);
 
   React.useEffect(() => {
     if (!router.isReady) return;
@@ -67,23 +72,20 @@ export default function Home(): JSX.Element {
     if (!credentials) return;
 
     router.push(encodeCreds(credentials));
-    const mapping = sensorsToItemSuppliedIds(credentials.streamKey);
-    setSensorMapping(mapping);
-    setTimeSeriesData(getTimeSeriesData(data, mapping));
+    setSensorMapping(sensorsToItemSuppliedIds(credentials.streamKey));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [credentials, data]);
+  }, [credentials]);
 
-  const keys = useKeyListener();
   React.useEffect(() => {
-    if (!dialogOpen && keys.o) setDialogOpen(true);
-  }, [dialogOpen, keys]);
+    setTimeSeriesData(getTimeSeriesData(data, sensorMapping));
+  }, [data, sensorMapping]);
 
   React.useEffect(() => {
     const tsd = timeSeriesData;
-    setSelectedTs(
+    setTs(
       tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ""
     );
-    setSelectedSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
+    setSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
   }, [timeSeriesData]);
 
   async function applyAndShowOrHideBySensorId(
@@ -91,9 +93,9 @@ export default function Home(): JSX.Element {
     apply: boolean,
     all: boolean
   ): Promise<void> {
-    const selectedMeta = timeSeriesData.sensors[id].meta;
-    const color = selectedMeta.tsData[selectedTs].color;
-    const suppliedIds = selectedMeta.itemSuppliedIds;
+    const meta = timeSeriesData.sensors[id].meta;
+    const color = meta.tsData[ts].color;
+    const suppliedIds = meta.itemSuppliedIds;
 
     await (apply
       ? applyAndShowBySuppliedIds({
@@ -105,20 +107,20 @@ export default function Home(): JSX.Element {
   }
 
   async function updateTimestamp(timestamp: string): Promise<void> {
-    await colorSelectedSensors(timestamp);
-    setSelectedTs(timestamp);
+    await colorSensors(timestamp);
+    setTs(timestamp);
   }
 
-  async function colorSelectedSensors(timestamp: string): Promise<void> {
+  async function colorSensors(timestamp: string): Promise<void> {
     if (shownSensors.size === 0) return;
 
     await applyGroupsBySuppliedIds({
       apply: true,
       groups: [...shownSensors].map((sId) => {
-        const selectedMeta = timeSeriesData.sensors[sId].meta;
+        const meta = timeSeriesData.sensors[sId].meta;
         return {
-          color: selectedMeta.tsData[timestamp].color,
-          suppliedIds: selectedMeta.itemSuppliedIds,
+          color: meta.tsData[timestamp].color,
+          suppliedIds: meta.itemSuppliedIds,
         };
       }),
       viewer: viewer.ref.current,
@@ -136,8 +138,8 @@ export default function Home(): JSX.Element {
         <BottomDrawer
           onSelect={async (timestamp) => updateTimestamp(timestamp)}
           content={content}
-          sensor={timeSeriesData.sensors[selectedSensor]}
-          timestamp={selectedTs}
+          sensor={timeSeriesData.sensors[sensor]}
+          timestamp={ts}
         />
       }
       header={<Header onOpenSceneClick={() => setDialogOpen(true)} />}
@@ -145,7 +147,6 @@ export default function Home(): JSX.Element {
         <LeftDrawer selected={content} onSelect={(c) => setContent(c)} />
       }
       main={
-        credentials &&
         viewer.isReady && (
           <Viewer
             configEnv={Env}
@@ -177,7 +178,7 @@ export default function Home(): JSX.Element {
             selected: asset,
           }}
           faults={{
-            selected: selectedTs,
+            selected: ts,
             onSelect: async (timestamp) => updateTimestamp(timestamp),
           }}
           mapping={{
@@ -208,7 +209,7 @@ export default function Home(): JSX.Element {
               }
             },
             onSelect: async (id) => {
-              setSelectedSensor(id);
+              setSensor(id);
               if (shownSensors.has(id) && keys.alt) {
                 flyToSuppliedId({
                   suppliedId:
@@ -217,8 +218,8 @@ export default function Home(): JSX.Element {
                 });
               }
             },
-            selected: selectedSensor,
-            selectedTs,
+            selected: sensor,
+            selectedTs: ts,
           }}
         />
       }
@@ -226,7 +227,10 @@ export default function Home(): JSX.Element {
       {dialogOpen && (
         <OpenDialog
           credentials={credentials}
-          onClose={() => setDialogOpen(false)}
+          onClose={() => {
+            reset();
+            setDialogOpen(false);
+          }}
           onConfirm={(cs) => {
             setCredentials(cs);
             setDialogOpen(false);
