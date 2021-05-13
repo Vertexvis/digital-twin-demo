@@ -486,9 +486,9 @@
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
 "@types/node@*", "@types/node@>=13.7.0", "@types/node@^15":
-  version "15.0.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.0.2.tgz#51e9c0920d1b45936ea04341aa3e2e58d339fb67"
-  integrity sha512-p68+a+KoxpoB47015IeYZYRrdqMUcpbK8re/zpFB8Ld46LHC1lPEbp3EXgkEhAYEcPvjJF6ZO+869SQ0aH1dcA==
+  version "15.0.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.0.3.tgz#ee09fcaac513576474c327da5818d421b98db88a"
+  integrity sha512-/WbxFeBU+0F79z9RdEOXH4CsDga+ibi5M8uEYr91u3CkT/pdWcV8MCook+4wDPnZBexRdwWS+PiVZ2xJviAzcQ==
 
 "@types/prop-types@*":
   version "15.7.3"
@@ -1807,9 +1807,9 @@ globby@^11.0.1:
     slash "^3.0.0"
 
 google-protobuf@^3.15.7:
-  version "3.16.0"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.16.0.tgz#87c61829a8aec7d9244dcbed9464e1d0fcbed8ae"
-  integrity sha512-gBY66yYL1wbQMU2r1POkXSXkm035Ni0wFv3vx0K9IEUsJLP9G5rAcFVn0xUXfZneRu6MmDjaw93pt/DE56VOyw==
+  version "3.17.0"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.17.0.tgz#5623215f9d0345649720ae5e5e9713491e2456fc"
+  integrity sha512-xuxzzx6FXmkmddRZci2SmGeZcx+vykmqG60yJf/Rz+NEKaUs+nLhaiUQAWa7Z00a7bHfRjRxSIX9FcELaxWIVA==
 
 graceful-fs@^4.1.2:
   version "4.2.6"

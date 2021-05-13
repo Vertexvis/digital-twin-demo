@@ -20,6 +20,10 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <meta
+          name="description"
+          content="Example of how to visualize IoT time series data aligned to your 3D digital twin using the Vertex platform."
+        />
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
