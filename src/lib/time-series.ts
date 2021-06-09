@@ -1,6 +1,7 @@
 import { calcRedToGreenGradient } from "./colors";
 import N29961 from "../data/N29961";
 import N905NA from "../data/N905NA";
+import { DefaultCredentials } from "./env";
 
 export interface TimeSeriesData {
   readonly ids: string[];
@@ -93,7 +94,7 @@ const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds =
       VCU: ["200030", "200060"],
       TCU: ["200090", "200100"],
     },
-    UbZCuXV38qGRUxw8gSenvgoTwN4x_QErXMIR: {
+    [DefaultCredentials.streamKey]: {
       ECU: ["300590", "300060", "306940", "300050", "300590", "300610"],
       VCU: ["326250", "327030", "326260"],
       TCU: ["327980", "327990", "328760"],

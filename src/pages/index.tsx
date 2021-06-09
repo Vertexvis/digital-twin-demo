@@ -153,7 +153,7 @@ export default function Home(): JSX.Element {
             credentials={credentials}
             onSelect={async (hit) => {
               setProperties(toProperties({ hit }));
-              return await selectByHit({ hit, viewer: viewer.ref.current });
+              return selectByHit({ hit, viewer: viewer.ref.current });
             }}
             streamAttributes={{
               experimentalGhosting: {
