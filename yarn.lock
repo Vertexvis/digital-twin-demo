@@ -554,53 +554,53 @@
   resolved "https://registry.yarnpkg.com/@vertexvis/frame-streaming-protos/-/frame-streaming-protos-0.5.7.tgz#6eeee94747dce7021afa5490c900ae43bd09e525"
   integrity sha512-FL+n6bYd4ZXbxAepwOo6rC1ekWB4k4hRq1ZFBndEMjhJ70QyVDMeGVFtrzG23v6jAWTGtYpz+g82EOjY7VXBAg==
 
-"@vertexvis/geometry@0.9.27":
-  version "0.9.27"
-  resolved "https://registry.yarnpkg.com/@vertexvis/geometry/-/geometry-0.9.27.tgz#3c47ef8010a2d19960582d7a23a175bf2159a3c7"
-  integrity sha512-8KGfLXorl//+ExuanjjaDGk9Vb6usnA8bzbpoK8lwH+PWUyKTNavkRW1ayXIaa2ORaIW3wvPltioBS3hVsaHKA==
+"@vertexvis/geometry@^0.9.28-canary.6":
+  version "0.9.28-canary.6"
+  resolved "https://registry.yarnpkg.com/@vertexvis/geometry/-/geometry-0.9.28-canary.6.tgz#f83b62ee320efb9264eebf9fbdaa31992bc59e74"
+  integrity sha512-l2+vUTgxgU8dRDVDb56vXmFjdHFB46QE5v+yU0iNEysRBImJbrPSvrZYYwCEuSMhD5iI2VB4awj1/DxYf+L0Rw==
 
 "@vertexvis/scene-tree-protos@^0.1.0":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@vertexvis/scene-tree-protos/-/scene-tree-protos-0.1.1.tgz#34de747436452d2d8d6c11f06d238dc540f9b7ad"
   integrity sha512-hio9clK2rmaoQKuBPcprK3bmDp/d9xnZ0M0qv5MR67SvuwnZGzilbTCPckbBr9CRjw2CFtz2HLWos8a3hyxeng==
 
-"@vertexvis/stream-api@0.9.27":
-  version "0.9.27"
-  resolved "https://registry.yarnpkg.com/@vertexvis/stream-api/-/stream-api-0.9.27.tgz#71114f3fa6f4b0b74b015e0ac4ed1c9adc83b036"
-  integrity sha512-oAXFh3rLqdVTAD5u0KBrd/4eam6WR6S0HQvtP5UJ59ZVs4v1Q3veULRC7iAdwTVDytu7exY3zi3gZy2ytLZMsw==
+"@vertexvis/stream-api@^0.9.28-canary.6":
+  version "0.9.28-canary.6"
+  resolved "https://registry.yarnpkg.com/@vertexvis/stream-api/-/stream-api-0.9.28-canary.6.tgz#3b91492002e5addd0a547854c9565c09f6420d3c"
+  integrity sha512-i4uOH0PNtZJI0SYlDnCdW8+k6aNIEBDf5AtGDhDBBMndT6DJHzWAjLIgQrGmRFcD/h2vjEcPpg+yL6C1jRm6FQ==
   dependencies:
     "@vertexvis/frame-streaming-protos" "^0.5.5"
-    "@vertexvis/utils" "0.9.27"
+    "@vertexvis/utils" "^0.9.28-canary.6"
 
-"@vertexvis/utils@0.9.27":
-  version "0.9.27"
-  resolved "https://registry.yarnpkg.com/@vertexvis/utils/-/utils-0.9.27.tgz#96d11009cbf51ac44e523c668fd4b348ef83915c"
-  integrity sha512-6iQJHdrrlURx2MS+jECRQtvRvO7CS41qmEz/z4QDuKevJJLFkeiJCnNS5jIFfNvWgY1Cr/KoGHGK8qHs0BYYJw==
+"@vertexvis/utils@^0.9.28-canary.6":
+  version "0.9.28-canary.6"
+  resolved "https://registry.yarnpkg.com/@vertexvis/utils/-/utils-0.9.28-canary.6.tgz#c5deedfab256eae259446c35f3fd4bb6543f648d"
+  integrity sha512-dff8DQ/bR6VHAP0q3nTkTKO4XwkIAr3pMddbNUUmc6442pmMn9utovBKech0NjtMcwjGc+Lfs+gwMkIyZf+N8g==
   dependencies:
     "@types/uuid" "^3.4.3"
     is-plain-object "^3.0.0"
     uuid "^3.3.2"
 
-"@vertexvis/viewer-react@^0.9":
-  version "0.9.27"
-  resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.9.27.tgz#57d03235948161d0952597e46ceb5fc908f0d382"
-  integrity sha512-PFryrP7FOosBtwns/Gs1i2IuIBlbsQVac3J4UXccjUiWQuX52wYlMfzDM+p7FRqrat1AnPyEhCgXWP/XlY0+Ow==
+"@vertexvis/viewer-react@^0.9.28-canary.6":
+  version "0.9.28-canary.6"
+  resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.9.28-canary.6.tgz#833e051b1ce437a2eaa5bb50052bf088683a5805"
+  integrity sha512-y/EQimeoqkrftkUSe3CL6SWpzpEATmozDuH2TwwbBv2q2tXsHn8vwmuN75a7Y+hqvIfaIE1Kjy2O+7aE9VRyvg==
   dependencies:
-    "@vertexvis/viewer" "0.9.27"
+    "@vertexvis/viewer" "^0.9.28-canary.6"
 
-"@vertexvis/viewer@0.9.27":
-  version "0.9.27"
-  resolved "https://registry.yarnpkg.com/@vertexvis/viewer/-/viewer-0.9.27.tgz#daaca1fd73f2b4c7e277e41f7130f49cc6a202be"
-  integrity sha512-JtcQZOGU+HcWiXyJYnMaKsA/EIoCPpCqAoTzPurFfaG9wIcUbMFvj5Q3gBcawxWrF5/VRfZucvs8TRgx576BDQ==
+"@vertexvis/viewer@^0.9.28-canary.6":
+  version "0.9.28-canary.6"
+  resolved "https://registry.yarnpkg.com/@vertexvis/viewer/-/viewer-0.9.28-canary.6.tgz#4eb3e7b593f70214aec4a5a1e1922977cd78dacb"
+  integrity sha512-RmG3k7p7L+HfpmC2StBgvjacrFYjNftgmVSxIK010jqsgEmnlNOauTf6vhYbYJQPENNfBsqnDtOUzzBlFx24yQ==
   dependencies:
     "@improbable-eng/grpc-web" "^0.14.0"
     "@juggle/resize-observer" "^3.3.0"
     "@types/classnames" "2.2.11"
     "@vertexvis/frame-streaming-protos" "^0.5.5"
-    "@vertexvis/geometry" "0.9.27"
+    "@vertexvis/geometry" "^0.9.28-canary.6"
     "@vertexvis/scene-tree-protos" "^0.1.0"
-    "@vertexvis/stream-api" "0.9.27"
-    "@vertexvis/utils" "0.9.27"
+    "@vertexvis/stream-api" "^0.9.28-canary.6"
+    "@vertexvis/utils" "^0.9.28-canary.6"
     camel-case "^4.1.2"
     classnames "2.2.6"
     google-protobuf "^3.15.7"
