@@ -1,6 +1,11 @@
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
 
-export interface Properties {
+export interface Metadata {
+  partName?: string;
+  properties: Properties;
+}
+
+interface Properties {
   [key: string]: string | undefined;
 }
 
@@ -11,12 +16,12 @@ const PartRevIdKey = "VERTEX_PART_REVISION_ID";
 const PartRevSuppliedId = "VERTEX_PART_REVISION_SUPPLIED_ID";
 const PartInstIdKey = "VERTEX_PART_INSTANCE_ID";
 
-export function toProperties({
+export function toMetadata({
   hit,
 }: {
   hit?: vertexvis.protobuf.stream.IHit | null;
-}): Properties {
-  if (hit == null) return {};
+}): Metadata | undefined {
+  if (hit == null) return;
 
   const ps: Properties = {};
   const {
@@ -33,9 +38,12 @@ export function toProperties({
   if (partRevSuppliedId?.value) ps[PartRevSuppliedId] = partRevSuppliedId.value;
 
   const md = hit?.metadata;
+  let partName: string | undefined;
+  console.log(md);
   if (md != null) {
-    const { partInstanceId } = md;
+    const { partInstanceId, partName: pn } = md;
     if (partInstanceId?.hex) ps[PartInstIdKey] = partInstanceId.hex;
+    partName = pn ?? undefined;
 
     if (md.properties != null) {
       md.properties
@@ -44,7 +52,7 @@ export function toProperties({
     }
   }
 
-  return alphabetize(ps);
+  return { partName, properties: alphabetize(ps) };
 }
 
 function alphabetize<T extends Record<string, unknown>>(obj: T): T {

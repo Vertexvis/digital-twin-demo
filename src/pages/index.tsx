@@ -9,7 +9,7 @@ import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
 import { DefaultCredentials, Env, head, StreamCredentials } from "../lib/env";
 import { useKeyListener } from "../lib/key-listener";
-import { Properties, toProperties } from "../lib/metadata";
+import { Metadata, toMetadata } from "../lib/metadata";
 import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyAndShowBySuppliedIds,
@@ -37,11 +37,12 @@ export default function Home(): JSX.Element {
 
   const [asset, setAsset] = React.useState(Assets[0]);
   const [content, setContent] = React.useState<Content>(undefined);
-  const [credentials, setCredentials] =
-    React.useState<StreamCredentials | undefined>();
+  const [credentials, setCredentials] = React.useState<
+    StreamCredentials | undefined
+  >();
   const [data, setData] = React.useState<RawSensors>(getData(asset));
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [properties, setProperties] = React.useState<Properties>({});
+  const [metadata, setMetadata] = React.useState<Metadata | undefined>();
   const [timeSeriesData, setTimeSeriesData] = React.useState<TimeSeriesData>({
     ids: [],
     sensors: {},
@@ -152,7 +153,7 @@ export default function Home(): JSX.Element {
             configEnv={Env}
             credentials={credentials}
             onSelect={async (hit) => {
-              setProperties(toProperties({ hit }));
+              setMetadata(toMetadata({ hit }));
               return selectByHit({ hit, viewer: viewer.ref.current });
             }}
             streamAttributes={{
@@ -189,7 +190,7 @@ export default function Home(): JSX.Element {
               setTimeSeriesData(getTimeSeriesData(data, mapping));
             },
           }}
-          metadata={{ properties }}
+          metadata={{ metadata }}
           sensors={{
             shown: shownSensors,
             list: timeSeriesData.sensorsMeta,

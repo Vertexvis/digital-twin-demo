@@ -1,14 +1,13 @@
-import Box from "@material-ui/core/Box";
 import ErrorTwoToneIcon from "@material-ui/icons/ErrorTwoTone";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
 import { Faults as FaultsList } from "../lib/time-series";
 import theme from "../lib/theme";
+import { NoData } from "./NoData";
 
 export interface FaultProps {
   readonly onSelect: (timestamp: string) => void;
@@ -54,8 +53,6 @@ export function Faults({ onSelect, selected }: FaultProps): JSX.Element {
       </Table>
     </TableContainer>
   ) : (
-    <Box mx={2} mb={2}>
-      <Typography variant="body2">No data</Typography>
-    </Box>
+    <NoData />
   );
 }

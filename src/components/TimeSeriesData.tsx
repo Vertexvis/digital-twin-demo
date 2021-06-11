@@ -29,7 +29,7 @@ export function TimeSeriesData({
 
   return (
     <TableContainer>
-      <Table className={table} padding="checkbox" size="small">
+      <Table className={table} size="small">
         <TableHead>
           <TableRow>
             <TableCell>Timestamp</TableCell>
