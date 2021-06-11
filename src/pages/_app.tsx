@@ -1,8 +1,9 @@
-import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
+
 import theme from "../lib/theme";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {

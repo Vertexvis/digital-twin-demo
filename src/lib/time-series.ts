@@ -1,6 +1,6 @@
-import { calcRedToGreenGradient } from "./colors";
-import N29961 from "../data/N29961";
 import N905NA from "../data/N905NA";
+import N29961 from "../data/N29961";
+import { calcRedToGreenGradient } from "./colors";
 import { DefaultCredentials } from "./env";
 
 export interface TimeSeriesData {

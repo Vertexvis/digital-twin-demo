@@ -1,9 +1,10 @@
-import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
 import Drawer from "@material-ui/core/Drawer";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+
 import { Sensor } from "../lib/time-series";
 import { TimeSeriesChart } from "./TimeSeriesChart";
 import { TimeSeriesData } from "./TimeSeriesData";

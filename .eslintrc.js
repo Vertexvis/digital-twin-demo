@@ -12,10 +12,14 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "react"],
+  plugins: ["@typescript-eslint", "react", "simple-import-sort"],
   rules: {
+    "no-await-in-loop": "warn",
+    "no-return-await": "warn",
     "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",
+    "require-await": "warn",
+    "simple-import-sort/imports": "warn",
   },
   settings: { react: { version: "detect" } },
 };

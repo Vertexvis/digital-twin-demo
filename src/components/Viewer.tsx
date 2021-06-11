@@ -1,14 +1,15 @@
-import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { makeStyles } from "@material-ui/core/styles";
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
 import {
+  JSX as ViewerJSX,
   VertexViewer,
   VertexViewerToolbar,
-  JSX as ViewerJSX,
 } from "@vertexvis/viewer-react";
 import React from "react";
+
 import { StreamCredentials } from "../lib/env";
 
 interface ViewerProps extends ViewerJSX.VertexViewer {

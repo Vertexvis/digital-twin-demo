@@ -1,4 +1,5 @@
 import { ResponsiveLine } from "@nivo/line";
+
 import { Sensor } from "../lib/time-series";
 
 interface Props {

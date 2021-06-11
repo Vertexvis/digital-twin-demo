@@ -1,10 +1,11 @@
-import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import { makeStyles } from "@material-ui/core/styles";
 import TableChartIcon from "@material-ui/icons/TableChart";
 import TimelineIcon from "@material-ui/icons/Timeline";
+
 import { Content } from "./BottomDrawer";
 import { LeftDrawerWidth } from "./Layout";
 

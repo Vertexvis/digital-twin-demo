@@ -1,10 +1,11 @@
-import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Drawer from "@material-ui/core/Drawer";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React from "react";
+
 import { AssetProps, Assets } from "./Assets";
 import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";

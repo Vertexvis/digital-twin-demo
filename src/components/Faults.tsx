@@ -1,12 +1,13 @@
-import ErrorTwoToneIcon from "@material-ui/icons/ErrorTwoTone";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
+import ErrorTwoToneIcon from "@material-ui/icons/ErrorTwoTone";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
-import { Faults as FaultsList } from "../lib/time-series";
+
 import theme from "../lib/theme";
+import { Faults as FaultsList } from "../lib/time-series";
 import { NoData } from "./NoData";
 
 export interface FaultProps {

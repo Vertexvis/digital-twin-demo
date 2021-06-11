@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+
 import { BottomDrawer, Content } from "../components/BottomDrawer";
 import { Header } from "../components/Header";
 import { Layout } from "../components/Layout";
@@ -137,7 +138,7 @@ export default function Home(): JSX.Element {
     <Layout
       bottomDrawer={
         <BottomDrawer
-          onSelect={async (timestamp) => updateTimestamp(timestamp)}
+          onSelect={(timestamp) => updateTimestamp(timestamp)}
           content={content}
           sensor={timeSeriesData.sensors[sensor]}
           timestamp={ts}
@@ -152,7 +153,7 @@ export default function Home(): JSX.Element {
           <Viewer
             configEnv={Env}
             credentials={credentials}
-            onSelect={async (hit) => {
+            onSelect={(hit) => {
               setMetadata(toMetadata({ hit }));
               return selectByHit({ hit, viewer: viewer.ref.current });
             }}
@@ -180,7 +181,7 @@ export default function Home(): JSX.Element {
           }}
           faults={{
             selected: ts,
-            onSelect: async (timestamp) => updateTimestamp(timestamp),
+            onSelect: (timestamp) => updateTimestamp(timestamp),
           }}
           mapping={{
             mapping: sensorMapping,
@@ -212,7 +213,7 @@ export default function Home(): JSX.Element {
             onSelect: async (id) => {
               setSensor(id);
               if (shownSensors.has(id) && keys.alt) {
-                flyToSuppliedId({
+                await flyToSuppliedId({
                   suppliedId:
                     timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
                   viewer: viewer.ref.current,

@@ -5,6 +5,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
+
 import { formatValue, SensorMeta } from "../lib/time-series";
 import { NoData } from "./NoData";
 
@@ -46,7 +47,7 @@ export function Sensors({
                     color="primary"
                     checked={shown.has(s.id)}
                     onClick={(e) => e.stopPropagation()}
-                    onChange={async (e) => onCheck(s.id, e.target.checked)}
+                    onChange={(e) => onCheck(s.id, e.target.checked)}
                   />
                 </TableCell>
                 <TableCell>{formatValue(td.value)}</TableCell>

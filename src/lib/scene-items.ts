@@ -1,5 +1,6 @@
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
 import { ColorMaterial, Components } from "@vertexvis/viewer";
+
 import { SelectColor } from "./colors";
 
 export interface Req {
