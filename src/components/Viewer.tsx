@@ -1,14 +1,7 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
 import { TapEventDetails } from "@vertexvis/viewer";
-import {
-  JSX as ViewerJSX,
-  VertexViewer,
-  VertexViewerToolbar,
-} from "@vertexvis/viewer-react";
+import { JSX as ViewerJSX, VertexViewer } from "@vertexvis/viewer-react";
 import React from "react";
 
 import { StreamCredentials } from "../lib/env";
@@ -32,10 +25,7 @@ interface OnSelectProps extends HOCViewerProps {
 }
 
 const useStyles = makeStyles(() => ({
-  root: {
-    height: "100%",
-    width: "100%",
-  },
+  root: { height: "100%", width: "100%" },
 }));
 
 export const Viewer = onTap(UnwrappedViewer);
@@ -46,11 +36,6 @@ function UnwrappedViewer({
   ...props
 }: ViewerProps): JSX.Element {
   const { root } = useStyles();
-  const RenderOptions = { animation: { milliseconds: 1500 } };
-
-  async function fitAll(): Promise<void> {
-    (await viewer.current?.scene())?.camera().viewAll().render(RenderOptions);
-  }
 
   return (
     <VertexViewer
@@ -59,15 +44,7 @@ function UnwrappedViewer({
       ref={viewer}
       src={`urn:vertexvis:stream-key:${credentials.streamKey}`}
       {...props}
-    >
-      <Box mb={2}>
-        <VertexViewerToolbar>
-          <ButtonGroup variant="contained">
-            <Button onClick={() => fitAll()}>Fit all</Button>
-          </ButtonGroup>
-        </VertexViewerToolbar>
-      </Box>
-    </VertexViewer>
+    />
   );
 }
 

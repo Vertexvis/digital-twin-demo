@@ -43,7 +43,7 @@ export function RightDrawer({
 
   return (
     <Drawer anchor="right" variant="permanent" classes={{ paper }}>
-      <Accordion>
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={title} variant="body2">
             Sensors

@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import { BottomDrawer, Content } from "../components/BottomDrawer";
-import { Header } from "../components/Header";
+import { BottomDrawer } from "../components/BottomDrawer";
 import { Layout } from "../components/Layout";
-import { LeftDrawer } from "../components/LeftDrawer";
 import { encodeCreds, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
@@ -37,7 +35,6 @@ export default function Home(): JSX.Element {
   const viewer = useViewer();
 
   const [asset, setAsset] = React.useState(Assets[0]);
-  const [content, setContent] = React.useState<Content>(undefined);
   const [credentials, setCredentials] = React.useState<
     StreamCredentials | undefined
   >();
@@ -142,15 +139,11 @@ export default function Home(): JSX.Element {
     <Layout
       bottomDrawer={
         <BottomDrawer
+          onOpenSceneClick={() => setDialogOpen(true)}
           onSelect={(timestamp) => updateTimestamp(timestamp)}
-          content={content}
           sensor={timeSeriesData.sensors[sensor]}
           timestamp={ts}
         />
-      }
-      header={<Header onOpenSceneClick={() => setDialogOpen(true)} />}
-      leftDrawer={
-        <LeftDrawer selected={content} onSelect={(c) => setContent(c)} />
       }
       main={
         viewer.isReady && (
