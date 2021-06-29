@@ -27,45 +27,47 @@ export function Sensors({
   shown,
 }: SensorProps): JSX.Element {
   return list.length > 0 ? (
-    <TableContainer>
-      <Table padding="checkbox" size="small">
-        <TableBody>
-          {list.map((s) => {
-            const isSelected = s.id === selected;
-            const td = s.tsData[selectedTs] ?? {
-              color: "#fff",
-              value: 0,
-            };
-            return (
-              <TableRow
-                key={s.id}
-                onClick={() => onSelect(s.id)}
-                selected={isSelected}
-              >
-                <TableCell>
-                  <Checkbox
-                    color="primary"
-                    checked={shown.has(s.id)}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => onCheck(s.id, e.target.checked)}
-                  />
-                </TableCell>
-                <TableCell>{formatValue(td.value)}</TableCell>
-                <TableCell>
-                  <Box
-                    borderRadius={2}
-                    height={"1rem"}
-                    style={{ backgroundColor: td.color }}
-                    width={"1rem"}
-                  ></Box>
-                </TableCell>
-                <TableCell>{s.id}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Box mb={2}>
+      <TableContainer>
+        <Table size="small">
+          <TableBody>
+            {list.map((s) => {
+              const isSelected = s.id === selected;
+              const td = s.tsData[selectedTs] ?? {
+                color: "#fff",
+                value: 0,
+              };
+              return (
+                <TableRow
+                  key={s.id}
+                  onClick={() => onSelect(s.id)}
+                  selected={isSelected}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="primary"
+                      checked={shown.has(s.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => onCheck(s.id, e.target.checked)}
+                    />
+                  </TableCell>
+                  <TableCell>{formatValue(td.value)}</TableCell>
+                  <TableCell>
+                    <Box
+                      borderRadius={2}
+                      height={"1rem"}
+                      style={{ backgroundColor: td.color }}
+                      width={"1rem"}
+                    ></Box>
+                  </TableCell>
+                  <TableCell>{s.id}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   ) : (
     <NoData />
   );

@@ -1,8 +1,8 @@
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableRow from "@material-ui/core/TableRow";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
 import ErrorTwoToneIcon from "@material-ui/icons/ErrorTwoTone";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
 
@@ -17,42 +17,39 @@ export interface FaultProps {
 
 export function Faults({ onSelect, selected }: FaultProps): JSX.Element {
   return FaultsList.length > 0 ? (
-    <TableContainer>
-      <Table padding="checkbox" size="small">
-        <TableBody>
-          {FaultsList.map((f) => {
-            const isSelected = f.timestamp === selected;
-            return (
-              <TableRow
-                key={f.id}
-                onClick={() => onSelect(f.timestamp)}
-                selected={isSelected}
-              >
-                <TableCell align="center">
-                  {f.severity === "warn" ? (
-                    <WarningTwoToneIcon
-                      style={{
-                        color: theme.palette.warning.light,
-                        marginTop: "4px",
-                      }}
-                    />
-                  ) : (
-                    <ErrorTwoToneIcon
-                      style={{
-                        color: theme.palette.error.light,
-                        marginTop: "4px",
-                      }}
-                    />
-                  )}
-                </TableCell>
-                <TableCell>{f.title}</TableCell>
-                <TableCell>{f.timestamp.substring(11, 19)}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <List>
+      {FaultsList.map((f) => {
+        const isSelected = f.timestamp === selected;
+        return (
+          <ListItem
+            button
+            key={f.id}
+            onClick={() => onSelect(f.timestamp)}
+            selected={isSelected}
+          >
+            <ListItemIcon>
+              {f.severity === "warn" ? (
+                <WarningTwoToneIcon
+                  style={{
+                    color: theme.palette.warning.light,
+                  }}
+                />
+              ) : (
+                <ErrorTwoToneIcon
+                  style={{
+                    color: theme.palette.error.light,
+                  }}
+                />
+              )}
+            </ListItemIcon>
+            <ListItemText primary={f.title} />
+            <Typography variant="body2">
+              {f.timestamp.substring(11, 19)}
+            </Typography>
+          </ListItem>
+        );
+      })}
+    </List>
   ) : (
     <NoData />
   );

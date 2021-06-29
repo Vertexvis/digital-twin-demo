@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11",
+    "@material-ui/data-grid": "^4.0.0-alpha.32",
     "@material-ui/icons": "^4.11",
     "@nivo/core": "^0.72",
     "@nivo/line": "^0.72",

@@ -9,9 +9,10 @@ import React from "react";
 import { AssetProps, Assets } from "./Assets";
 import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";
-import { Mapping, MappingProps } from "./Mapping";
+import { MappingProps } from "./Mapping";
 import { MetadataProperties, MetadataProps } from "./MetadataProperties";
 import { SensorProps, Sensors } from "./Sensors";
+import { Settings, SettingsProps } from "./Settings";
 
 interface Props {
   readonly assets: AssetProps;
@@ -19,6 +20,7 @@ interface Props {
   readonly mapping: MappingProps;
   readonly metadata: MetadataProps;
   readonly sensors: SensorProps;
+  readonly settings: SettingsProps;
 }
 
 const useStyles = makeStyles(() => ({
@@ -33,9 +35,9 @@ const useStyles = makeStyles(() => ({
 export function RightDrawer({
   assets,
   faults,
-  mapping,
   metadata,
   sensors,
+  settings,
 }: Props): JSX.Element {
   const { paper, title } = useStyles();
 
@@ -73,13 +75,21 @@ export function RightDrawer({
         </AccordionSummary>
         <MetadataProperties {...metadata} />
       </Accordion>
-      <Accordion>
+      {/* <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={title} variant="body2">
             Sensor Mapping
           </Typography>
         </AccordionSummary>
         <Mapping {...mapping} />
+      </Accordion> */}
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className={title} variant="body2">
+            Settings
+          </Typography>
+        </AccordionSummary>
+        <Settings {...settings} />
       </Accordion>
     </Drawer>
   );

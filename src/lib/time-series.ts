@@ -75,13 +75,13 @@ export const Faults: FaultCode[] = [
   {
     id: "1",
     severity: "warn",
-    title: "Check ECU",
+    title: "Bearing end-of-life",
     timestamp: "2021-04-01T12:15:01.000Z",
   },
   {
     id: "2",
     severity: "error",
-    title: "LCU fault",
+    title: "Brake malfunction",
     timestamp: "2021-04-01T12:15:07.000Z",
   },
 ];
@@ -95,14 +95,14 @@ const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds =
       TCU: ["200090", "200100"],
     },
     [DefaultCredentials.streamKey]: {
-      ECU: ["300590", "300060", "306940", "300050", "300590", "300610"],
-      VCU: ["326250", "327030", "326260"],
-      TCU: ["327980", "327990", "328760"],
-      CCU: ["329580", "329590", "330360"],
-      RCU: ["304010", "304040"],
-      ACU: ["310830", "310840"],
-      LCU: ["312840", "312850"],
-      SCU: ["309590", "309600"],
+      ECU: ["300590", "300060", "306940", "300050", "300590", "300610"], // low-speed shaft
+      TCU: ["325950", "326040", "325700"], // hub router
+      CCU: ["318590", "321750", "320370"], // routers
+      RCU: ["300620", "300630", "300600"], // intermediate shaft
+      ACU: ["300640", "300660"], // high-speed shaft
+      LCU: ["302630"], // brake
+      SCU: ["304670", "304800", "304840", "306840"], // connector shaft
+      VCU: ["306540", "306530", "306550"], // generator
     },
   };
 if (stSk)
@@ -167,5 +167,5 @@ export function getTimeSeriesData(
 }
 
 export function formatValue(num: number): string {
-  return num.toFixed(3);
+  return num.toFixed(6);
 }

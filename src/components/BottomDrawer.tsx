@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { Sensor } from "../lib/time-series";
 import { TimeSeriesChart } from "./TimeSeriesChart";
-import { TimeSeriesData } from "./TimeSeriesData";
+import { TimeSeriesDataGrid } from "./TimeSeriesData";
 
 export type Content = "data" | "chart" | undefined;
 
@@ -18,13 +18,15 @@ interface Props {
   readonly timestamp: string;
 }
 
+export const BottomDrawerHeight = 400;
+
 const useStyles = makeStyles(() => ({
   expanded: {
     boxShadow: "none",
-    maxHeight: "20rem",
+    maxHeight: BottomDrawerHeight,
   },
   paper: {
-    height: `20rem`,
+    height: BottomDrawerHeight,
   },
   title: {
     textTransform: "uppercase",
@@ -53,7 +55,7 @@ export function BottomDrawer({
               {sensor.meta.id} Data
             </Typography>
           </AccordionSummary>
-          <TimeSeriesData
+          <TimeSeriesDataGrid
             onSelect={onSelect}
             sensor={sensor}
             timestamp={timestamp}

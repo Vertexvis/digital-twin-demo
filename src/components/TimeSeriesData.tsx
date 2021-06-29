@@ -1,12 +1,8 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { DataGrid, GridColDef } from "@material-ui/data-grid";
+import React from "react";
 
 import { formatValue, Sensor } from "../lib/time-series";
+import { BottomDrawerHeight } from "./BottomDrawer";
 
 interface Props {
   readonly onSelect: (timestamp: string) => Promise<void>;
@@ -14,51 +10,46 @@ interface Props {
   readonly timestamp: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  table: {
-    // To accommodate scrollbar
-    marginBottom: theme.spacing(1),
+const columns: GridColDef[] = [
+  { field: "id", headerName: "Timestamp", flex: 1 },
+  { field: "min", headerName: "Minimum", flex: 1 },
+  { field: "max", headerName: "Maximum", flex: 1 },
+  { field: "avg", headerName: "Average", flex: 1 },
+  {
+    field: "std",
+    headerName: "Standard Deviation",
+    flex: 1,
   },
-}));
+];
 
-export function TimeSeriesData({
+export function TimeSeriesDataGrid({
   onSelect,
   sensor,
   timestamp,
 }: Props): JSX.Element {
-  const { table } = useStyles();
-
   return (
-    <TableContainer>
-      <Table className={table} size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Timestamp</TableCell>
-            <TableCell align="right">Minimum</TableCell>
-            <TableCell align="right">Maximum</TableCell>
-            <TableCell align="right">Average</TableCell>
-            <TableCell align="right">Standard Deviation</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sensor.data.map((v, i) => {
-            const tsEq = v.timestamp === timestamp;
-            return (
-              <TableRow
-                key={i}
-                onClick={() => onSelect(v.timestamp)}
-                selected={tsEq}
-              >
-                <TableCell>{v.timestamp}</TableCell>
-                <TableCell align="right">{formatValue(v.min)}</TableCell>
-                <TableCell align="right">{formatValue(v.max)}</TableCell>
-                <TableCell align="right">{formatValue(v.avg)}</TableCell>
-                <TableCell align="right">{formatValue(v.std)}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div style={{ height: `${BottomDrawerHeight - 65}px`, width: "100%" }}>
+      <DataGrid
+        disableColumnMenu
+        disableColumnSelector
+        disableDensitySelector
+        hideFooter
+        columns={columns}
+        onStateChange={(e) => {
+          const ts = e.state.focus.cell?.id as string;
+          if (ts == null) return;
+
+          onSelect(ts);
+        }}
+        rows={sensor.data.map((d) => ({
+          id: d.timestamp,
+          min: formatValue(d.min),
+          max: formatValue(d.max),
+          avg: formatValue(d.avg),
+          std: formatValue(d.std),
+        }))}
+        selectionModel={[timestamp]}
+      />
+    </div>
   );
 }

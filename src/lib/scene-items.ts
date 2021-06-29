@@ -26,6 +26,7 @@ interface ApplyAndShowBySuppliedIdsReq extends Req {
 }
 
 interface HideSuppliedIdReq extends Req {
+  readonly hide: boolean;
   readonly suppliedIds: string[];
 }
 
@@ -78,6 +79,7 @@ export async function applyAndShowBySuppliedIds({
 }
 
 export async function hideBySuppliedId({
+  hide,
   suppliedIds,
   viewer,
 }: HideSuppliedIdReq): Promise<void> {
@@ -87,7 +89,12 @@ export async function hideBySuppliedId({
   if (scene == null) return;
 
   await scene
-    .items((op) => [op.where((q) => q.withSuppliedIds(suppliedIds)).hide()])
+    .items((op) => {
+      const w = op.where((q) => q.withSuppliedIds(suppliedIds));
+      return hide
+        ? w.clearMaterialOverrides().hide()
+        : w.clearMaterialOverrides();
+    })
     .execute();
 }
 
@@ -121,18 +128,21 @@ export async function handleHit({
   }
 }
 
-export async function showAndClearAll({ viewer }: Req): Promise<void> {
+export async function clearAll({
+  showAll,
+  viewer,
+}: Req & { showAll: boolean }): Promise<void> {
   if (viewer == null) return;
 
   const scene = await viewer.scene();
   if (scene == null) return;
 
   await scene
-    .items((op) =>
-      op
-        .where((q) => q.all())
-        .clearMaterialOverrides()
-        .show()
-    )
+    .items((op) => {
+      const w = op.where((q) => q.all());
+      return showAll
+        ? w.clearMaterialOverrides().show()
+        : w.clearMaterialOverrides();
+    })
     .execute();
 }

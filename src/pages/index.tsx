@@ -15,9 +15,9 @@ import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyAndShowBySuppliedIds,
   applyGroupsBySuppliedIds,
+  clearAll,
   handleHit,
   hideBySuppliedId,
-  showAndClearAll,
 } from "../lib/scene-items";
 import {
   Asset,
@@ -43,6 +43,7 @@ export default function Home(): JSX.Element {
   >();
   const [data, setData] = React.useState<RawSensors>(getData(asset));
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [ghosted, setGhosted] = React.useState(false);
   const [metadata, setMetadata] = React.useState<Metadata | undefined>();
   const [timeSeriesData, setTimeSeriesData] = React.useState<TimeSeriesData>({
     ids: [],
@@ -96,16 +97,19 @@ export default function Home(): JSX.Element {
     all: boolean
   ): Promise<void> {
     const meta = timeSeriesData.sensors[id].meta;
-    const color = meta.tsData[ts].color;
     const suppliedIds = meta.itemSuppliedIds;
 
     await (apply
       ? applyAndShowBySuppliedIds({
           all,
-          group: { color, suppliedIds },
+          group: { color: meta.tsData[ts].color, suppliedIds },
           viewer: viewer.ref.current,
         })
-      : hideBySuppliedId({ suppliedIds, viewer: viewer.ref.current }));
+      : hideBySuppliedId({
+          hide: ghosted,
+          suppliedIds,
+          viewer: viewer.ref.current,
+        }));
   }
 
   async function updateTimestamp(timestamp: string): Promise<void> {
@@ -131,7 +135,7 @@ export default function Home(): JSX.Element {
 
   async function reset(): Promise<void> {
     setShownSensors(new Set());
-    await showAndClearAll({ viewer: viewer.ref.current });
+    await clearAll({ showAll: ghosted, viewer: viewer.ref.current });
   }
 
   return router.isReady && credentials ? (
@@ -159,7 +163,7 @@ export default function Home(): JSX.Element {
             }}
             streamAttributes={{
               experimentalGhosting: {
-                enabled: { value: true },
+                enabled: { value: ghosted },
                 opacity: { value: 0.7 },
               },
             }}
@@ -171,11 +175,11 @@ export default function Home(): JSX.Element {
         <RightDrawer
           assets={{
             onSelect: async (a: Asset) => {
-              await reset();
               setAsset(a);
               const d = getData(a);
               setData(d);
               setTimeSeriesData(getTimeSeriesData(d, sensorMapping));
+              await colorSensors(ts);
             },
             selected: asset,
           }}
@@ -201,12 +205,15 @@ export default function Home(): JSX.Element {
               setShownSensors(upd);
 
               if (upd.size === 0)
-                await showAndClearAll({ viewer: viewer.ref.current });
+                await clearAll({
+                  showAll: ghosted,
+                  viewer: viewer.ref.current,
+                });
               else {
                 await applyAndShowOrHideBySensorId(
                   id,
                   checked,
-                  shownSensors.size === 0 && upd.size === 1
+                  ghosted && shownSensors.size === 0 && upd.size === 1
                 );
               }
             },
@@ -222,6 +229,13 @@ export default function Home(): JSX.Element {
             },
             selected: sensor,
             selectedTs: ts,
+          }}
+          settings={{
+            ghosted,
+            onGhostToggle: (g) => {
+              setGhosted(g);
+              reset();
+            },
           }}
         />
       }
