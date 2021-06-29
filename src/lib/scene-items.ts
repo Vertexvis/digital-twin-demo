@@ -1,5 +1,5 @@
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
-import { ColorMaterial, Components } from "@vertexvis/viewer";
+import { ColorMaterial, Components, TapEventDetails } from "@vertexvis/viewer";
 
 import { SelectColor } from "./colors";
 
@@ -29,7 +29,8 @@ interface HideSuppliedIdReq extends Req {
   readonly suppliedIds: string[];
 }
 
-interface SelectByHitReq extends Req {
+interface HandleHitReq extends Req {
+  readonly detail: TapEventDetails;
   readonly hit?: vertexvis.protobuf.stream.IHit;
 }
 
@@ -90,10 +91,11 @@ export async function hideBySuppliedId({
     .execute();
 }
 
-export async function selectByHit({
+export async function handleHit({
+  detail,
   hit,
   viewer,
-}: SelectByHitReq): Promise<void> {
+}: HandleHitReq): Promise<void> {
   if (viewer == null) return;
 
   const scene = await viewer.scene();
@@ -105,10 +107,14 @@ export async function selectByHit({
     console.debug(`Selected ${id}${suppliedId ? `, ${suppliedId}` : ""}`);
 
     await scene
-      .items((op) => [
-        op.where((q) => q.all()).deselect(),
-        op.where((q) => q.withItemId(id)).select(SelectColor),
-      ])
+      .items((op) => {
+        const idQuery = op.where((q) => q.withItemId(id));
+        return [
+          op.where((q) => q.all()).deselect(),
+          // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons#return_value
+          detail.buttons === 2 ? idQuery.hide() : idQuery.select(SelectColor),
+        ];
+      })
       .execute();
   } else {
     await scene.items((op) => op.where((q) => q.all()).deselect()).execute();

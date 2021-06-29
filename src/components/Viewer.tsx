@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
+import { TapEventDetails } from "@vertexvis/viewer";
 import {
   JSX as ViewerJSX,
   VertexViewer,
@@ -22,6 +23,13 @@ type ViewerComponentType = React.ComponentType<
 >;
 
 type HOCViewerProps = React.RefAttributes<HTMLVertexViewerElement>;
+
+interface OnSelectProps extends HOCViewerProps {
+  readonly onSelect: (
+    detail: TapEventDetails,
+    hit?: vertexvis.protobuf.stream.IHit
+  ) => Promise<void>;
+}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -63,10 +71,6 @@ function UnwrappedViewer({
   );
 }
 
-interface OnSelectProps extends HOCViewerProps {
-  readonly onSelect: (hit?: vertexvis.protobuf.stream.IHit) => Promise<void>;
-}
-
 function onTap<P extends ViewerProps>(
   WrappedViewer: ViewerComponentType
 ): React.FunctionComponent<P & OnSelectProps> {
@@ -87,7 +91,7 @@ function onTap<P extends ViewerProps>(
                 includeMetadata: true,
               });
               const hit = (res?.hits ?? [])[0];
-              onSelect(hit);
+              onSelect(e.detail, hit);
             }
           }
         }}

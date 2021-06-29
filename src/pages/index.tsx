@@ -15,8 +15,8 @@ import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyAndShowBySuppliedIds,
   applyGroupsBySuppliedIds,
+  handleHit,
   hideBySuppliedId,
-  selectByHit,
   showAndClearAll,
 } from "../lib/scene-items";
 import {
@@ -153,9 +153,9 @@ export default function Home(): JSX.Element {
           <Viewer
             configEnv={Env}
             credentials={credentials}
-            onSelect={(hit) => {
+            onSelect={(detail, hit) => {
               setMetadata(toMetadata({ hit }));
-              return selectByHit({ hit, viewer: viewer.ref.current });
+              return handleHit({ detail, hit, viewer: viewer.ref.current });
             }}
             streamAttributes={{
               experimentalGhosting: {
