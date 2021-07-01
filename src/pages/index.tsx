@@ -84,6 +84,9 @@ export default function Home(): JSX.Element {
     setData(d);
     const tsd = getTimeSeriesData(a, d, m);
     setTimeSeriesData(tsd);
+    setTs(
+      tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ""
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
