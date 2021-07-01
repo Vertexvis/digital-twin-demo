@@ -72,25 +72,23 @@ export default function Home(): JSX.Element {
   React.useEffect(() => {
     if (!credentials) return;
 
-    reset();
     router.push(encodeCreds(credentials));
-    setSensorMapping(sensorsToItemSuppliedIds(credentials.streamKey));
-    setAsset(getAssets(credentials.streamKey)[0]);
+    reset();
+
+    const sk = credentials.streamKey;
+    const m = sensorsToItemSuppliedIds(sk);
+    setSensorMapping(m);
+    const a = getAssets(sk)[0];
+    setAsset(a);
+    const d = getData(a);
+    setData(d);
+    const tsd = getTimeSeriesData(a, d, m);
+    setTimeSeriesData(tsd);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
   React.useEffect(() => {
-    const d = getData(asset);
-    setData(d);
-    const tsd = getTimeSeriesData(asset, d, sensorMapping);
-    setTimeSeriesData(tsd);
-  }, [asset, sensorMapping]);
-
-  React.useEffect(() => {
     const tsd = timeSeriesData;
-    setTs(
-      tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ""
-    );
     setSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
   }, [timeSeriesData]);
 
@@ -120,13 +118,16 @@ export default function Home(): JSX.Element {
     setTs(timestamp);
   }
 
-  async function colorSensors(timestamp: string): Promise<void> {
+  async function colorSensors(
+    timestamp: string,
+    tsd: TimeSeriesData = timeSeriesData
+  ): Promise<void> {
     if (shownSensors.size === 0) return;
 
     await applyGroupsBySuppliedIds({
       apply: true,
       groups: [...shownSensors].map((sId) => {
-        const meta = timeSeriesData.sensors[sId].meta;
+        const meta = tsd.sensors[sId].meta;
         return {
           color: meta.tsData[timestamp].color,
           suppliedIds: meta.itemSuppliedIds,
@@ -185,7 +186,12 @@ export default function Home(): JSX.Element {
             assets: getAssets(credentials.streamKey),
             onSelect: async (a: Asset) => {
               setAsset(a);
-              await colorSensors(ts);
+              console.log(a);
+              const d = getData(a);
+              setData(d);
+              const tsd = getTimeSeriesData(a, d, sensorMapping);
+              setTimeSeriesData(tsd);
+              await colorSensors(ts, tsd);
             },
             selected: asset,
           }}
