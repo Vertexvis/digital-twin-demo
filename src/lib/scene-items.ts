@@ -109,10 +109,7 @@ export async function handleHit({
   if (scene == null) return;
 
   const id = hit?.itemId?.hex;
-  const suppliedId = hit?.itemSuppliedId?.value;
   if (id) {
-    console.debug(`Selected ${id}${suppliedId ? `, ${suppliedId}` : ""}`);
-
     await scene
       .items((op) => {
         const idQuery = op.where((q) => q.withItemId(id));

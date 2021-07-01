@@ -1,8 +1,8 @@
+import { Box } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import React from "react";
 
 import { formatValue, Sensor } from "../lib/time-series";
-import { BottomDrawerHeight } from "./BottomDrawer";
 
 interface Props {
   readonly onSelect: (timestamp: string) => Promise<void>;
@@ -28,11 +28,12 @@ export function TimeSeriesDataGrid({
   timestamp,
 }: Props): JSX.Element {
   return (
-    <div style={{ height: `${BottomDrawerHeight - 65}px`, width: "100%" }}>
+    <Box display="flex" flexGrow={1}>
       <DataGrid
         disableColumnMenu
         disableColumnSelector
         disableDensitySelector
+        disableMultipleSelection
         hideFooter
         columns={columns}
         onStateChange={(e) => {
@@ -50,6 +51,6 @@ export function TimeSeriesDataGrid({
         }))}
         selectionModel={[timestamp]}
       />
-    </div>
+    </Box>
   );
 }

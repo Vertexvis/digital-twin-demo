@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 
-import { BottomDrawer } from "../components/BottomDrawer";
+import { BottomDrawer, Content } from "../components/BottomDrawer";
 import { Layout } from "../components/Layout";
 import { encodeCreds, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
@@ -19,11 +19,11 @@ import {
 } from "../lib/scene-items";
 import {
   Asset,
-  Assets,
+  getAssets,
   getData,
+  getFaults,
   getTimeSeriesData,
   RawSensors,
-  SensorsToItemSuppliedIds,
   sensorsToItemSuppliedIds,
   TimeSeriesData,
 } from "../lib/time-series";
@@ -34,11 +34,12 @@ export default function Home(): JSX.Element {
   const router = useRouter();
   const viewer = useViewer();
 
-  const [asset, setAsset] = React.useState(Assets[0]);
+  const [asset, setAsset] = React.useState<Asset>("R8071");
+  const [content, setContent] = React.useState<Content>(undefined);
   const [credentials, setCredentials] = React.useState<
     StreamCredentials | undefined
   >();
-  const [data, setData] = React.useState<RawSensors>(getData(asset));
+  const [, setData] = React.useState<RawSensors>(getData(asset));
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [ghosted, setGhosted] = React.useState(false);
   const [metadata, setMetadata] = React.useState<Metadata | undefined>();
@@ -71,14 +72,19 @@ export default function Home(): JSX.Element {
   React.useEffect(() => {
     if (!credentials) return;
 
+    reset();
     router.push(encodeCreds(credentials));
     setSensorMapping(sensorsToItemSuppliedIds(credentials.streamKey));
+    setAsset(getAssets(credentials.streamKey)[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
   React.useEffect(() => {
-    setTimeSeriesData(getTimeSeriesData(data, sensorMapping));
-  }, [data, sensorMapping]);
+    const d = getData(asset);
+    setData(d);
+    const tsd = getTimeSeriesData(asset, d, sensorMapping);
+    setTimeSeriesData(tsd);
+  }, [asset, sensorMapping]);
 
   React.useEffect(() => {
     const tsd = timeSeriesData;
@@ -139,6 +145,8 @@ export default function Home(): JSX.Element {
     <Layout
       bottomDrawer={
         <BottomDrawer
+          content={content}
+          onContent={setContent}
           onOpenSceneClick={() => setDialogOpen(true)}
           onSelect={(timestamp) => updateTimestamp(timestamp)}
           sensor={timeSeriesData.sensors[sensor]}
@@ -151,6 +159,13 @@ export default function Home(): JSX.Element {
             configEnv={Env}
             credentials={credentials}
             onSelect={(detail, hit) => {
+              console.debug({
+                hitNormal: hit?.hitNormal,
+                hitPoint: hit?.hitPoint,
+                partName: hit?.metadata?.partName,
+                sceneItemId: hit?.itemId?.hex,
+                sceneItemSuppliedId: hit?.itemSuppliedId?.value,
+              });
               setMetadata(toMetadata({ hit }));
               return handleHit({ detail, hit, viewer: viewer.ref.current });
             }}
@@ -167,26 +182,18 @@ export default function Home(): JSX.Element {
       rightDrawer={
         <RightDrawer
           assets={{
+            assets: getAssets(credentials.streamKey),
             onSelect: async (a: Asset) => {
               setAsset(a);
-              const d = getData(a);
-              setData(d);
-              setTimeSeriesData(getTimeSeriesData(d, sensorMapping));
               await colorSensors(ts);
             },
             selected: asset,
           }}
+          bottomOpen={Boolean(content)}
           faults={{
+            faults: getFaults(asset),
             selected: ts,
             onSelect: (timestamp) => updateTimestamp(timestamp),
-          }}
-          mapping={{
-            mapping: sensorMapping,
-            onChange: async (mapping: SensorsToItemSuppliedIds) => {
-              await reset();
-              setSensorMapping(mapping);
-              setTimeSeriesData(getTimeSeriesData(data, mapping));
-            },
           }}
           metadata={{ metadata }}
           sensors={{

@@ -1,5 +1,6 @@
 import Box from "@material-ui/core/Box";
 import Checkbox from "@material-ui/core/Checkbox";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -18,6 +19,8 @@ export interface SensorProps {
   readonly shown: Set<string>;
 }
 
+const useStyles = makeStyles(() => ({ root: { overflowX: "hidden" } }));
+
 export function Sensors({
   list,
   onCheck,
@@ -26,9 +29,11 @@ export function Sensors({
   selectedTs,
   shown,
 }: SensorProps): JSX.Element {
+  const { root } = useStyles();
+
   return list.length > 0 ? (
     <Box mb={2}>
-      <TableContainer>
+      <TableContainer classes={{ root }}>
         <Table size="small">
           <TableBody>
             {list.map((s) => {
@@ -60,7 +65,7 @@ export function Sensors({
                       width={"1rem"}
                     ></Box>
                   </TableCell>
-                  <TableCell>{s.id}</TableCell>
+                  <TableCell>{s.name}</TableCell>
                 </TableRow>
               );
             })}

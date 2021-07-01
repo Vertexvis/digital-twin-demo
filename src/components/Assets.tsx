@@ -4,18 +4,23 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import LayersIcon from "@material-ui/icons/Layers";
 
-import { Asset, Assets as AssetList } from "../lib/time-series";
+import { Asset } from "../lib/time-series";
 import { NoData } from "./NoData";
 
 export interface AssetProps {
-  readonly selected: Asset;
+  readonly assets: Asset[];
   readonly onSelect: (asset: Asset) => void;
+  readonly selected: Asset;
 }
 
-export function Assets({ selected, onSelect }: AssetProps): JSX.Element {
-  return AssetList.length > 0 ? (
+export function Assets({
+  assets,
+  onSelect,
+  selected,
+}: AssetProps): JSX.Element {
+  return assets.length > 0 ? (
     <List>
-      {AssetList.map((a) => {
+      {assets.map((a) => {
         const isSelected = a === selected;
         return (
           <ListItem

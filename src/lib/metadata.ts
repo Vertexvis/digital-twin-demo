@@ -39,7 +39,6 @@ export function toMetadata({
 
   const md = hit?.metadata;
   let partName: string | undefined;
-  console.log(md);
   if (md != null) {
     const { partInstanceId, partName: pn } = md;
     if (partInstanceId?.hex) ps[PartInstIdKey] = partInstanceId.hex;

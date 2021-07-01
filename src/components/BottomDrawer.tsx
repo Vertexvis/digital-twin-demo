@@ -4,7 +4,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Link from "@material-ui/core/Link";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
 import TimelineOutlinedIcon from "@material-ui/icons/TimelineOutlined";
@@ -18,6 +18,8 @@ import { TimeSeriesDataGrid } from "./TimeSeriesData";
 export type Content = "data" | "chart" | undefined;
 
 interface Props {
+  readonly content: Content;
+  readonly onContent: (c: Content) => void;
   readonly onOpenSceneClick: () => void;
   readonly onSelect: (timestamp: string) => Promise<void>;
   readonly sensor: Sensor;
@@ -26,7 +28,7 @@ interface Props {
 
 export const BottomDrawerHeight = 400;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     height: BottomDrawerHeight,
     flexShrink: 0,
@@ -52,12 +54,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export function BottomDrawer({
+  content,
+  onContent,
   onOpenSceneClick,
   onSelect,
   sensor,
   timestamp,
 }: Props): JSX.Element {
-  const [content, setContent] = React.useState<Content>(undefined);
   const { drawer, drawerOpen, drawerClose, mr, title } = useStyles();
   const open = Boolean(content);
 
@@ -79,7 +82,7 @@ export function BottomDrawer({
         >
           <ListItem
             button
-            onClick={() => setContent(content === "data" ? undefined : "data")}
+            onClick={() => onContent(content === "data" ? undefined : "data")}
           >
             <TableChartOutlinedIcon
               color={content === "data" ? "primary" : undefined}
@@ -87,9 +90,7 @@ export function BottomDrawer({
           </ListItem>
           <ListItem
             button
-            onClick={() =>
-              setContent(content === "chart" ? undefined : "chart")
-            }
+            onClick={() => onContent(content === "chart" ? undefined : "chart")}
           >
             <TimelineOutlinedIcon
               color={content === "chart" ? "primary" : undefined}

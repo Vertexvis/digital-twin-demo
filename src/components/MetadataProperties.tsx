@@ -1,3 +1,4 @@
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -14,15 +15,18 @@ export interface MetadataProps {
   readonly metadata?: Metadata;
 }
 
+const useStyles = makeStyles(() => ({ root: { overflowX: "hidden" } }));
+
 export function MetadataProperties({ metadata }: MetadataProps): JSX.Element {
+  const { root } = useStyles();
   if (metadata == null) return <NoData />;
 
   const propKeys = Object.keys(metadata.properties);
   if (propKeys.length === 0) return <NoData />;
 
   return (
-    <TableContainer>
-      <Table size="small" style={{ whiteSpace: "nowrap" }}>
+    <TableContainer classes={{ root }}>
+      <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>

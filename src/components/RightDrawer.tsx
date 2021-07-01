@@ -4,45 +4,58 @@ import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import clsx from "clsx";
 import React from "react";
 
 import { AssetProps, Assets } from "./Assets";
+import { BottomDrawerHeight } from "./BottomDrawer";
 import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";
-import { MappingProps } from "./Mapping";
 import { MetadataProperties, MetadataProps } from "./MetadataProperties";
 import { SensorProps, Sensors } from "./Sensors";
 import { Settings, SettingsProps } from "./Settings";
 
 interface Props {
   readonly assets: AssetProps;
+  readonly bottomOpen: boolean;
   readonly faults: FaultProps;
-  readonly mapping: MappingProps;
   readonly metadata: MetadataProps;
   readonly sensors: SensorProps;
   readonly settings: SettingsProps;
 }
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    width: RightDrawerWidth,
-  },
-  title: {
-    textTransform: "uppercase",
-  },
-}));
+const useStyles = makeStyles((theme) => {
+  return {
+    paper: {
+      height: `calc(100% - ${theme.spacing(7) + 1}px)`,
+      width: RightDrawerWidth,
+    },
+    paperOpen: {
+      height: `calc(100% - ${BottomDrawerHeight}px)`,
+      width: RightDrawerWidth,
+    },
+    title: { textTransform: "uppercase" },
+  };
+});
 
 export function RightDrawer({
   assets,
+  bottomOpen,
   faults,
   metadata,
   sensors,
   settings,
 }: Props): JSX.Element {
-  const { paper, title } = useStyles();
+  const { paper, paperOpen, title } = useStyles();
 
   return (
-    <Drawer anchor="right" variant="permanent" classes={{ paper }}>
+    <Drawer
+      anchor="right"
+      variant="permanent"
+      classes={{
+        paper: clsx({ [paperOpen]: bottomOpen, [paper]: !bottomOpen }),
+      }}
+    >
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={title} variant="body2">
@@ -75,14 +88,6 @@ export function RightDrawer({
         </AccordionSummary>
         <MetadataProperties {...metadata} />
       </Accordion>
-      {/* <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={title} variant="body2">
-            Sensor Mapping
-          </Typography>
-        </AccordionSummary>
-        <Mapping {...mapping} />
-      </Accordion> */}
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={title} variant="body2">

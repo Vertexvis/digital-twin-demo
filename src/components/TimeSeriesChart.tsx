@@ -7,6 +7,8 @@ interface Props {
 }
 
 export function TimeSeriesChart({ sensor }: Props): JSX.Element {
+  const max = Math.max(...sensor.data.map((s) => s.avg));
+
   return (
     <ResponsiveLine
       colors={"#93C5FD"}
@@ -24,7 +26,7 @@ export function TimeSeriesChart({ sensor }: Props): JSX.Element {
       yScale={{
         type: "linear",
         min: "auto",
-        max: 16.25,
+        max: max * 1.08,
         stacked: true,
         reverse: false,
       }}

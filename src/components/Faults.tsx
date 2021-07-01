@@ -7,18 +7,23 @@ import ErrorTwoToneIcon from "@material-ui/icons/ErrorTwoTone";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
 
 import theme from "../lib/theme";
-import { Faults as FaultsList } from "../lib/time-series";
+import { FaultCode } from "../lib/time-series";
 import { NoData } from "./NoData";
 
 export interface FaultProps {
+  readonly faults: FaultCode[];
   readonly onSelect: (timestamp: string) => void;
   readonly selected: string;
 }
 
-export function Faults({ onSelect, selected }: FaultProps): JSX.Element {
-  return FaultsList.length > 0 ? (
+export function Faults({
+  faults,
+  onSelect,
+  selected,
+}: FaultProps): JSX.Element {
+  return faults.length > 0 ? (
     <List>
-      {FaultsList.map((f) => {
+      {faults.map((f) => {
         const isSelected = f.timestamp === selected;
         return (
           <ListItem

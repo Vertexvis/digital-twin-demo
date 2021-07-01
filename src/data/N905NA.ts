@@ -1,4 +1,6 @@
-export default {
+import { RawSensors } from "../lib/time-series";
+
+const data: RawSensors = {
   ECU: {
     data: [
       {
@@ -880,3 +882,5 @@ export default {
     id: "VCU",
   },
 };
+
+export default data;
