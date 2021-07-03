@@ -79,24 +79,26 @@ export function getAssets(streamKey: string): Asset[] {
 }
 
 export function getFaults(asset: Asset): FaultCode[] {
-  return [
-    {
-      id: "1",
-      severity: "warn",
-      title: "Bearing end-of-life",
-      timestamp: isWindTurbine(asset)
-        ? "2021-04-03T06:40:00.000Z"
-        : "2021-04-01T12:15:01.000Z",
-    },
-    {
-      id: "2",
-      severity: "error",
-      title: "Brake malfunction",
-      timestamp: isWindTurbine(asset)
-        ? "2021-04-03T18:20:00.000Z"
-        : "2021-04-01T12:15:07.000Z",
-    },
-  ];
+  return asset === "T03482"
+    ? []
+    : [
+        {
+          id: "1",
+          severity: "warn",
+          title: "Bearing end-of-life",
+          timestamp: isWindTurbine(asset)
+            ? "2021-04-03T06:40:00.000Z"
+            : "2021-04-01T12:15:01.000Z",
+        },
+        {
+          id: "2",
+          severity: "error",
+          title: "Brake malfunction",
+          timestamp: isWindTurbine(asset)
+            ? "2021-04-03T18:20:00.000Z"
+            : "2021-04-01T12:15:07.000Z",
+        },
+      ];
 }
 
 function isWindTurbine(asset: Asset): boolean {
