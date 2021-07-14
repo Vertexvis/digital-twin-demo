@@ -105,7 +105,7 @@ function isWindTurbine(asset: Asset): boolean {
   return ["R8071", "T03482"].includes(asset);
 }
 
-const stSk = process.env.NEXT_PUBLIC_ST_STREAM_KEY;
+export const stSk = process.env.NEXT_PUBLIC_ST_STREAM_KEY;
 const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds =
   {
     "U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU": {

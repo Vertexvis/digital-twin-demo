@@ -25,6 +25,7 @@ import {
   getTimeSeriesData,
   RawSensors,
   sensorsToItemSuppliedIds,
+  stSk,
   TimeSeriesData,
 } from "../lib/time-series";
 import { useViewer } from "../lib/viewer";
@@ -75,6 +76,7 @@ export default function Home(): JSX.Element {
     router.push(encodeCreds(credentials));
     reset();
 
+    setGhosted(credentials.streamKey === stSk);
     const sk = credentials.streamKey;
     const m = sensorsToItemSuppliedIds(sk);
     setSensorMapping(m);
@@ -238,13 +240,6 @@ export default function Home(): JSX.Element {
             },
             selected: sensor,
             selectedTs: ts,
-          }}
-          settings={{
-            ghosted,
-            onGhostToggle: (g) => {
-              setGhosted(g);
-              reset();
-            },
           }}
         />
       }

@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
-import { TapEventDetails } from "@vertexvis/viewer";
+import type { TapEventDetails } from "@vertexvis/viewer";
 import { JSX as ViewerJSX, VertexViewer } from "@vertexvis/viewer-react";
 import React from "react";
 

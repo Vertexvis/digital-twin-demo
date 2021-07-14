@@ -13,7 +13,6 @@ import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";
 import { MetadataProperties, MetadataProps } from "./MetadataProperties";
 import { SensorProps, Sensors } from "./Sensors";
-import { Settings, SettingsProps } from "./Settings";
 
 interface Props {
   readonly assets: AssetProps;
@@ -21,7 +20,6 @@ interface Props {
   readonly faults: FaultProps;
   readonly metadata: MetadataProps;
   readonly sensors: SensorProps;
-  readonly settings: SettingsProps;
 }
 
 const useStyles = makeStyles((theme) => {
@@ -44,7 +42,6 @@ export function RightDrawer({
   faults,
   metadata,
   sensors,
-  settings,
 }: Props): JSX.Element {
   const { paper, paperOpen, title } = useStyles();
 
@@ -87,14 +84,6 @@ export function RightDrawer({
           </Typography>
         </AccordionSummary>
         <MetadataProperties {...metadata} />
-      </Accordion>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={title} variant="body2">
-            Settings
-          </Typography>
-        </AccordionSummary>
-        <Settings {...settings} />
       </Accordion>
     </Drawer>
   );
