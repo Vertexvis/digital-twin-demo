@@ -9,7 +9,7 @@
     "@nivo/core": "^0.72",
     "@nivo/line": "^0.72",
     "@vertexvis/viewer-react": "^0.10.0-canary.21",
-    "next": "11.0",
+    "next": "11.1",
     "react": "^17",
     "react-dom": "^17"
   },
