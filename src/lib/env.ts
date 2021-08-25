@@ -8,7 +8,7 @@ export interface StreamCredentials {
 // Wind turbine
 export const DefaultCredentials: StreamCredentials = {
   clientId: "08F675C4AACE8C0214362DB5EFD4FACAFA556D463ECA00877CB225157EF58BFA",
-  streamKey: "XKT4N3NtH1ib4qLKLPdg3Q3MCSxX4zVRxarB",
+  streamKey: "wRpxNYMTKcHaD73mwRvER1b-rqYALjB7Rgk9",
 };
 
 export const Env =

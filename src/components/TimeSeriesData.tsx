@@ -33,6 +33,8 @@ export function TimeSeriesDataGrid({
         disableColumnMenu
         disableColumnSelector
         disableDensitySelector
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         disableMultipleSelection
         hideFooter
         columns={columns}

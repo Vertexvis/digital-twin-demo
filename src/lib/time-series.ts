@@ -108,7 +108,7 @@ function isWindTurbine(asset: Asset): boolean {
 export const stSk = process.env.NEXT_PUBLIC_ST_STREAM_KEY;
 const streamKeyToSensorsToItemSuppliedIds: StreamKeyToSensorsToItemSuppliedIds =
   {
-    "U9cSWVb7fvS9k-NQcT28uZG6wtm6xmiG0ctU": {
+    Eh96kzXEppNfcxj5gbbqdJ9oUdQPB7hXzHrU: {
       ECU: ["200050"],
       VCU: ["200030", "200060"],
       TCU: ["200090", "200100"],
