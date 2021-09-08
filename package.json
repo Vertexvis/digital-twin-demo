@@ -8,7 +8,7 @@
     "@material-ui/icons": "^4.11",
     "@nivo/core": "^0.73",
     "@nivo/line": "^0.73",
-    "@vertexvis/viewer-react": "^0.10",
+    "@vertexvis/viewer-react": "^0.10.2-canary.7",
     "next": "11.1",
     "react": "^17",
     "react-dom": "^17"
