@@ -14,7 +14,6 @@ const ItemSuppliedIdKey = "VERTEX_SCENE_ITEM_SUPPLIED_ID";
 const PartIdKey = "VERTEX_PART_ID";
 const PartRevIdKey = "VERTEX_PART_REVISION_ID";
 const PartRevSuppliedId = "VERTEX_PART_REVISION_SUPPLIED_ID";
-const PartInstIdKey = "VERTEX_PART_INSTANCE_ID";
 
 export function toMetadata({
   hit,
@@ -31,27 +30,19 @@ export function toMetadata({
     partId,
     suppliedPartRevisionId: partRevSuppliedId,
   } = hit;
+
   if (itemId?.hex) ps[ItemIdKey] = itemId.hex;
   if (itemSuppliedId?.value) ps[ItemSuppliedIdKey] = itemSuppliedId.value;
   if (partId?.hex) ps[PartIdKey] = partId.hex;
   if (partRevisionId?.hex) ps[PartRevIdKey] = partRevisionId.hex;
   if (partRevSuppliedId?.value) ps[PartRevSuppliedId] = partRevSuppliedId.value;
 
-  const md = hit?.metadata;
-  let partName: string | undefined;
-  if (md != null) {
-    const { partInstanceId, partName: pn } = md;
-    if (partInstanceId?.hex) ps[PartInstIdKey] = partInstanceId.hex;
-    partName = pn ?? undefined;
-
-    if (md.properties != null) {
-      md.properties
-        .filter((p) => p.key)
-        .forEach((p) => (ps[p.key as string] = toValue(p)));
-    }
+  const md = hit?.metadataProperties;
+  if (md) {
+    md.filter((p) => p.key).forEach((p) => (ps[p.key as string] = toValue(p)));
   }
 
-  return { partName, properties: alphabetize(ps) };
+  return { partName: ps.Name, properties: alphabetize(ps) };
 }
 
 function alphabetize<T extends Record<string, unknown>>(obj: T): T {
