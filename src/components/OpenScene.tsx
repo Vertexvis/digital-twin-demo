@@ -1,10 +1,10 @@
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 import React from "react";
 
 import { DefaultCredentials, StreamCredentials } from "../lib/env";
@@ -14,6 +14,10 @@ interface Props {
   readonly open: boolean;
   readonly onClose: VoidFunction;
   readonly onConfirm: (credentials: StreamCredentials) => void;
+}
+
+interface Value {
+  value: string;
 }
 
 export function OpenDialog({
@@ -28,14 +32,26 @@ export function OpenDialog({
   const invalidClientId = inputCreds.clientId.length > 64;
   const invalidStreamKey = inputCreds.streamKey.length > 36;
 
+  function handleClientIdChange(e: React.ChangeEvent<Value>): void {
+    setInputCreds({ ...inputCreds, clientId: e.target.value });
+  }
+
+  function handleStreamKeyChange(e: React.ChangeEvent<Value>): void {
+    setInputCreds({ ...inputCreds, streamKey: e.target.value });
+  }
+
+  function handleOpenSceneClick(): void {
+    if (inputCreds.clientId && inputCreds.streamKey) {
+      onConfirm(inputCreds);
+    }
+  }
+
+  function handleRestoreDefaultsClick(): void {
+    setInputCreds(DefaultCredentials);
+  }
+
   return (
-    <Dialog
-      aria-labelledby="open-scene-title"
-      fullWidth
-      maxWidth="md"
-      onClose={onClose}
-      open={open}
-    >
+    <Dialog fullWidth maxWidth="md" onClose={onClose} open={open}>
       <DialogTitle id="open-scene-title">Open Scene</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -47,14 +63,10 @@ export function OpenDialog({
           fullWidth
           helperText={invalidClientId ? "Client ID too long." : undefined}
           label="Client ID"
-          margin="dense"
+          margin="normal"
+          onChange={handleClientIdChange}
+          size="small"
           value={inputCreds.clientId}
-          onChange={(e) =>
-            setInputCreds({
-              ...inputCreds,
-              clientId: e.target.value,
-            })
-          }
         />
         <TextField
           autoFocus={!emptyClientId}
@@ -62,32 +74,21 @@ export function OpenDialog({
           fullWidth
           helperText={invalidStreamKey ? "Stream key too long." : undefined}
           label="Stream Key"
-          margin="dense"
-          value={inputCreds.streamKey}
+          margin="normal"
           onFocus={(e) => e.target.select()}
-          onChange={(e) =>
-            setInputCreds({
-              ...inputCreds,
-              streamKey: e.target.value,
-            })
-          }
+          onChange={handleStreamKeyChange}
+          size="small"
+          value={inputCreds.streamKey}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setInputCreds(DefaultCredentials)}>
+        <Button color="inherit" onClick={handleRestoreDefaultsClick}>
           Restore Defaults
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button
-          color="primary"
-          onClick={() => {
-            if (inputCreds.clientId && inputCreds.streamKey) {
-              onConfirm(inputCreds);
-            }
-          }}
-        >
-          Open Scene
+        <Button color="inherit" onClick={onClose}>
+          Cancel
         </Button>
+        <Button onClick={handleOpenSceneClick}>Open Scene</Button>
       </DialogActions>
     </Dialog>
   );

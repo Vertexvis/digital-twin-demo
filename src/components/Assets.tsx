@@ -1,8 +1,8 @@
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import LayersIcon from "@material-ui/icons/Layers";
+import LayersIcon from "@mui/icons-material/Layers";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
 import { Asset } from "../lib/time-series";
 import { NoData } from "./NoData";

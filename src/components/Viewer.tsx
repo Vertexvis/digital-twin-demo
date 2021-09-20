@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+/* @jsx jsx */ /** @jsxRuntime classic */ import { jsx } from "@emotion/react";
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
 import type { TapEventDetails } from "@vertexvis/viewer";
 import { JSX as ViewerJSX, VertexViewer } from "@vertexvis/viewer-react";
@@ -24,10 +24,6 @@ interface OnSelectProps extends HOCViewerProps {
   ) => Promise<void>;
 }
 
-const useStyles = makeStyles(() => ({
-  root: { height: "100%", width: "100%" },
-}));
-
 export const Viewer = onTap(UnwrappedViewer);
 
 function UnwrappedViewer({
@@ -35,12 +31,10 @@ function UnwrappedViewer({
   viewer,
   ...props
 }: ViewerProps): JSX.Element {
-  const { root } = useStyles();
-
   return (
     <VertexViewer
-      className={root}
       clientId={credentials.clientId}
+      css={{ height: "100%", width: "100%" }}
       ref={viewer}
       src={`urn:vertexvis:stream-key:${credentials.streamKey}`}
       {...props}

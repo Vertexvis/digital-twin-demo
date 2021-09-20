@@ -2,7 +2,11 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { BottomDrawer, Content } from "../components/BottomDrawer";
-import { Layout } from "../components/Layout";
+import {
+  BottomDrawerHeight,
+  Layout,
+  RightDrawerWidth,
+} from "../components/Layout";
 import { encodeCreds, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
@@ -243,6 +247,7 @@ export default function Home(): JSX.Element {
           }}
         />
       }
+      rightDrawerWidth={RightDrawerWidth}
     >
       {dialogOpen && (
         <OpenDialog

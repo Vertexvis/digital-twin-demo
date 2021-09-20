@@ -1,41 +1,115 @@
-import Box from "@material-ui/core/Box";
-import Hidden from "@material-ui/core/Hidden";
-import { makeStyles } from "@material-ui/core/styles";
+import { AppBar as MuiAppBar, Box, Toolbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
+import { easeOutEntering, sharpLeaving } from "../lib/transitions";
+
+export const BottomDrawerHeight = 400;
+export const DenseToolbarHeight = 48;
+export const LeftDrawerWidth = 240;
 export const RightDrawerWidth = 320;
 
 interface Props {
-  readonly bottomDrawer: React.ReactNode;
-  readonly children: React.ReactNode;
+  readonly bottomDrawer?: React.ReactNode;
+  readonly children?: React.ReactNode;
+  readonly header?: React.ReactNode;
+  readonly leftDrawer?: React.ReactNode;
+  readonly leftDrawerWidth?: number;
   readonly main: React.ReactNode;
-  readonly rightDrawer: React.ReactNode;
+  readonly rightDrawer?: React.ReactNode;
+  readonly rightDrawerWidth?: number;
 }
 
-const useStyles = makeStyles((theme) => ({
-  content: {
-    height: "100%",
-    width: `calc(100% - ${RightDrawerWidth}px)`,
-    [theme.breakpoints.down("sm")]: {
-      width: `100%`,
-    },
-  },
-}));
+interface DrawerProps {
+  leftDrawerWidth: number;
+  rightDrawerWidth: number;
+}
+
+function shouldForwardProp(prop: PropertyKey): boolean {
+  return (
+    prop !== "bottomDrawerHeight" &&
+    prop !== "leftDrawerWidth" &&
+    prop !== "rightDrawerWidth" &&
+    prop !== "toolbarHeight"
+  );
+}
+
+const AppBar = styled(MuiAppBar, { shouldForwardProp })<DrawerProps>(
+  ({ leftDrawerWidth, rightDrawerWidth, theme }) => {
+    const { create } = theme.transitions;
+    return {
+      marginLeft: leftDrawerWidth,
+      transition: create(["margin", "width"], sharpLeaving(theme)),
+      zIndex: theme.zIndex.drawer + 1,
+      ...(rightDrawerWidth > 0 && {
+        marginRight: rightDrawerWidth,
+        transition: create(["margin", "width"], easeOutEntering(theme)),
+        width: `calc(100% - ${leftDrawerWidth + rightDrawerWidth}px)`,
+      }),
+      [theme.breakpoints.down("sm")]: {
+        margin: 0,
+        width: `100%`,
+      },
+    };
+  }
+);
+
+const Main = styled("main", { shouldForwardProp })<
+  DrawerProps & { toolbarHeight: number }
+>(({ leftDrawerWidth, rightDrawerWidth, theme, toolbarHeight }) => {
+  const { create } = theme.transitions;
+  return {
+    flexGrow: 1,
+    height: `calc(100% - ${toolbarHeight}px)`,
+    marginRight: -RightDrawerWidth,
+    marginTop: `${toolbarHeight}px`,
+    maxWidth: `calc(100% - ${leftDrawerWidth}px)`,
+    transition: create("margin", sharpLeaving(theme)),
+    ...(rightDrawerWidth > 0 && {
+      marginRight: 0,
+      transition: create("margin", easeOutEntering(theme)),
+    }),
+    [theme.breakpoints.down("sm")]: { width: `100%` },
+    ...(rightDrawerWidth > 0 && {
+      width: `calc(100% - ${leftDrawerWidth + rightDrawerWidth}px)`,
+    }),
+  };
+});
 
 export function Layout({
   bottomDrawer,
   children,
+  header,
+  leftDrawer,
+  leftDrawerWidth = 0,
   main,
   rightDrawer,
+  rightDrawerWidth = 0,
 }: Props): JSX.Element {
-  const { content } = useStyles();
-
   return (
-    <Box height="100vh" display="flex">
-      <main className={content}>{main}</main>
-      <Hidden smDown>{rightDrawer}</Hidden>
-      {children}
-      {bottomDrawer}
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      {header && (
+        <AppBar
+          color="default"
+          elevation={1}
+          leftDrawerWidth={leftDrawerWidth}
+          position="fixed"
+          rightDrawerWidth={rightDrawerWidth}
+        >
+          <Toolbar variant="dense">{header}</Toolbar>
+        </AppBar>
+      )}
+      {leftDrawer ? leftDrawer : <></>}
+      <Main
+        leftDrawerWidth={leftDrawerWidth}
+        rightDrawerWidth={rightDrawerWidth}
+        toolbarHeight={header ? DenseToolbarHeight : 0}
+      >
+        {main}
+      </Main>
+      {rightDrawer ? rightDrawer : <></>}
+      {children ?? <></>}
+      {bottomDrawer ? bottomDrawer : <></>}
     </Box>
   );
 }

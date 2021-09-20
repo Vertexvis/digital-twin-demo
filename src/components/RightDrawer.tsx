@@ -1,17 +1,17 @@
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Drawer from "@material-ui/core/Drawer";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import clsx from "clsx";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Drawer, { drawerClasses } from "@mui/material/Drawer";
+import Typography from "@mui/material/Typography";
 import React from "react";
 
 import { AssetProps, Assets } from "./Assets";
-import { BottomDrawerHeight } from "./BottomDrawer";
 import { FaultProps, Faults } from "./Faults";
-import { RightDrawerWidth } from "./Layout";
-import { MetadataProperties, MetadataProps } from "./MetadataProperties";
+import { BottomDrawerHeight, RightDrawerWidth } from "./Layout";
+import {
+  MetadataProperties,
+  Props as MetadataProps,
+} from "./MetadataProperties";
 import { SensorProps, Sensors } from "./Sensors";
 
 interface Props {
@@ -22,20 +22,6 @@ interface Props {
   readonly sensors: SensorProps;
 }
 
-const useStyles = makeStyles((theme) => {
-  return {
-    paper: {
-      height: `calc(100% - ${theme.spacing(7) + 1}px)`,
-      width: RightDrawerWidth,
-    },
-    paperOpen: {
-      height: `calc(100% - ${BottomDrawerHeight}px)`,
-      width: RightDrawerWidth,
-    },
-    title: { textTransform: "uppercase" },
-  };
-});
-
 export function RightDrawer({
   assets,
   bottomOpen,
@@ -43,19 +29,25 @@ export function RightDrawer({
   metadata,
   sensors,
 }: Props): JSX.Element {
-  const { paper, paperOpen, title } = useStyles();
-
   return (
     <Drawer
       anchor="right"
-      variant="permanent"
-      classes={{
-        paper: clsx({ [paperOpen]: bottomOpen, [paper]: !bottomOpen }),
+      sx={{
+        display: { sm: "block", xs: "none" },
+        flexShrink: 0,
+        width: RightDrawerWidth,
+        [`& .${drawerClasses.paper}`]: bottomOpen
+          ? {
+              height: `calc(100% - ${BottomDrawerHeight}px)`,
+              width: RightDrawerWidth,
+            }
+          : { height: `calc(100% - 57px)`, width: RightDrawerWidth },
       }}
+      variant="permanent"
     >
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={title} variant="body2">
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
             Sensors
           </Typography>
         </AccordionSummary>
@@ -63,7 +55,7 @@ export function RightDrawer({
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={title} variant="body2">
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
             Assets
           </Typography>
         </AccordionSummary>
@@ -71,7 +63,7 @@ export function RightDrawer({
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={title} variant="body2">
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
             Fault Codes
           </Typography>
         </AccordionSummary>
@@ -79,7 +71,7 @@ export function RightDrawer({
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={title} variant="body2">
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
             Metadata Properties
           </Typography>
         </AccordionSummary>

@@ -1,5 +1,5 @@
-import { Box } from "@material-ui/core";
-import { DataGrid, GridColDef } from "@material-ui/data-grid";
+import { Box } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React from "react";
 
 import { formatValue, Sensor } from "../lib/time-series";
@@ -39,7 +39,7 @@ export function TimeSeriesDataGrid({
         hideFooter
         columns={columns}
         onStateChange={(e) => {
-          const ts = e.state.focus.cell?.id as string;
+          const ts = e.focus.cell?.id as string;
           if (ts == null) return;
 
           onSelect(ts);

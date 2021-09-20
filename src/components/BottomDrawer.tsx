@@ -1,17 +1,17 @@
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Drawer from "@material-ui/core/Drawer";
-import Link from "@material-ui/core/Link";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
-import TimelineOutlinedIcon from "@material-ui/icons/TimelineOutlined";
-import clsx from "clsx";
+import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
+import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Drawer, { drawerClasses } from "@mui/material/Drawer";
+import Link from "@mui/material/Link";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Typography from "@mui/material/Typography";
 import React from "react";
 
 import { Sensor } from "../lib/time-series";
+import { sharpEntering, sharpLeaving } from "../lib/transitions";
+import { BottomDrawerHeight } from "./Layout";
 import { TimeSeriesChart } from "./TimeSeriesChart";
 import { TimeSeriesDataGrid } from "./TimeSeriesData";
 
@@ -26,33 +26,6 @@ interface Props {
   readonly timestamp: string;
 }
 
-export const BottomDrawerHeight = 400;
-
-const useStyles = makeStyles((theme) => ({
-  drawer: {
-    height: BottomDrawerHeight,
-    flexShrink: 0,
-    whiteSpace: "nowrap",
-  },
-  drawerOpen: {
-    height: BottomDrawerHeight,
-    transition: theme.transitions.create("height", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create("height", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: "hidden",
-    height: theme.spacing(7) + 1,
-  },
-  mr: { marginRight: theme.spacing(2) },
-  title: { textTransform: "uppercase" },
-}));
-
 export function BottomDrawer({
   content,
   onContent,
@@ -61,20 +34,34 @@ export function BottomDrawer({
   sensor,
   timestamp,
 }: Props): JSX.Element {
-  const { drawer, drawerOpen, drawerClose, mr, title } = useStyles();
   const open = Boolean(content);
 
   return (
     <Drawer
       anchor="bottom"
-      className={clsx(drawer, { [drawerOpen]: open, [drawerClose]: !open })}
-      classes={{ paper: clsx({ [drawerOpen]: open, [drawerClose]: !open }) }}
       open={open}
+      sx={{
+        height: BottomDrawerHeight,
+        flexShrink: 0,
+        whiteSpace: "nowrap",
+        [`& .${drawerClasses.paper}`]: open
+          ? {
+              height: BottomDrawerHeight,
+              transition: (theme) =>
+                theme.transitions.create("height", sharpEntering(theme)),
+            }
+          : {
+              height: "57px",
+              overflowX: "hidden",
+              transition: (theme) =>
+                theme.transitions.create("height", sharpLeaving(theme)),
+            },
+      }}
       variant="permanent"
     >
       <Box display="flex" justifyContent="space-between" mx={2} my={1}>
         <List
-          style={{
+          sx={{
             display: "flex",
             flexDirection: "row",
             padding: 0,
@@ -99,10 +86,9 @@ export function BottomDrawer({
         </List>
         <Box>
           <Link
-            className={mr}
             href="https://github.com/Vertexvis/digital-twin-demo"
             rel="noreferrer"
-            style={{ alignSelf: "center" }}
+            sx={{ alignSelf: "center", mr: 2 }}
             target="_blank"
           >
             View on GitHub
@@ -120,7 +106,7 @@ export function BottomDrawer({
         <>
           <Typography
             align="center"
-            className={title}
+            sx={{ textTransform: "uppercase" }}
             gutterBottom
             variant="subtitle1"
           >

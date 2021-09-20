@@ -1,10 +1,10 @@
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
-import ErrorTwoToneIcon from "@material-ui/icons/ErrorTwoTone";
-import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
+import ErrorTwoToneIcon from "@mui/icons-material/ErrorTwoTone";
+import WarningTwoToneIcon from "@mui/icons-material/WarningTwoTone";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 
 import theme from "../lib/theme";
 import { FaultCode } from "../lib/time-series";
@@ -35,16 +35,10 @@ export function Faults({
             <ListItemIcon>
               {f.severity === "warn" ? (
                 <WarningTwoToneIcon
-                  style={{
-                    color: theme.palette.warning.light,
-                  }}
+                  sx={{ color: theme.palette.warning.light }}
                 />
               ) : (
-                <ErrorTwoToneIcon
-                  style={{
-                    color: theme.palette.error.light,
-                  }}
-                />
+                <ErrorTwoToneIcon sx={{ color: theme.palette.error.light }} />
               )}
             </ListItemIcon>
             <ListItemText primary={f.title} />
