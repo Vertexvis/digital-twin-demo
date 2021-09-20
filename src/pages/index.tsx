@@ -2,11 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { BottomDrawer, Content } from "../components/BottomDrawer";
-import {
-  BottomDrawerHeight,
-  Layout,
-  RightDrawerWidth,
-} from "../components/Layout";
+import { Layout, RightDrawerWidth } from "../components/Layout";
 import { encodeCreds, OpenDialog } from "../components/OpenScene";
 import { RightDrawer } from "../components/RightDrawer";
 import { Viewer } from "../components/Viewer";
