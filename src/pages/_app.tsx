@@ -24,6 +24,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       if (window.gtag) {
         // @ts-ignore
         window.gtag("config", process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS, {
+          cookie_flags: "SameSite=None;Secure",
           page_path: url,
         });
       }

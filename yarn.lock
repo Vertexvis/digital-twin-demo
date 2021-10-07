@@ -315,7 +315,7 @@
     "@emotion/cache" "^11.4.0"
     prop-types "^15.7.2"
 
-"@mui/styles@^5.0.1":
+"@mui/styles@^5.0":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.0.1.tgz#1634d08d892b5c7e85c9f84e4fc8bc02a5fb0f7a"
   integrity sha512-hCtR2ZVOkoIhpTan02I4UEShnZxe59WwhKRJqauMs/addXByhAHHCNheTdiV++Irl/fyyFObmzPM0CUD3q6FIA==
@@ -850,7 +850,7 @@
     lodash.isequal "^4.5.0"
     uuid "^8.3.2"
 
-"@vertexvis/viewer-react@^0.11.0":
+"@vertexvis/viewer-react@^0.11":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.11.0.tgz#8d0dda2eb433cf3353b3a08aa81dd3858b5bb648"
   integrity sha512-90WRc1RPsD0lBDqblH4xRCeAxjE5ATt/2gEv69pd92nJIaiv4BTrf1bN9+ooUCmKB0wzzVk+btLOJNGUIz7v1A==

@@ -9,11 +9,11 @@
     "@emotion/styled": "^11.3",
     "@mui/icons-material": "^5.0",
     "@mui/material": "^5.0",
-    "@mui/styles": "^5.0.1",
+    "@mui/styles": "^5.0",
     "@mui/x-data-grid": "^5.0.0-beta.1",
     "@nivo/core": "^0.73",
     "@nivo/line": "^0.73",
-    "@vertexvis/viewer-react": "^0.11.0",
+    "@vertexvis/viewer-react": "^0.11",
     "next": "11.1",
     "react": "^17",
     "react-dom": "^17"
