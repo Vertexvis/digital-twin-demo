@@ -364,7 +364,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.1.0.tgz#5ed928c5a41cfbf9a4be82ea3bbdc47bcc9610d5"
   integrity sha512-Hh7ALdq/GjfIwLvqH3XftuY3bcKhupktTm+S6qRIDGOtPtRuq2L21VWzOK4p7kblirK0XgGVH5BLwa6u8z/6QQ==
 
-"@mui/utils@^5.1.0", "@mui/utils@^5.2.2":
+"@mui/utils@^5.2.2":
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.2.2.tgz#972aab7d2564e77c06e0c3c11e7b1aec6e37c927"
   integrity sha512-0u9ImUfpCfTxmvQTfUzTSS+jKWMX15MBZeZCRQZ0f7o9Yi8BlrLj33lMx0mFBkUSYdTXnqL4yfOn7RBzV01HMQ==
@@ -375,15 +375,26 @@
     prop-types "^15.7.2"
     react-is "^17.0.2"
 
-"@mui/x-data-grid@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.0.1.tgz#bace714fca342b6401bebb8861c4a0b09a4f1604"
-  integrity sha512-F1IhkxNiI7A/VoRT0vTs7PP4E8E/K6e5WLrjXFzxeWmvOBaAfmwvf3Wq8o/8ouQ9MFy92M/lAgviOMp1gduOtw==
+"@mui/utils@^5.2.3":
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.2.3.tgz#994f3a500679804483732596fcfa531e59c56445"
+  integrity sha512-sQujlajIS0zQKcGIS6tZR0L1R+ib26B6UtuEn+cZqwKHsPo3feuS+SkdscYBdcCdMbrZs4gj8WIJHl2z6tbSzQ==
   dependencies:
-    "@mui/utils" "^5.1.0"
-    clsx "^1.1.1"
+    "@babel/runtime" "^7.16.3"
+    "@types/prop-types" "^15.7.4"
+    "@types/react-is" "^16.7.1 || ^17.0.0"
     prop-types "^15.7.2"
-    reselect "^4.1.1"
+    react-is "^17.0.2"
+
+"@mui/x-data-grid@^5.2.1":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.2.2.tgz#4d0ab76048268a91878f908d428c3975e52ae7e3"
+  integrity sha512-FI/fwsMMATUdEHwiGGkBdiw/p3G6+iUlkoklBzzsB6MY0Mb+Voj+s/waoFM3uyNJ+h4jof8NTS/Gs8IfDiyciA==
+  dependencies:
+    "@mui/utils" "^5.2.3"
+    clsx "^1.1.1"
+    prop-types "^15.8.0"
+    reselect "^4.1.5"
 
 "@napi-rs/triples@1.0.3":
   version "1.0.3"
@@ -3443,6 +3454,15 @@ prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
+prop-types@^15.8.0:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 protobufjs@^6.9.0:
   version "6.11.2"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.11.2.tgz#de39fabd4ed32beaa08e9bb1e30d08544c1edf8b"
@@ -3542,7 +3562,7 @@ react-is@17.0.2, react-is@^17.0.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-is@^16.7.0, react-is@^16.8.1:
+react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -3656,7 +3676,7 @@ require-from-string@^2.0.2:
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
   integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
 
-reselect@^4.1.1:
+reselect@^4.1.5:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.1.5.tgz#852c361247198da6756d07d9296c2b51eddb79f6"
   integrity sha512-uVdlz8J7OO+ASpBYoz1Zypgx0KasCY20H+N8JD13oUMtPvSHQuscrHop4KbXrbsBcdB9Ds7lVK7eRkBIfO43vQ==
