@@ -10,7 +10,7 @@
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.7.0",
     "@mui/styles": "^5.7.0",
-    "@mui/x-data-grid": "^5.11.0",
+    "@mui/x-data-grid": "^5.12.1",
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "@vertexvis/viewer-react": "^0.11",
