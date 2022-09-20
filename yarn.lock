@@ -339,16 +339,16 @@
     csstype "^3.1.0"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.9.3":
-  version "5.10.2"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.10.2.tgz#4d39a6c75b1780f68050d48c73a3b908f6c4a561"
-  integrity sha512-cXV2Z+n5Dx1AH16/MG/WAoe1Pq3KfwLN/8ACgl+vDsKW+pg0mGEvFjStGnd2igIPncMWPvrA3sv1aNTgqHdKUw==
+"@mui/styles@^5.10.3":
+  version "5.10.6"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.10.6.tgz#cef0774c64429c868ba85ddd34fd49c0dc92a926"
+  integrity sha512-QmT/PXDKOSttkSWV97SVw1isfmc+iNMQBUtVwafRju1T6+O26tf9Hz0QjILuXIk74lg/nrbQn5S5c9h6FZWPXQ==
   dependencies:
-    "@babel/runtime" "^7.17.2"
+    "@babel/runtime" "^7.19.0"
     "@emotion/hash" "^0.9.0"
-    "@mui/private-theming" "^5.9.3"
-    "@mui/types" "^7.1.5"
-    "@mui/utils" "^5.9.3"
+    "@mui/private-theming" "^5.10.6"
+    "@mui/types" "^7.2.0"
+    "@mui/utils" "^5.10.6"
     clsx "^1.2.1"
     csstype "^3.1.0"
     hoist-non-react-statics "^3.3.2"
