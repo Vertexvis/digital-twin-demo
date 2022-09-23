@@ -81,13 +81,6 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.17.2":
-  version "7.17.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
-  integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
 "@babel/runtime@^7.19.0":
   version "7.19.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.19.0.tgz#22b11c037b094d27a8a2504ea4dcff00f50e2259"
@@ -379,7 +372,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.0.tgz#91380c2d42420f51f404120f7a9270eadd6f5c23"
   integrity sha512-lGXtFKe5lp3UxTBGqKI1l7G8sE2xBik8qCfrLHD5olwP/YU0/ReWoWT7Lp1//ri32dK39oPMrJN8TgbkCSbsNA==
 
-"@mui/utils@^5.10.6":
+"@mui/utils@^5.10.3", "@mui/utils@^5.10.6":
   version "5.10.6"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.10.6.tgz#98d432d2b05544c46efe356cf095cea3a37c2e59"
   integrity sha512-g0Qs8xN/MW2M3fLL8197h5J2VB9U+49fLlnKKqC6zy/yus5cZwdT+Gwec+wUMxgwQoxMDn+J8oDWAn28kEOR/Q==
@@ -390,24 +383,13 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/utils@^5.9.3":
-  version "5.9.3"
-  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.9.3.tgz#a11e0824f00b7ea40257b390060ce167fe861d02"
-  integrity sha512-l0N5bcrenE9hnwZ/jPecpIRqsDFHkPXoFUcmkgysaJwVZzJ3yQkGXB47eqmXX5yyGrSc6HksbbqXEaUya+siew==
-  dependencies:
-    "@babel/runtime" "^7.17.2"
-    "@types/prop-types" "^15.7.5"
-    "@types/react-is" "^16.7.1 || ^17.0.0"
-    prop-types "^15.8.1"
-    react-is "^18.2.0"
-
-"@mui/x-data-grid@^5.15.1":
-  version "5.16.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.16.0.tgz#4620efe1707f36153ede0c5aacb652a75cf9ab1f"
-  integrity sha512-pP1dsNAOWJQoxU/pTHKF/7uDVNASeTA2Ki8fdm6+TVLu8C4ISsg88vGPj8W3ikbdQ1geExzxO1LLX1atQGKTiA==
+"@mui/x-data-grid@^5.17.0":
+  version "5.17.4"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-5.17.4.tgz#93ccd06a0a15d02b8d59c2d3038e217ffc72350d"
+  integrity sha512-cxZuu65Whh1DNU9M2X5ljDOx+GAEpGeJLPnugMjhgqTOszfJZX/4kI7NftrPy051Hy0um0sv0NVTDSFXG6yixA==
   dependencies:
     "@babel/runtime" "^7.18.9"
-    "@mui/utils" "^5.9.3"
+    "@mui/utils" "^5.10.3"
     clsx "^1.2.1"
     prop-types "^15.8.1"
     reselect "^4.1.6"
