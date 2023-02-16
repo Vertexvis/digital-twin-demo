@@ -1,7 +1,5 @@
-import { vertexvis } from "@vertexvis/frame-streaming-protos";
-import { ColorMaterial, Components, TapEventDetails } from "@vertexvis/viewer";
-
-import { SelectColor } from "./colors";
+import { vertexvis } from '@vertexvis/frame-streaming-protos';
+import { ColorMaterial, Components, TapEventDetails } from '@vertexvis/viewer';
 
 export interface Req {
   readonly viewer: Components.VertexViewer | null;
@@ -116,7 +114,7 @@ export async function handleHit({
         return [
           op.where((q) => q.all()).deselect(),
           // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons#return_value
-          detail.buttons === 2 ? idQuery.hide() : idQuery.select(SelectColor),
+          detail.buttons === 2 ? idQuery.hide() : idQuery.select(),
         ];
       })
       .execute();
