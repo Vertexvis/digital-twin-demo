@@ -11,7 +11,7 @@
     "@mui/material": "^5.12.0",
     "@mui/styles": "^5.11.16",
     "@mui/x-data-grid": "^5.17.26",
-    "@nivo/core": "^0.80.0",
+    "@nivo/core": "^0.81.0",
     "@nivo/line": "^0.80.0",
     "@vertexvis/viewer-react": "^0.11",
     "next": "12.3.4",
