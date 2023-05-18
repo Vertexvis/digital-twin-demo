@@ -1,5 +1,5 @@
-import { vertexvis } from '@vertexvis/frame-streaming-protos';
-import { ColorMaterial, Components, TapEventDetails } from '@vertexvis/viewer';
+import { vertexvis } from "@vertexvis/frame-streaming-protos";
+import { ColorMaterial, Components, TapEventDetails } from "@vertexvis/viewer";
 
 export interface Req {
   readonly viewer: Components.VertexViewer | null;
@@ -39,7 +39,14 @@ export async function applyGroupsBySuppliedIds({
   viewer,
 }: ApplyGroupsBySuppliedIdsReq): Promise<void> {
   if (viewer == null) return;
-
+  viewer?.stream?.update({
+    streamAttributes: {
+      experimentalGhosting: {
+        enabled: { value: true },
+        opacity: { value: 0.7 },
+      },
+    },
+  });
   const scene = await viewer.scene();
   if (scene == null) return;
 
@@ -61,7 +68,14 @@ export async function applyAndShowBySuppliedIds({
   viewer,
 }: ApplyAndShowBySuppliedIdsReq): Promise<void> {
   if (viewer == null) return;
-
+  viewer?.stream?.update({
+    streamAttributes: {
+      experimentalGhosting: {
+        enabled: { value: true },
+        opacity: { value: 0.7 },
+      },
+    },
+  });
   const scene = await viewer.scene();
   if (scene == null) return;
 
@@ -82,7 +96,14 @@ export async function hideBySuppliedId({
   viewer,
 }: HideSuppliedIdReq): Promise<void> {
   if (viewer == null) return;
-
+  viewer?.stream?.update({
+    streamAttributes: {
+      experimentalGhosting: {
+        enabled: { value: true },
+        opacity: { value: 0.7 },
+      },
+    },
+  });
   const scene = await viewer.scene();
   if (scene == null) return;
 
@@ -102,7 +123,14 @@ export async function handleHit({
   viewer,
 }: HandleHitReq): Promise<void> {
   if (viewer == null) return;
-
+  viewer?.stream?.update({
+    streamAttributes: {
+      experimentalGhosting: {
+        enabled: { value: true },
+        opacity: { value: 0.7 },
+      },
+    },
+  });
   const scene = await viewer.scene();
   if (scene == null) return;
 
