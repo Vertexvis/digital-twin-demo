@@ -104,7 +104,14 @@ export default function Home(): JSX.Element {
   ): Promise<void> {
     const meta = timeSeriesData.sensors[id].meta;
     const suppliedIds = meta.itemSuppliedIds;
-
+    viewer.ref.current?.stream?.update({
+      streamAttributes: {
+        experimentalGhosting: {
+          enabled: { value: true },
+          opacity: { value: 0.7 },
+        },
+      },
+    });
     await (apply
       ? applyAndShowBySuppliedIds({
           all,
@@ -173,12 +180,6 @@ export default function Home(): JSX.Element {
               });
               setMetadata(toMetadata({ hit }));
               return handleHit({ detail, hit, viewer: viewer.ref.current });
-            }}
-            streamAttributes={{
-              experimentalGhosting: {
-                enabled: { value: ghosted },
-                opacity: { value: 0.7 },
-              },
             }}
             viewer={viewer.ref}
           />
