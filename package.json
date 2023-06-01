@@ -13,7 +13,7 @@
     "@mui/x-data-grid": "^5.17.26",
     "@nivo/core": "^0.82.1",
     "@nivo/line": "^0.80.0",
-    "@vertexvis/viewer-react": "^0.11",
+    "@vertexvis/viewer-react": "^0.17.2",
     "next": "12.3.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
