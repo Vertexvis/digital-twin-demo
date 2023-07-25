@@ -174,7 +174,8 @@ export default function Home(): JSX.Element {
               setMetadata(toMetadata({ hit }));
               return handleHit({ detail, hit, viewer: viewer.ref.current });
             }}
-            experimentalGhostingOpacity={ghosted ? 0.7 : undefined}
+            experimentalGhostingOpacity={ghosted ? 70 : undefined}
+
             viewer={viewer.ref}
           />
         )
