@@ -174,12 +174,8 @@ export default function Home(): JSX.Element {
               setMetadata(toMetadata({ hit }));
               return handleHit({ detail, hit, viewer: viewer.ref.current });
             }}
-            streamAttributes={{
-              experimentalGhosting: {
-                enabled: { value: ghosted },
-                opacity: { value: 0.7 },
-              },
-            }}
+            experimentalGhostingOpacity={ghosted ? 70 : undefined}
+
             viewer={viewer.ref}
           />
         )
