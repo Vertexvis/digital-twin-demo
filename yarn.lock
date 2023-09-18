@@ -347,6 +347,15 @@
     "@mui/utils" "^5.14.9"
     prop-types "^15.8.1"
 
+"@mui/styled-engine@^5.13.2":
+  version "5.13.2"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.13.2.tgz#c87bd61c0ab8086d34828b6defe97c02bcd642ef"
+  integrity sha512-VCYCU6xVtXOrIN8lcbuPmoG+u7FYuOERG++fpY74hPpEWkyFQG97F+/XfTQVYzlR2m7nPjnwVUgATcTCMEaMvw==
+  dependencies:
+    "@babel/runtime" "^7.22.15"
+    "@mui/utils" "^5.14.9"
+    prop-types "^15.8.1"
+
 "@mui/styled-engine@^5.14.9":
   version "5.14.9"
   resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.14.9.tgz#bc2121db1399bb84ea5390b40beac742b6be7023"
@@ -358,16 +367,16 @@
     prop-types "^15.8.1"
     react "^18.2.0"
 
-"@mui/styles@^5.14.3":
-  version "5.14.5"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.14.5.tgz#182759e844045b613a3c86266804642860c2fe53"
-  integrity sha512-yss4BRGae6ib4gq6YpVLnPyhHiuSIENwlDPWrTEqgc1UhTMmDBGZ7ZCdZ15YGdwviJuNDDf5Bcp3GK4rE5wZNQ==
+"@mui/styles@^5.14.6":
+  version "5.14.9"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.14.9.tgz#f02a435f349582dbca73847502ba0a44895aa3ab"
+  integrity sha512-pd308euoTj6t5bMnIS/FKNoPTzbZMk238FHnWfDIl0KLGw95Xrc6JPNCmrwfP1jCm++xXqcbSL11JGPf2OeQXA==
   dependencies:
-    "@babel/runtime" "^7.22.6"
+    "@babel/runtime" "^7.22.15"
     "@emotion/hash" "^0.9.1"
-    "@mui/private-theming" "^5.14.5"
+    "@mui/private-theming" "^5.14.9"
     "@mui/types" "^7.2.4"
-    "@mui/utils" "^5.14.5"
+    "@mui/utils" "^5.14.9"
     clsx "^2.0.0"
     csstype "^3.1.2"
     hoist-non-react-statics "^3.3.2"
