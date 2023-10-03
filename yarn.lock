@@ -90,13 +90,6 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.22.6":
-  version "7.22.6"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.6.tgz#57d64b9ae3cff1d67eb067ae117dac087f5bd438"
-  integrity sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==
-  dependencies:
-    regenerator-runtime "^0.13.11"
-
 "@babel/types@^7.18.6":
   version "7.18.10"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.18.10.tgz#4908e81b6b339ca7c6b7a555a5fc29446f26dde6"
@@ -329,28 +322,10 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/private-theming@^5.14.5":
-  version "5.14.5"
-  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.14.5.tgz#834e1569c31e2644665f98d902def79014053017"
-  integrity sha512-cC4C5RrpXpDaaZyH9QwmPhRLgz+f2SYbOty3cPkk4qPSOSfif2ZEcDD9HTENKDDd9deB+xkPKzzZhi8cxIx8Ig==
-  dependencies:
-    "@babel/runtime" "^7.22.6"
-    "@mui/utils" "^5.14.5"
-    prop-types "^15.8.1"
-
 "@mui/private-theming@^5.14.9":
   version "5.14.9"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.14.9.tgz#085041c44cc28c25f3431a293339922ec3d9b5f8"
   integrity sha512-0PzoUFqFXTXiNchhR7K4b7kZunasPOjx6Qf7AagCmfZDNASHedA0x6evHVhnST918x/AHY9xykYNKfB0Z4xMBg==
-  dependencies:
-    "@babel/runtime" "^7.22.15"
-    "@mui/utils" "^5.14.9"
-    prop-types "^15.8.1"
-
-"@mui/styled-engine@^5.13.2":
-  version "5.13.2"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.13.2.tgz#c87bd61c0ab8086d34828b6defe97c02bcd642ef"
-  integrity sha512-VCYCU6xVtXOrIN8lcbuPmoG+u7FYuOERG++fpY74hPpEWkyFQG97F+/XfTQVYzlR2m7nPjnwVUgATcTCMEaMvw==
   dependencies:
     "@babel/runtime" "^7.22.15"
     "@mui/utils" "^5.14.9"
@@ -417,17 +392,6 @@
     "@babel/runtime" "^7.19.0"
     "@types/prop-types" "^15.7.5"
     "@types/react-is" "^16.7.1 || ^17.0.0"
-    prop-types "^15.8.1"
-    react-is "^18.2.0"
-
-"@mui/utils@^5.14.5":
-  version "5.14.5"
-  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.14.5.tgz#98fb6060610b793a8478e70ffe5e4ed5bd922dba"
-  integrity sha512-6Hzw63VR9C5xYv+CbjndoRLU6Gntal8rJ5W+GUzkyHrGWIyYPWZPa6AevnyGioySNETATe1H9oXS8f/7qgIHJA==
-  dependencies:
-    "@babel/runtime" "^7.22.6"
-    "@types/prop-types" "^15.7.5"
-    "@types/react-is" "^18.2.1"
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
@@ -865,13 +829,6 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-is@^18.2.1":
-  version "18.2.1"
-  resolved "https://registry.yarnpkg.com/@types/react-is/-/react-is-18.2.1.tgz#61d01c2a6fc089a53520c0b66996d458fdc46863"
-  integrity sha512-wyUkmaaSZEzFZivD8F2ftSyAfk6L+DfFliVj/mYdOXbVjRcS87fQJLTnhk6dRZPuJjI+9g6RZJO4PNCngUrmyw==
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-lifecycles-compat@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/react-lifecycles-compat/-/react-lifecycles-compat-3.0.1.tgz#a0b1fe18cfb9435bd52737829a69cbe93faf32e2"
@@ -1014,22 +971,22 @@
     "@typescript-eslint/types" "5.5.0"
     eslint-visitor-keys "^3.0.0"
 
-"@vertexvis/frame-streaming-protos@^0.10.4":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@vertexvis/frame-streaming-protos/-/frame-streaming-protos-0.10.4.tgz#e5957305ce49ec02b79b62dad7321998b6be38c7"
-  integrity sha512-GGcA06hcdT9I4UFYqiOW6O2hXXh2tL7qpPHFx5hp5IFmNPgMfBgo/ELnYUnz2gIHQu3xaBGOxLC+4NCyPoIaxg==
+"@vertexvis/frame-streaming-protos@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@vertexvis/frame-streaming-protos/-/frame-streaming-protos-0.11.1.tgz#ecd37e4b1188774d82cf234831bc6a18b8bab898"
+  integrity sha512-DYbh/nTpfpk+SOAxnFcAyh1WlGEQHrIP8jQnDQMDVL7y/DdidORqCnMEhbvutSLFPYXOPgvihvMMt0jVI3tnvg==
 
-"@vertexvis/geometry@0.17.5":
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/@vertexvis/geometry/-/geometry-0.17.5.tgz#d6a2f9f4ef18ac6dbf07f02f39dbeb102d0c78df"
-  integrity sha512-2kZfydkS9PRgCi/eTco+jEMKlxp0jRNyZhVtgVMq2Ro/ZzfAeeXDP2Xmn50VeYQg73hb45Kcp198rabXbvw0Xg==
+"@vertexvis/geometry@0.19.2":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/geometry/-/geometry-0.19.2.tgz#37a36355e88d454da47092b49221a89b047e7e0f"
+  integrity sha512-5DDUJpChmLJ8YQAR6+4ZDaJWKuhl6/lKalm2gVgLAo6DB8vSTO2213CJ1fotg07Dkl+A23b8x2sAa/u2WS4yzw==
 
-"@vertexvis/html-templates@0.17.5":
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/@vertexvis/html-templates/-/html-templates-0.17.5.tgz#71d89427c59fd5c764cf5f2cba9e148928b7c62f"
-  integrity sha512-53+VWC9LGf5jOcv6FjTCjO+I+3i0hhV1XYHSmy73YdK7fxsHbVhzbS0Zh9FX4m5R3l4NYm1RvKHQZKXK4oaGvg==
+"@vertexvis/html-templates@0.19.2":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/html-templates/-/html-templates-0.19.2.tgz#7d3910bc58149908fe92cac6b7a278f3a644d736"
+  integrity sha512-2kJDjnuYJN5F8Vtyvxx2TdJRXej7G9gz6PTdeOmYM+cHWL7swgFWb+zum8XoTcOrf5Fu/owideLnzVopkR6/dA==
   dependencies:
-    "@vertexvis/utils" "0.17.5"
+    "@vertexvis/utils" "0.19.2"
 
 "@vertexvis/scene-tree-protos@^0.1.18":
   version "0.1.18"
@@ -1041,44 +998,44 @@
   resolved "https://registry.yarnpkg.com/@vertexvis/scene-view-protos/-/scene-view-protos-0.1.9.tgz#130be1e7fe013c03be8638253b8b18ed926fa2b8"
   integrity sha512-HtvQFLj7DdlHIjnAOT9qIP0XFy1V87L5Jz0Ca8s+A/porB91Xy1y6kHl2bF4K/ZFc6q9H0coLLFH0gqybWlqzA==
 
-"@vertexvis/stream-api@0.17.5":
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/@vertexvis/stream-api/-/stream-api-0.17.5.tgz#17cdc375a2e4b9ca2f5df90fd425713b933338c6"
-  integrity sha512-ujCx5V/IcsnZr6JV9523WGpZ1XkyRHyeNrJQ4nve0XvMkfp/4oWqkFRFar5LTQUMPCcPgHhGelW+QwjfLBC3qA==
+"@vertexvis/stream-api@0.19.2":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/stream-api/-/stream-api-0.19.2.tgz#1a5a72731f8a8c376143a82991256416210e579f"
+  integrity sha512-97KFWQoUzkH6Mynqd41YFBlZMy/SstKT4bhXDOmp03r9QdvUSwatkHvUewseW25KgQ7HBsoetIe8pBZ3gonRKQ==
   dependencies:
-    "@vertexvis/frame-streaming-protos" "^0.10.4"
+    "@vertexvis/frame-streaming-protos" "^0.11.1"
 
-"@vertexvis/utils@0.17.5":
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/@vertexvis/utils/-/utils-0.17.5.tgz#249fb8244446bd1198e9d3058ed52db04a095114"
-  integrity sha512-BR6fEDqpOOymVET7LmFQnuSl7Z4qAl3D6/JI5i1biGjZutqEhwe/HNIiCZyoXfCzfMtvPo6pAoF444cB2DvSqA==
+"@vertexvis/utils@0.19.2":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/utils/-/utils-0.19.2.tgz#91de4b4adbbea4848758bb4ed4846b719f4216fe"
+  integrity sha512-Ha7c2BqtpiYA/fqNZDIatJzhSbBVTP0Y+orc0Dld7xuBzc1RwUjboLwQFp70PUCAT1Y6p294zniCFsjoObzZ6A==
   dependencies:
     is-plain-object "^3.0.0"
     lodash.isequal "^4.5.0"
     uuid "^8.3.2"
 
-"@vertexvis/viewer-react@^0.17.5":
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.17.5.tgz#eaaeb253dae6e68be3d07f3eee3a38e78f82300d"
-  integrity sha512-2h1NwG/EOz5Xz6a0hXhXRz25izG/CH4xhW6/ysnGUJ9rC9JL0OXG0HIkDnRfw2We5M96vAmX0tcKlYgXhG/LxQ==
+"@vertexvis/viewer-react@^0.19.1":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.19.2.tgz#bd1e3b3e7367571c1ba7286c113220814106c8f9"
+  integrity sha512-oTsrNBLrXzG/wfy4faVOCf7/m0AuYPNeEu0z3wdCI2sHCkQ/iZrfgeQf5xhxNHgBRKy65g9orQzKMbz8bm1IGA==
   dependencies:
-    "@vertexvis/viewer" "0.17.5"
+    "@vertexvis/viewer" "0.19.2"
 
-"@vertexvis/viewer@0.17.5":
-  version "0.17.5"
-  resolved "https://registry.yarnpkg.com/@vertexvis/viewer/-/viewer-0.17.5.tgz#1322974445f46bf5616fcaa682d1c74893defb38"
-  integrity sha512-pF0BJu3NMGqv8U2uT65oecuYJjUFb0F5ZBwabVGVRY2TqmpgOlk+IB4fsoD/nXnPto9IOOj077nly7WjggRwEw==
+"@vertexvis/viewer@0.19.2":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/viewer/-/viewer-0.19.2.tgz#36bceb317b48782677f4b661178eece6c5598bb2"
+  integrity sha512-nXUedZLicxEDDorFH7BG4pHSo6ui3E3rtSvdQhcHL4dwtQNiXA3je1B5TCYxzZASrK50wCNth4/IOLJr2gaihw==
   dependencies:
     "@improbable-eng/grpc-web" "^0.15.0"
     "@stencil/core" "^2.16.1"
     "@types/classnames" "^2.3.1"
-    "@vertexvis/frame-streaming-protos" "^0.10.4"
-    "@vertexvis/geometry" "0.17.5"
-    "@vertexvis/html-templates" "0.17.5"
+    "@vertexvis/frame-streaming-protos" "^0.11.1"
+    "@vertexvis/geometry" "0.19.2"
+    "@vertexvis/html-templates" "0.19.2"
     "@vertexvis/scene-tree-protos" "^0.1.18"
     "@vertexvis/scene-view-protos" "^0.1.8"
-    "@vertexvis/stream-api" "0.17.5"
-    "@vertexvis/utils" "0.17.5"
+    "@vertexvis/stream-api" "0.19.2"
+    "@vertexvis/utils" "0.19.2"
     "@vertexvis/web-workers" "^0.1.0"
     camel-case "^4.1.2"
     classnames "^2.3.1"
