@@ -9,7 +9,7 @@
     "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "^5.14.6",
     "@mui/material": "^5.14.6",
-    "@mui/styles": "^5.14.6",
+    "@mui/styles": "^5.14.10",
     "@mui/x-data-grid": "^5.17.26",
     "@nivo/core": "^0.82.1",
     "@nivo/line": "^0.80.0",
